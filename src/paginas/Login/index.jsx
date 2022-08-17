@@ -14,94 +14,95 @@ import fondo from '../../assets/fondo.png';
 import logo from '../../assets/Logo.png';
 
 function Copyright(props) {
-	return (
-		<Typography
-			variant='body2'
-			color='text.secondary'
-			align='center'
-			{...props}
-		>
-			{'Copyright © '}
-			<Link color='inherit' href='#'>
-				Museemin
-			</Link>{' '}
-			{new Date().getFullYear()}
-			{'.'}
-		</Typography>
-	);
+  return (
+    <Typography
+      variant='body2'
+      color='text.secondary'
+      align='center'
+      {...props}
+    >
+      {'Copyright © '}
+      <Link color='inherit' href='#'>
+        Museemin
+      </Link>{' '}
+      {new Date().getFullYear()}
+      {'.'}
+    </Typography>
+  );
 }
 
 const theme = createTheme();
 
 export default function SignIn() {
-	const handleSubmit = (event) => {
-		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		console.log({
-			email: data.get('email'),
-			password: data.get('password'),
-		});
-	};
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get('email'),
+      password: data.get('password'),
+    });
+  };
 
-	return (
-		<ThemeProvider theme={theme}>
-			<Container component='main' maxWidth='xs'>
-				<CssBaseline />
-				<Box
-					sx={{
-						marginTop: 8,
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'center',
-					}}
-				>
-					<img src={logo} className='p-5 h-32' />
-
-					<Typography component='h1' variant='h5'>
-						Iniciar Sessión
-					</Typography>
-					<Box
-						component='form'
-						onSubmit={handleSubmit}
-						noValidate
-						sx={{ mt: 1 }}
-					>
-						<TextField
-							margin='normal'
-							required
-							fullWidth
-							id='email'
-							label='Usuario'
-							name='email'
-							autoComplete='Usuario'
-							autoFocus
-						/>
-						<TextField
-							margin='normal'
-							required
-							fullWidth
-							name='password'
-							label='Contraseña'
-							type='password'
-							id='password'
-							autoComplete='current-password'
-						/>
-						<FormControlLabel
-							control={<Checkbox value='remember' color='primary' />}
-							label='Recuerdame'
-						/>
-						<Button
-							type='submit'
-							fullWidth
-							variant='contained'
-							sx={{ mt: 3, mb: 2 }}
-						>
-							Iniciar
-						</Button>
-					</Box>
-				</Box>
-				<Copyright sx={{ mt: 8, mb: 4 }} />
-			</Container>
-		</ThemeProvider>
-	);
+  return (
+    <ThemeProvider theme={theme}>
+      <Container component='main' maxWidth='xs'>
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <img src={logo} className='p-5 h-32' />
+          <h1 class='flex-auto text-lg font-bold text-slate-900'>
+            Iniciar Sessión
+          </h1>
+          <Box
+            component='form'
+            onSubmit={handleSubmit}
+            noValidate
+            className='flex-auto p-2'
+            sx={{ mt: 1 }}
+          >
+            <TextField
+              margin='normal'
+              required
+              fullWidth
+              id='email'
+              label='Usuario'
+              name='email'
+              autoComplete='Usuario'
+              autoFocus
+            />
+            <TextField
+              margin='normal'
+              required
+              fullWidth
+              name='password'
+              label='Contraseña'
+              type='password'
+              id='password'
+              autoComplete='current-password'
+            />
+            <FormControlLabel
+              control={<Checkbox value='remember'/>}
+              label='Recuerdame'
+            />
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              className='bg-black'
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Iniciar
+            </Button>
+          </Box>
+        </Box>
+        <Copyright sx={{ mt: 8, mb: 4 }} />
+      </Container>
+    </ThemeProvider>
+  );
 }
