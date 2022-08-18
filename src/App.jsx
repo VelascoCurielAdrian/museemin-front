@@ -1,12 +1,11 @@
-// import { useState } from 'react';
-// import Button from '@mui/material/Button';
+import { ThemeProvider } from '@mui/material';
 import SignInSide from './paginas/Login';
-
+import { theme } from './configuracion/theme';
 function App() {
 	return (
-		<div>
-			<SignInSide/>
-		</div>
+		<ThemeProvider theme={theme}>
+			<SignInSide />
+		</ThemeProvider>
 	);
 }
 

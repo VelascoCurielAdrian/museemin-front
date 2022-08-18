@@ -15,7 +15,7 @@ module.exports = {
       'purple': '#7e5bef',
       'pink': '#ff49db',
       'orange': '#ff7849',
-      'green': '#13ce66',
+      'success': '#13ce66',
       'yellow': '#ffc82c',
       'gray-dark': '#273444',
       'gray': '#8492a6',
@@ -31,6 +31,9 @@ module.exports = {
         '144': '36rem',
       },
 			height: {
+				128: '36rem',
+			},
+			width: {
 				128: '36rem',
 			},
       borderRadius: {
