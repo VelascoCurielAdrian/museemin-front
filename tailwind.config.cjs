@@ -3,18 +3,31 @@ module.exports = {
 	content: ['./src/**/*.{html, js, ts, vue}', './src/**/*'],
 	important: '#root',
 	theme: {
-    // extend: {
-    //   spacing: {
-    //     '128': '32rem',
-    //     '144': '36rem',
-    //   },
-		// 	height: {
-		// 		128: '36rem',
-		// 	},
-		// 	width: {
-		// 		128: '36rem',
-		// 	}
-    // }
+    screens: {
+      sm: '480px',
+      md: '768px',
+      lg: '976px',
+      xl: '1440px',
+    },
+    fontFamily: {
+      sans: ['Graphik', 'sans-serif'],
+      serif: ['Merriweather', 'serif'],
+    },
+    extend: {
+      spacing: {
+        '128': '32rem',
+        '144': '36rem',
+      },
+			height: {
+				128: '36rem',
+			},
+			width: {
+				128: '36rem',
+			},
+      borderRadius: {
+        '4xl': '2rem',
+      }
+    }
   },
 	plugins: [],
 };

@@ -1,21 +1,61 @@
-import * as React from 'react';
+import React, { useState } from 'react';
+import { useMutation, gql } from '@apollo/client';
+import { RiLockPasswordLine } from 'react-icons/ri';
+import { FaRegUserCircle } from 'react-icons/fa';
 import Box from '@mui/material/Box';
-import logo from '../../assets/Logo.png';
+
 import Copyright from '../../componentes/CopyRight';
 import TextField from '../../componentes/TextField';
+import CheckBox from '../../componentes/CheckBox';
 import Button from '../../componentes/Button';
+import logo from '../../assets/Logo.png';
+import { parseError } from '../../helpers';
+
+const AUTHENTICATION = gql`
+	mutation AuthenticarUsuario($input: UsuarioAuth!) {
+		authenticarUsuario(input: $input) {
+			token
+		}
+	}
+`;
 
 const Login = () => {
+	const [datosUsuario, setDatosUsuario] = useState({
+		usuario: '',
+		password: '',
+		mantenerSesion: false,
+	});
+	const [error, setError] = useState({});
+
+	const [Authenticate, { loading }] = useMutation(AUTHENTICATION, {
+		onCompleted: async (data) => {
+			await localStorage.setItem('token', `${data.authenticarUsuario?.token}`);
+		},
+		onError: (e) => {
+			const parseErrors = parseError(e);
+			parseErrors.forEach((el) => {
+				if (el.name === 'BAD_USER_INPUT') {
+					setError({ mensaje: el.message, estatus: 'error' });
+				} else {
+					console.log(el.message);
+				}
+			});
+		},
+	});
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		console.log({
-			email: data.get('email'),
-			password: data.get('password'),
-		});
+		console.log(datosUsuario);
+		const input = {
+			usuario: datosUsuario.usuario,
+			password: datosUsuario.password,
+		};
+		Authenticate({ variables: { input } });
 	};
+
+	if (loading) return <h1>Cargando</h1>;
+
 	return (
-		<div className='container:mx-auto min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 dark:bg-gray-700'>
+		<div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
 			<Box className='max-w-md w-full'>
 				<img src={logo} className='mx-auto h-24 w-auto' />
 				<Box
@@ -25,66 +65,35 @@ const Login = () => {
 					className='mt-8 space-y-6'
 				>
 					<TextField
-						textLabel='Usuario'
-						name='nombreCorto'
+						iconCustomized={
+							<FaRegUserCircle className=' tw-5 h-5 text-gray-500 dark:text-gray-400' />
+						}
 						placeHolder='Usuario'
-						value={''}
-						onChange={() => {}}
+						name='usuario'
+						label='Usuario'
 						isHandleChange
 						required
-						error={''}
+						showIcon
+						onChange={setDatosUsuario}
+						value={datosUsuario.usuario}
+						error={error}
 					/>
 					<TextField
-						textLabel='Contraseña'
-						name='nombreCorto'
-						placeHolder='Contraseña'
-						value={''}
-						onChange={() => {}}
-						isHandleChange
+						iconCustomized={
+							<RiLockPasswordLine className='w-5 h-5 text-gray-500 dark:text-gray-400' />
+						}
+						placeHolder='contraseña'
+						label='Contraseña'
+						name='password'
+						value={datosUsuario.password}
 						required
-						error={''}
+						showIcon
+						onChange={setDatosUsuario}
+						isHandleChange
+						error={error.password}
 					/>
-					<label
-						for='input-group-1'
-						className='block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
-					>
-						Your Email
-					</label>
-					<div className='relative mb-6'>
-						<div className='flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none'>
-							<svg
-								aria-hidden='true'
-								className='w-5 h-5 text-gray-500 dark:text-gray-400'
-								fill='currentColor'
-								viewBox='0 0 20 20'
-								xmlns='http://www.w3.org/2000/svg'
-							>
-								<path d='M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z'></path>
-								<path d='M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z'></path>
-							</svg>
-						</div>
-						<input
-							type='text'
-							id='input-group-1'
-							className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500'
-							placeholder='name@flowbite.com'
-						/>
-					</div>
-					<div className='flex items-center mb-4'>
-						<input
-							id='default-checkbox'
-							type='checkbox'
-							value=''
-							className='w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
-						/>
-						<label
-							for='default-checkbox'
-							className='ml-1 text-sm font-medium text-gray-900 dark:text-gray-300'
-						>
-							Recuerdame
-						</label>
-					</div>
-					<Button label='Iniciar Sessión' />
+					<CheckBox label='Recuerdame' />
+					<Button label='Iniciar Sessión' isSubmit />
 				</Box>
 				<Copyright sx={{ mt: 8, mb: 4 }} />
 			</Box>

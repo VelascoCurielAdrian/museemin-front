@@ -1,14 +1,13 @@
 import React from 'react';
 import propTypes from 'prop-types';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import clsx from 'clsx';
-import styles from './styles';
+// import styles from './styles';
 
 const CustomTypography = ({
-  children, bold, className, component, style,
+  children, className, component, style,
   variant, display, aling
 }) => {
-  const classes = styles();
   return (
     <Typography
       component={component}
@@ -16,9 +15,7 @@ const CustomTypography = ({
       display={display}
       align={aling}
       variant={variant}
-      className={clsx(className, classes.root, {
-        [classes.bold]: bold,
-      })}>
+      className={clsx(className)}>
       {children}
     </Typography>
   );
@@ -26,7 +23,7 @@ const CustomTypography = ({
 
 CustomTypography.propTypes = {
   /** Children to show  */
-  children: propTypes.any.isRequired,
+  children: propTypes.any,
   /** Flag to show bold font */
   bold: propTypes.bool,
   /** className */
