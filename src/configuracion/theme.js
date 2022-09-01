@@ -153,7 +153,7 @@ export const theme = createTheme({
 		},
 		divider: '#E6E8F0',
 		primary: {
-			main: '#5048E5',
+			main: '#0d47a1',
 			light: '#828DF8',
 			dark: '#3832A0',
 			contrastText: '#FFFFFF',
@@ -195,7 +195,7 @@ export const theme = createTheme({
 		},
 	},
 	typography: {
-		fontSize: 13,
-		fontFamily: '"Avenir", "Helvetica", "Arial", sans-serif',
+		fontSize: 14,
+		fontFamily: '"font-medium", "Helvetica", "Arial", sans-serif',
 	},
 });
