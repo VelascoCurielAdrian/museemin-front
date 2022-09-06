@@ -1,25 +1,20 @@
-import { Button } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import { Box } from '@mui/material';
 
-const ButtonCustomized = ({
-	label,
-	name,
-	icono,
-	classesCustom,
-	onClick,
-	border,
-	isSubmit,
-}) => {
+const ButtonCustomized = ({ label, name, onClick, isSubmit, loading }) => {
 	return (
-		<div>
-			<button
+		<Box sx={{ display: 'flex', alignItems: 'center' }}>
+			<LoadingButton
 				name={name}
+				loading={loading}
 				onClick={onClick}
 				type={isSubmit ? 'submit' : 'button'}
-				className='text-white w-full bg-gradient-to-r from-blue-800 via-blue-600 to-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 '
+				fullWidth
+				variant='contained'
 			>
 				{label}
-			</button>
-		</div>
+			</LoadingButton>
+		</Box>
 	);
 };
 
