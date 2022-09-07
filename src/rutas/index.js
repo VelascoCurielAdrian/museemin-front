@@ -1,4 +1,2 @@
-
-
 export * from './paginas';
-export * from './rutas/HeroesRoutes';
+export * from './rutas/DaashBoardRoutes';

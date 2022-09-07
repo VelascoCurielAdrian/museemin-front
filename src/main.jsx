@@ -10,11 +10,11 @@ import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 	<React.StrictMode>
-		<BrowserRouter>
-			<ApolloProvider client={client}>
+		<ApolloProvider client={client}>
+			<BrowserRouter>
 				<ToasCustomized />
 				<App />
-			</ApolloProvider>
-		</BrowserRouter>
+			</BrowserRouter>
+		</ApolloProvider>
 	</React.StrictMode>,
 );

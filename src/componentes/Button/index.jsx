@@ -1,10 +1,11 @@
 import { LoadingButton } from '@mui/lab';
 import { Box } from '@mui/material';
 
-const ButtonCustomized = ({ label, name, onClick, isSubmit, loading }) => {
+const ButtonCustomized = ({ label, name, onClick, isSubmit, loading, styles }) => {
 	return (
 		<Box sx={{ display: 'flex', alignItems: 'center' }}>
 			<LoadingButton
+				styles={styles}
 				name={name}
 				loading={loading}
 				onClick={onClick}

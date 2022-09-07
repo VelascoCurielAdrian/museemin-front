@@ -1,24 +1,21 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { DashBoard } from '../componentes/DashBoard';
+import { Clasificacion, Cliente, Herramientas, Trabajadores } from '../paginas';
 
-const MarvelPage = () => <h1>MarvelPage</h1>;
-const DcPage = () => <h1>DcPage</h1>;
-const SearchPage = () => <h1>SearchPage</h1>;
-const HeroPage = () => <h1>HeroPage</h1>;
-
-export const HeroesRoutes = () => {
+export const DaashBoardRoutes = () => {
 	return (
 		<>
-			<div className='container'>
-				<Routes>
-					<Route path='marvel' element={<MarvelPage />} />
-					<Route path='dc' element={<DcPage />} />
-
-					<Route path='search' element={<SearchPage />} />
-					<Route path='hero/:id' element={<HeroPage />} />
-
-					<Route path='/' element={<Navigate to='/marvel' />} />
-				</Routes>
-			</div>
+			<DashBoard>
+				<div className='container'>
+					<Routes>
+						<Route path='clientes' element={<Cliente />} />
+						<Route path='trabajadores' element={<Trabajadores />} />
+						<Route path='herramientas' element={<Herramientas />} />
+						<Route path='clasificaciones' element={<Clasificacion />} />
+						<Route path='/' element={<Navigate to='/home' />} />
+					</Routes>
+				</div>
+			</DashBoard>
 		</>
 	);
 };
