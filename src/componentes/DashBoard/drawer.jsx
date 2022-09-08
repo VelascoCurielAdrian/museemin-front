@@ -1,11 +1,10 @@
 import MuiDrawer from '@mui/material/Drawer';
-import { styled, useTheme } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import { Divider, IconButton } from '@mui/material';
-import { AiOutlineMenuUnfold } from 'react-icons/ai';
+import { AiOutlineMenuFold } from 'react-icons/ai';
 import { NavItems } from './navItems';
 
-const drawerWidth = 230;
-
+const drawerWidth = 240;
 const openedMixin = (theme) => ({
 	width: drawerWidth,
 	transition: theme.transitions.create('width', {
@@ -23,7 +22,7 @@ const closedMixin = (theme) => ({
 	overflowX: 'hidden',
 	width: `calc(${theme.spacing(7)} + 1px)`,
 	[theme.breakpoints.up('sm')]: {
-		width: `calc(${theme.spacing(8)} + 1px)`,
+		width: `calc(${theme.spacing(7.5)} + 2px)`,
 	},
 });
 
@@ -53,16 +52,11 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export const Drawer = ({ open, handleDrawerClose }) => {
-	const theme = useTheme();
 	return (
 		<DrawerCustomized variant='permanent' open={open}>
 			<DrawerHeader>
 				<IconButton onClick={handleDrawerClose}>
-					{theme.direction === 'rtl' ? (
-						<AiOutlineMenuUnfold />
-					) : (
-						<AiOutlineMenuUnfold />
-					)}
+					<AiOutlineMenuFold />
 				</IconButton>
 			</DrawerHeader>
 			<Divider />

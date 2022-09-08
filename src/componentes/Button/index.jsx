@@ -1,11 +1,25 @@
 import { LoadingButton } from '@mui/lab';
+import propTypes from 'prop-types';
 import { Box } from '@mui/material';
+import stylesButton from './styles';
+import clsx from 'clsx';
 
-const ButtonCustomized = ({ label, name, onClick, isSubmit, loading, styles }) => {
+const Button = ({
+	label,
+	name,
+	loading,
+	classesCustom,
+	onClick,
+	border,
+	isSubmit,
+}) => {
+	const classes = stylesButton();
+
 	return (
 		<Box sx={{ display: 'flex', alignItems: 'center' }}>
 			<LoadingButton
-				styles={styles}
+				className={clsx(classes.boton, classesCustom.boton, { [classes.border]: border })}
+				sx={stylesButton}
 				name={name}
 				loading={loading}
 				onClick={onClick}
@@ -19,4 +33,29 @@ const ButtonCustomized = ({ label, name, onClick, isSubmit, loading, styles }) =
 	);
 };
 
-export default ButtonCustomized;
+Button.propTypes = {
+  label: propTypes.string,
+  name: propTypes.string,
+  icono: propTypes.element,
+  estilo: propTypes.object,
+  classesCustom: propTypes.shape({
+    boton: propTypes.string,
+    icono: propTypes.string,
+    texto: propTypes.string,
+  }),
+  onClick: propTypes.func,
+  border: propTypes.bool,
+  isSubmit: propTypes.bool,
+}
+
+Button.defaultProps = {
+  label: '',
+  variant: 'contained',
+  icono: null,
+  classesCustom: {},
+  onClick: null,
+  border: false,
+  isSubmit: false,
+}
+
+export default Button;

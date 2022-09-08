@@ -5,12 +5,10 @@ import { theme } from './configuracion/theme';
 
 export const App = () => {
 	return (
-		<div className='App'>
-			<AuthProvider>
-				<ThemeProvider theme={theme}>
-					<AppRouter />
-				</ThemeProvider>
-			</AuthProvider>
-		</div>
+		<AuthProvider>
+			<ThemeProvider theme={theme}>
+				<AppRouter />
+			</ThemeProvider>
+		</AuthProvider>
 	);
 };

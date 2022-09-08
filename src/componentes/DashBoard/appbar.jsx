@@ -7,7 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import { AiOutlineMenuUnfold } from 'react-icons/ai';
 import { FaUserCircle } from 'react-icons/fa';
 import { Profile } from './profile';
-const drawerWidth = 230;
+const drawerWidth = 240;
 
 const AppBarCustomized = styled(MuiAppBar, {
 	shouldForwardProp: (prop) => prop !== 'open',

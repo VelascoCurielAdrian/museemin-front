@@ -4,7 +4,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { styled } from '@mui/material/styles';
 import { Appbar } from './appbar';
 import { Drawer } from './drawer';
-import { Paper } from '@mui/material';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
@@ -32,12 +31,10 @@ export const DashBoard = ({ children }) => {
 			<Drawer open={open} handleDrawerClose={handleDrawerClose} />
 			<Box
 				component='main'
-				sx={{ flexGrow: 1, p: 3, bgcolor: '#f5f5f5', height: '100vh' }}
+				sx={{ flexGrow: 1, p: 3, height: '100vh' }}
 			>
 				<DrawerHeader />
-				<Paper sx={{ flexGrow: 1, p: 2,  minHeight:'85vh'}}>
-					{children}
-				</Paper>
+				{children}
 			</Box>
 		</Box>
 	);
