@@ -4,20 +4,22 @@ import { TextField as Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
 const CssTextField = styled(Input)(({ theme }) => ({
+	'& input': {
+		color: '#263238',
+		backgroundColor: '#fafafa',
+	},
 	'& input:valid + fieldset': {
-		borderColor: '#0d47a1',
-		borderWidth: 2,
-		borderRadius: 15,
+		color: '#212121',
+		borderWidth: 1,
+		borderRadius: 10,
 	},
 	'& input:invalid + fieldset': {
-		borderWidth: 2,
-		borderRadius: 15,
-		border: '1px solid',
+		borderWidth: 1,
+		borderRadius: 10,
 	},
 	'& input:valid:focus + fieldset': {
-		borderLeftWidth: 5,
-		borderWidth: 2,
-		borderRadius: 15,
+		borderWidth: 1,
+		borderRadius: 10,
 	},
 	transition: theme.transitions.create([
 		'border-color',
@@ -27,7 +29,6 @@ const CssTextField = styled(Input)(({ theme }) => ({
 }));
 
 const TextField = ({
-	id,
 	name,
 	size,
 	type,
@@ -39,6 +40,7 @@ const TextField = ({
 	onChange,
 	required,
 	disabled,
+	autoFocus,
 	fullWidth,
 	className,
 	onKeyDown,
@@ -55,15 +57,20 @@ const TextField = ({
 	};
 	return (
 		<div style={inputStyles}>
+			<label
+				htmlFor='label-form'
+				className='block mb-2 text-sm font-medium text-gray-700'
+			>
+				{label}
+			</label>
 			{variant !== 'multiline' ? (
 				<CssTextField
-					id={id}
 					size={size}
 					name={name}
 					type={type}
-					label={label}
 					value={value}
 					error={error}
+					autoFocus={autoFocus}
 					disabled={disabled}
 					required={required}
 					onKeyDown={onKeyDown}
@@ -77,7 +84,6 @@ const TextField = ({
 				/>
 			) : (
 				<CssTextField
-					id={id}
 					multiline
 					size={size}
 					name={name}

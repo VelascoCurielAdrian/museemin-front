@@ -13,7 +13,7 @@ const paleta = {
     secondary: '#4B5D6E',
     border: 'rgba(36, 36, 36, 0.1)',
     icono: '#33404E',
-    iconoBorder: '#E1E7ED',
+    iconoBorder: '#E9EEFA',
     user: '#409A8E',
     elements: '#8CA0B6',
     details: '#EBEFF2',

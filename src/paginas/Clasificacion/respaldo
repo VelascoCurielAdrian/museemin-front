@@ -1,0 +1,14 @@
+{({ handleChange, values, touched, errors }) => (
+  <div className='col-span-6 sm:col-span-2 mb-2'>
+    <TextField
+      fullWidth
+      size='small'
+      label='Nombre'
+      name='nombre'
+      value={values.nombre}
+      onChange={handleChange}
+      helperText={touched.nombre && errors.nombre}
+      error={touched.nombre && Boolean(errors.nombre)}
+    />
+  </div>
+)}

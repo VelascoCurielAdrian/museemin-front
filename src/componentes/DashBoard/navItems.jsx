@@ -1,41 +1,89 @@
 import {
+	Collapse,
 	List,
-	ListItem,
 	ListItemButton,
 	ListItemIcon,
 	ListItemText,
-} from '@mui/material';
-import { AiOutlineMenuUnfold } from 'react-icons/ai';
+} from "@mui/material";
+import { useState } from "react";
+import { MdExpandLess, MdExpandMore } from "react-icons/md";
+import { FaTools } from "react-icons/fa";
+import { VscTools } from "react-icons/vsc";
+import { LinkButton } from "../LinkButton/container";
+import paleta from "../../configuracion/paleta";
 
-export const NavItems = ({ open }) => {
+export const NavItems = (props) => {
+	const [open, setOpen] = useState(false);
+	const [openAlmacen, setOpenAlmacen] = useState(false);
+
+	const handleClick = () => {
+		setOpen(!open);
+	};
+
+	const handleClickAlmacen = () => {
+		setOpenAlmacen(!openAlmacen);
+	};
 	return (
-		<List>
-			{['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-				<ListItem key={text} disablePadding sx={{ display: 'block' }}>
-					<ListItemButton
-						sx={{
-							minHeight: 48,
-							justifyContent: open ? 'initial' : 'center',
-							px: 2.5,
-						}}
-					>
-						<ListItemIcon
-							sx={{
-								minWidth: 0,
-								mr: open ? 3 : 'auto',
-								justifyContent: 'center',
-							}}
-						>
-							{index % 2 === 0 ? (
-								<AiOutlineMenuUnfold />
-							) : (
-								<AiOutlineMenuUnfold />
-							)}
-						</ListItemIcon>
-						<ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-					</ListItemButton>
-				</ListItem>
-			))}
+		<List
+			sx={{
+				width: "100%",
+				bgcolor: paleta.bar.iconoBorder,
+				height: "100%",
+				color: "#4B5D6E",
+			}}
+			component='nav'
+		>
+			<ListItemButton onClick={handleClick}>
+				<ListItemIcon>
+					<FaTools />
+				</ListItemIcon>
+				<ListItemText primary='Inventario' />
+				{open ? <MdExpandLess /> : <MdExpandMore />}
+			</ListItemButton>
+			<Collapse
+				in={open}
+				timeout='auto'
+				unmountOnExit
+				sx={{ backgroundColor: "#fafafa" }}
+			>
+				<List component='div' disablePadding>
+					<LinkButton
+						icon={<VscTools />}
+						url='/clasificaciones'
+						label='Clasificaciones'
+						handleClick={props.handleClick}
+					/>
+					<LinkButton
+						icon={<VscTools />}
+						url='/herramientas'
+						label='Herramientas'
+						handleClick={props.handleClick}
+					/>
+					<LinkButton
+						icon={<VscTools />}
+						url='/paqueteHerramientas'
+						label='Paquetes'
+						handleClick={props.handleClick}
+					/>
+				</List>
+			</Collapse>
+			<ListItemButton onClick={handleClickAlmacen}>
+				<ListItemIcon>
+					<FaTools />
+				</ListItemIcon>
+				<ListItemText primary='Almacén' />
+				{openAlmacen ? <MdExpandLess /> : <MdExpandMore />}
+			</ListItemButton>
+			<Collapse in={openAlmacen} timeout='auto' unmountOnExit>
+				<List component='div' disablePadding>
+					<LinkButton
+						icon={<VscTools />}
+						url='/clasificaciones'
+						label='Prestamos'
+						handleClick={props.handleClick}
+					/>
+				</List>
+			</Collapse>
 		</List>
 	);
 };

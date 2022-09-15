@@ -1,7 +1,7 @@
 import { ToastContainer } from 'react-toastify';
 
 const contextClass = {
-	success: 'bg-blue-600',
+	success: 'bg-green-500',
 	error: 'bg-red-600',
 	info: 'bg-gray-600',
 	warning: 'bg-orange-400',
@@ -17,7 +17,7 @@ const ToasCustomized = () => {
 				contextClass[type || 'default'] +
 				' relative flex p-2 min-h-12 rounded-md overflow-hidden cursor-pointer'
 			}
-			bodyClassName={'text-xs'}
+			bodyClassName={'text-sm'}
 			autoClose={3000}
 			limit={1}
 			icon={false}

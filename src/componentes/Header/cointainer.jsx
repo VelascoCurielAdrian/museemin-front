@@ -4,9 +4,12 @@ import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import { FaSearch } from 'react-icons/fa';
 import { Box } from '@mui/system';
-import paleta from '../../configuracion/paleta';
 import { Button } from '@mui/material';
 import { BsPlusLg } from 'react-icons/bs';
+import { GiCancel } from 'react-icons/gi';
+import { FiSave } from 'react-icons/fi';
+import paleta from '../../configuracion/paleta';
+
 
 const Search = styled('div')(({ theme }) => ({
 	position: 'relative',
@@ -16,7 +19,7 @@ const Search = styled('div')(({ theme }) => ({
 		backgroundColor: alpha(theme.palette.common.white, 0.25),
 	},
 	marginLeft: 0,
-	margin: 5,
+	margin: 6,
 	width: '100%',
 	[theme.breakpoints.up('sm')]: {
 		marginLeft: theme.spacing(1),
@@ -53,7 +56,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const TitleContainer = styled('div')(() => ({
-	display: 'flex',
 	alignItems: 'center',
 	flexGrow: 1,
 	display: { xs: 'none', sm: 'block' },
@@ -63,8 +65,8 @@ const Container = styled(Box)(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
 	flexDirection: 'row',
-	marginBottom: 20,
 	[theme.breakpoints.only('xs')]: {
+		marginBottom: 50,
 		flexDirection: 'column',
 		alignItems: 'flex-start',
 		maxHeight: 100,
@@ -76,7 +78,16 @@ const Actions = styled('div')(() => ({
 	justifyContent: 'flex-end',
 	alignItems: 'flex-end',
 }));
-export const Header = ({ title, subtitle }) => {
+export const Header = ({
+	title,
+	subtitle,
+	listado,
+	agregar,
+	handleNew,
+	handleCreate,
+	handleCancelar,
+}) => {
+
 	return (
 		<Actions>
 			<Container flex={1}>
@@ -95,32 +106,59 @@ export const Header = ({ title, subtitle }) => {
 						{subtitle}
 					</Typography>
 				</TitleContainer>
-				<Search>
-					<SearchIconWrapper>
-						<FaSearch />
-					</SearchIconWrapper>
-					<StyledInputBase
-						size='large'
-						fullWidth
-						placeholder='Buscar'
-						inputProps={{ 'aria-label': 'search' }}
-					/>
-				</Search>
-				<Search>
-					<Button size='medium' fullWidth variant='contained'>
-						Buscar
-					</Button>
-				</Search>
-				<Search>
-					<Button
-						size='medium'
-						fullWidth
-						variant='contained'
-						startIcon={<BsPlusLg size={16} />}
-					>
-						Agregar
-					</Button>
-				</Search>
+				{listado && (
+					<>
+						<Search>
+							<SearchIconWrapper>
+								<FaSearch />
+							</SearchIconWrapper>
+							<StyledInputBase
+								size='large'
+								fullWidth
+								placeholder='Buscar'
+								inputProps={{ 'aria-label': 'search' }}
+							/>
+						</Search>
+						<Search>
+							<Button
+								size='medium'
+								fullWidth
+								variant='contained'
+								onClick={handleNew}
+								startIcon={<BsPlusLg size={16} />}
+							>
+								Agregar
+							</Button>
+						</Search>
+					</>
+				)}
+
+				{agregar && (
+					<>
+						<Search>
+							<Button
+								size='medium'
+								fullWidth
+								variant='contained'
+								onClick={handleCancelar}
+								startIcon={<GiCancel size={16} />}
+							>
+								Cancelar
+							</Button>
+						</Search>
+						<Search>
+							<Button
+								size='medium'
+								fullWidth
+								variant='contained'
+								onClick={handleCreate}
+								startIcon={<FiSave size={16} />}
+							>
+								Guardar
+							</Button>
+						</Search>
+					</>
+				)}
 			</Container>
 		</Actions>
 	);

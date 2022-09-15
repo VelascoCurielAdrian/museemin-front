@@ -157,7 +157,7 @@ export const theme = createTheme({
 		},
 		divider: '#E6E8F0',
 		primary: {
-			main: '#0d47a1',
+			main: '#003366',
 			light: '#828DF8',
 			dark: '#3832A0',
 			contrastText: '#FFFFFF',
@@ -236,7 +236,7 @@ export const theme = createTheme({
 			fontWeight: 600,
 		},
 		typography: {
-			fontFamily: 'Raleway, Arial',
+			fontFamily: 'font-medium',
 		},
 		components: {
 			MuiCssBaseline: {
