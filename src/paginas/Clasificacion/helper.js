@@ -1,8 +1,10 @@
-import { gql } from '@apollo/client';
-import * as yup from 'yup';
+import { gql } from "@apollo/client";
+import * as yup from "yup";
+
+export const dataCache = "getAllCountClasificacion";
 
 export const validacion = yup.object({
-	nombre: yup.string('Ecriba el nombre').required('El nombre es requerido'),
+	nombre: yup.string("Ecriba el nombre").required("El nombre es requerido"),
 });
 
 const CREATE = gql`

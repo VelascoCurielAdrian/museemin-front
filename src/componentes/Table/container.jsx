@@ -5,6 +5,7 @@ import {
 	gridPageSelector,
 	useGridApiContext,
 	useGridSelector,
+	GridToolbarQuickFilter,
 } from "@mui/x-data-grid";
 import Pagination from "@mui/material/Pagination";
 import PaginationItem from "@mui/material/PaginationItem";
@@ -33,7 +34,7 @@ export const Table = ({ columns, rows, loading, error, height }) => {
 		<>
 			<Box
 				sx={{
-					height: height ? height : 400,
+					height: height ? height : 480,
 					width: "100%",
 					"& .MuiDataGrid-columnHeaders": {
 						backgroundColor: "#E9EEFA",
@@ -57,10 +58,11 @@ export const Table = ({ columns, rows, loading, error, height }) => {
 					error={error}
 					loading={loading}
 					columns={columns}
-					pageSize={5}
+					pageSize={10}
 					components={{
 						NoRowsOverlay: NoRows,
 						Pagination: CustomPagination,
+						// Toolbar: GridToolbarQuickFilter,
 					}}
 					disableColumnMenu
 					rowsPerPageOptions={[5]}

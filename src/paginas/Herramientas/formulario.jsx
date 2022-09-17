@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { Formik } from "formik";
 import { BsTools } from "react-icons/bs";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 
 import Button from "../../componentes/Button";
@@ -9,9 +9,16 @@ import TextField from "../../componentes/TextField";
 import { Header } from "../../componentes/Header/cointainer";
 import { SelecField } from "../../componentes/Select/component";
 
-import GQL, { estadoHerramienta, estatus, validacion } from "./helper";
+import GQL, {
+	estadoHerramienta,
+	estatus,
+	validacion,
+	dataCache,
+} from "./helper";
 import { Clasificacion } from "../Clasificacion/formulario";
-import { Box } from "@mui/material";
+import { parseError } from "../../helpers";
+import { toast } from "react-toastify";
+import { useFormularion } from "../../componentes/Formulario/component";
 
 const dataInicial = {
 	clasificacionID: "",
@@ -25,8 +32,21 @@ const dataInicial = {
 
 export const Herramienta = () => {
 	const navigate = useNavigate();
-	const formikRef = useRef(null);
-	const { data, loading, error } = useQuery(GQL.GET, {
+	const handleBack = () => {
+		navigate("/herramientas", {
+			replace: true,
+		});
+	};
+	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
+		{ action: "create" },
+		dataCache,
+		GQL.CREATE,
+		GQL.CREATE,
+		GQL.GET,
+		handleBack,
+	);
+
+	const { data } = useQuery(GQL.GET_CLASIFICACION, {
 		variables: {
 			offset: null,
 			limit: null,
@@ -42,23 +62,14 @@ export const Herramienta = () => {
 		setOpen(false);
 	};
 
-	const handleCancelar = () => {
-		navigate("/herramientas", {
-			replace: true,
-		});
-	};
-
-	const submitForm = () => {
-		formikRef.current.submitForm();
-	};
-
 	return (
 		<>
 			<Header
 				title='Herramientas'
 				subtitle='Moduló de Herramientas'
-				handleCancelar={handleCancelar}
+				handleCancelar={handleBack}
 				handleCreate={submitForm}
+				loading={isLoading}
 				agregar
 			/>
 			<>
@@ -73,7 +84,21 @@ export const Herramienta = () => {
 						innerRef={formikRef}
 						initialValues={dataInicial}
 						validationSchema={validacion}
-						onSubmit={(values) => console.log(values)}
+						onSubmit={(values) => {
+							const input = {
+								nombre: values.nombre,
+								descripcion: values.descripcion,
+								marca: values.marca,
+								estado: "21",
+								precio: values.precio,
+								usuarioRegistroID: 1,
+								clasificacionID: values.clasificacionID,
+								estatus: true,
+							};
+							ActionForm({
+								variables: { input },
+							});
+						}}
 					>
 						{({ handleChange, values, touched, errors }) => (
 							<div className='overflow-hidden shadow sm:rounded-md'>

@@ -1,6 +1,8 @@
 import { gql } from "@apollo/client";
 import * as yup from "yup";
 
+export const dataCache = "getAllHerramientas";
+
 export const validacion = yup.object({
 	clasificacionID: yup.string().required("La clasificación es requerida"),
 	nombre: yup.string().required("El nombre es requerido"),
@@ -23,13 +25,25 @@ export const estadoHerramienta = [
 ];
 
 const CREATE = gql`
-	mutation CrearClasificacion($input: clasificacionDatos!) {
-		createClasificacion(input: $input) {
+	mutation CreateHerramienta($input: herramientaDatos!) {
+		createHerramienta(input: $input) {
 			mensaje
 			respuesta {
 				id
+				nombre
 				descripcion
+				precio
+				marca
+				estado
 				usuarioRegistroID
+				clasificacionID
+				clasificacion {
+					id
+					descripcion
+					usuarioRegistroID
+					activo
+					estatus
+				}
 				activo
 				estatus
 			}
@@ -64,20 +78,23 @@ const GET = gql`
 	}
 `;
 
-const GETCLASIFICACION = gql`
-	query GetAllClasificaciones {
-		getAllClasificaciones {
-			id
-			descripcion
-			usuarioRegistroID
-			activo
-			estatus
+const GET_CLASIFICACION = gql`
+	query obtenerClasificaciones($offset: Int, $limit: Int) {
+		getAllCountClasificacion(offset: $offset, limit: $limit) {
+			count
+			rows {
+				id
+				descripcion
+				usuarioRegistroID
+				activo
+				estatus
+			}
 		}
 	}
 `;
 
 const exportedObject = {
-	GETCLASIFICACION,
+	GET_CLASIFICACION,
 	CREATE,
 	GET,
 };

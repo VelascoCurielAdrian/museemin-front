@@ -1,9 +1,9 @@
-import { forwardRef, useRef } from "react";
+import { forwardRef } from "react";
 import { Formik } from "formik";
 import { FiSave } from "react-icons/fi";
 import Slide from "@mui/material/Slide";
 import { GiCancel } from "react-icons/gi";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
@@ -12,9 +12,8 @@ import DialogContent from "@mui/material/DialogContent";
 import Button from "../../componentes/Button";
 import TextField from "../../componentes/TextField";
 import { Table } from "../../componentes/Table/container";
-import GQL, { validacion } from "./helper";
-import { parseError } from "../../helpers";
-import { toast } from "react-toastify";
+import GQL, { validacion, dataCache } from "./helper";
+import { useFormularion } from "../../componentes/Formulario/component";
 
 const Transition = forwardRef(function Transition(props, ref) {
 	return <Slide direction='down' ref={ref} {...props} />;
@@ -30,51 +29,13 @@ const columns = [
 	},
 ];
 export const Clasificacion = ({ handleClose, open }) => {
-	const formikRef = useRef(null);
-	const [createClasificacion, { loading: loadingCreate }] = useMutation(
+	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
+		{ action: "create" },
+		dataCache,
 		GQL.CREATE,
-		{
-			update: (cache, { data: response }) => {
-				const dataResponse = response[Object.keys(response)[0]];
-				const oldQuery = cache.readQuery({
-					query: GQL.GET,
-					variables: {
-						offset: null,
-						limit: null,
-					},
-				});
-				cache.writeQuery({
-					query: GQL.GET,
-					variables: {
-						offset: null,
-						limit: null,
-					},
-					data: {
-						getAllCountClasificacion: {
-							...oldQuery["getAllCountClasificacion"],
-							count: oldQuery["getAllCountClasificacion"].count + 1,
-							rows: [
-								dataResponse.respuesta,
-								...oldQuery["getAllCountClasificacion"].rows,
-							],
-						},
-					},
-				});
-			},
-			onCompleted: (response) => {
-				toast.success(response.createClasificacion.mensaje);
-				formikRef.current.resetForm();
-				handleClose();
-			},
-			onError: (e) => {
-				const parseErrors = parseError(e);
-				parseErrors.forEach(({ message, name }) => {
-					if (name === "BAD_USER_INPUT") {
-						toast.error(`${Object.values(message)}`);
-					}
-				});
-			},
-		},
+		GQL.CREATE,
+		GQL.GET,
+		handleClose,
 	);
 	const { data, loading, error } = useQuery(GQL.GET, {
 		variables: {
@@ -82,10 +43,6 @@ export const Clasificacion = ({ handleClose, open }) => {
 			limit: null,
 		},
 	});
-
-	const submitForm = () => {
-		formikRef.current.submitForm();
-	};
 
 	return (
 		<Dialog
@@ -106,7 +63,7 @@ export const Clasificacion = ({ handleClose, open }) => {
 							usuarioRegistroID: 1,
 							estatus: true,
 						};
-						createClasificacion({
+						ActionForm({
 							variables: { input },
 						});
 					}}
@@ -149,7 +106,7 @@ export const Clasificacion = ({ handleClose, open }) => {
 					onClick={submitForm}
 					label='Guardar'
 					fullWidth
-					loading={loadingCreate}
+					loading={isLoading}
 					icono={<FiSave size={16} />}
 				/>
 			</DialogActions>
