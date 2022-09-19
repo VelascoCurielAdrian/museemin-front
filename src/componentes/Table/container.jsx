@@ -47,7 +47,7 @@ export const Table = ({
 }) => {
 	const navigate = useNavigate();
 	const [anchorEl, setAnchorEl] = useState(null);
-	const [deleteRow, setDeleteRow] = useState({ ...urlDelete.params });
+	const [deleteRow, setDeleteRow] = useState({});
 	const open = Boolean(anchorEl);
 
 	const [_delete, { loading: loadingDelete }] = useMutation(urlDelete.gql, {
@@ -86,7 +86,7 @@ export const Table = ({
 		setAnchorEl(null);
 	};
 
-	const handleEdit = (row, index) => {
+	const handleEdit = (row) => {
 		navigate(`/${row.__typename}/formulario/${row.id}`, {
 			replace: true,
 		});
@@ -108,7 +108,7 @@ export const Table = ({
 				<GridActionsCellItem
 					onClick={(e) => {
 						showConfirm(e);
-						setDeleteRow({ deleteHerramientaId: row.id });
+						setDeleteRow({ [urlDelete.params]: row.id });
 					}}
 					icon={<MdOutlineDelete size={15} />}
 					label='Delete'

@@ -57,10 +57,10 @@ const columns = [
 	},
 ];
 
-export const Herramientas = () => {
+export const Trabajadores = () => {
 	const navigate = useNavigate();
 	const handleNew = () => {
-		navigate("/herramienta/formulario");
+		navigate("/trabajador/formulario");
 	};
 	return (
 		<>
