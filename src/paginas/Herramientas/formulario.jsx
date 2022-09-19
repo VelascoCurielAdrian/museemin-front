@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Formik } from "formik";
 import { BsTools } from "react-icons/bs";
-import { useQuery, useMutation } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "../../componentes/Button";
 import TextField from "../../componentes/TextField";
@@ -16,14 +16,13 @@ import GQL, {
 	dataCache,
 } from "./helper";
 import { Clasificacion } from "../Clasificacion/formulario";
-import { parseError } from "../../helpers";
-import { toast } from "react-toastify";
-import { useFormularion } from "../../componentes/Formulario/component";
+import { useFormularion } from "../../hooks/useForm";
+import { useMemo } from "react";
 
 const dataInicial = {
 	clasificacionID: "",
-	estadoID: "",
-	estatusID: "",
+	estado: "",
+	estatus: "",
 	nombre: "",
 	marca: "",
 	precio: "",
@@ -31,20 +30,21 @@ const dataInicial = {
 };
 
 export const Herramienta = () => {
+	const { id } = useParams();
 	const navigate = useNavigate();
-	const handleBack = () => {
-		navigate("/herramientas", {
-			replace: true,
-		});
-	};
-	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
-		{ action: "create" },
-		dataCache,
-		GQL.CREATE,
-		GQL.CREATE,
-		GQL.GET,
-		handleBack,
-	);
+	const [open, setOpen] = useState(false);
+	const [dataForm, setDataForm] = useState({ ...dataInicial });
+
+	const [getHerramienta, { loading }] = useLazyQuery(GQL.GET_BYID, {
+		onCompleted: (response) => {
+			console.log(response);
+			setDataForm({ ...response.getHerramienta, estadoID: "" });
+		},
+	});
+
+	useMemo(() => {
+		id && getHerramienta({ variables: { getHerramientaId: id } });
+	}, [id]);
 
 	const { data } = useQuery(GQL.GET_CLASIFICACION, {
 		variables: {
@@ -52,7 +52,21 @@ export const Herramienta = () => {
 			limit: null,
 		},
 	});
-	const [open, setOpen] = useState(false);
+
+	const handleBack = () => {
+		navigate("/herramientas", {
+			replace: true,
+		});
+	};
+
+	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
+		{ action: id ? "update" : "create", filters: id },
+		dataCache,
+		GQL.CREATE,
+		GQL.UPDATE,
+		GQL.GET,
+		handleBack,
+	);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -62,6 +76,7 @@ export const Herramienta = () => {
 		setOpen(false);
 	};
 
+	if (loading) return <div>Cargando...</div>;
 	return (
 		<>
 			<Header
@@ -82,21 +97,21 @@ export const Herramienta = () => {
 				<div className='mt-5 md:col-span-2 md:mt-0'>
 					<Formik
 						innerRef={formikRef}
-						initialValues={dataInicial}
+						initialValues={dataForm}
 						validationSchema={validacion}
 						onSubmit={(values) => {
 							const input = {
 								nombre: values.nombre,
 								descripcion: values.descripcion,
 								marca: values.marca,
-								estado: "21",
+								estado: values.estado,
 								precio: values.precio,
 								usuarioRegistroID: 1,
 								clasificacionID: values.clasificacionID,
-								estatus: true,
+								estatus: values.estatus,
 							};
 							ActionForm({
-								variables: { input },
+								variables: { updateHerramientaId: id, input },
 							});
 						}}
 					>
@@ -182,13 +197,13 @@ export const Herramienta = () => {
 												fullWidth
 												size='small'
 												labelProp='nombre'
-												name='estadoID'
+												name='estado'
 												onChange={handleChange}
-												value={values.estadoID}
+												value={values.estado}
 												label='Estado de la herramienta'
 												options={estadoHerramienta}
-												helperText={touched.estadoID && errors.estadoID}
-												error={touched.estadoID && Boolean(errors.estadoID)}
+												helperText={touched.estado && errors.estado}
+												error={touched.estado && Boolean(errors.estado)}
 											/>
 										</div>
 										<div className='col-span-6 sm:col-span-2'>
@@ -197,12 +212,12 @@ export const Herramienta = () => {
 												size='small'
 												label='Estatus'
 												labelProp='nombre'
-												name='estatusID'
+												name='estatus'
 												options={estatus}
 												onChange={handleChange}
-												value={values.estatusID}
-												helperText={touched.estatusID && errors.estatusID}
-												error={touched.estatusID && Boolean(errors.estatusID)}
+												value={values.estatus}
+												helperText={touched.estatus && errors.estatus}
+												error={touched.estatus && Boolean(errors.estatus)}
 											/>
 										</div>
 										<div className='col-span-6 sm:col-span-3'>

@@ -6,8 +6,14 @@ import {
 	ListItemText,
 } from "@mui/material";
 import { useState } from "react";
-import { MdExpandLess, MdExpandMore } from "react-icons/md";
-import { FaTools } from "react-icons/fa";
+import {
+	MdExpandLess,
+	MdExpandMore,
+	MdInventory,
+	MdBackpack,
+	MdStoreMallDirectory,
+} from "react-icons/md";
+import { FaToolbox } from "react-icons/fa";
 import { VscTools } from "react-icons/vsc";
 import { LinkButton } from "../LinkButton/container";
 import paleta from "../../configuracion/paleta";
@@ -35,7 +41,7 @@ export const NavItems = (props) => {
 		>
 			<ListItemButton onClick={handleClick}>
 				<ListItemIcon>
-					<FaTools />
+					<MdInventory />
 				</ListItemIcon>
 				<ListItemText primary='Inventario' />
 				{open ? <MdExpandLess /> : <MdExpandMore />}
@@ -48,19 +54,13 @@ export const NavItems = (props) => {
 			>
 				<List component='div' disablePadding>
 					<LinkButton
-						icon={<VscTools />}
-						url='/clasificaciones'
-						label='Clasificaciones'
-						handleClick={props.handleClick}
-					/>
-					<LinkButton
-						icon={<VscTools />}
+						icon={<FaToolbox />}
 						url='/herramientas'
 						label='Herramientas'
 						handleClick={props.handleClick}
 					/>
 					<LinkButton
-						icon={<VscTools />}
+						icon={<MdBackpack />}
 						url='/paqueteHerramientas'
 						label='Paquetes'
 						handleClick={props.handleClick}
@@ -69,7 +69,7 @@ export const NavItems = (props) => {
 			</Collapse>
 			<ListItemButton onClick={handleClickAlmacen}>
 				<ListItemIcon>
-					<FaTools />
+					<MdStoreMallDirectory size={17} />
 				</ListItemIcon>
 				<ListItemText primary='Almacén' />
 				{openAlmacen ? <MdExpandLess /> : <MdExpandMore />}
@@ -78,8 +78,8 @@ export const NavItems = (props) => {
 				<List component='div' disablePadding>
 					<LinkButton
 						icon={<VscTools />}
-						url='/clasificaciones'
-						label='Prestamos'
+						url='/herramientas'
+						label='Herramientas'
 						handleClick={props.handleClick}
 					/>
 				</List>

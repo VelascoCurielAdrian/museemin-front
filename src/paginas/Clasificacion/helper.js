@@ -22,6 +22,21 @@ const CREATE = gql`
 	}
 `;
 
+const DELETE = gql`
+	mutation eliminarClasificacion($deleteClasificacionId: ID) {
+		deleteClasificacion(id: $deleteClasificacionId) {
+			mensaje
+			respuesta {
+				id
+				descripcion
+				usuarioRegistroID
+				activo
+				estatus
+			}
+		}
+	}
+`;
+
 const GET = gql`
 	query obtenerClasificaciones($offset: Int, $limit: Int) {
 		getAllCountClasificacion(offset: $offset, limit: $limit) {
@@ -39,6 +54,7 @@ const GET = gql`
 
 const exportedObject = {
 	CREATE,
+	DELETE,
 	GET,
 };
 

@@ -1,11 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
+import GQL, { dataCache } from "./helper";
 import { Header } from "../../componentes/Header/cointainer";
 import { Table } from "../../componentes/Table/container";
-import GQL from "./helper";
+import { EstadoHerramienta } from "../../componentes/EstadoHerramienta/component";
+import { Estatus } from "../../componentes/Estatus/component";
 
 const columns = [
-	{ field: "id", headerName: "ID", width: 120 },
+	{ field: "id", headerName: "ID", width: 80 },
 	{
 		field: "nombre",
 		headerName: "Nombre",
@@ -15,19 +17,19 @@ const columns = [
 	{
 		field: "descripcion",
 		headerName: "DESCRIPCIÓN",
-		width: 280,
+		width: 150,
 		editable: false,
 	},
 	{
 		field: "precio",
 		headerName: "PRECIO",
-		width: 150,
+		width: 80,
 		editable: false,
 	},
 	{
 		field: "marca",
 		headerName: "MARCA",
-		width: 150,
+		width: 80,
 		editable: false,
 	},
 	{
@@ -37,17 +39,26 @@ const columns = [
 		editable: false,
 		valueGetter: ({ value }) => value.descripcion,
 	},
+	{
+		field: "estado",
+		headerName: "CONDICIÓN",
+		width: 120,
+		editable: false,
+		renderCell: ({ value, index }) => (
+			<EstadoHerramienta key={index} value={value} />
+		),
+	},
+	{
+		field: "estatus",
+		headerName: "ACTIVO",
+		width: 120,
+		editable: false,
+		renderCell: ({ value, index }) => <Estatus key={index} value={value} />,
+	},
 ];
 
 export const Herramientas = () => {
 	const navigate = useNavigate();
-	const { data, loading, error } = useQuery(GQL.GET, {
-		variables: {
-			offset: null,
-			limit: null,
-		},
-	});
-
 	const handleNew = () => {
 		navigate("/herramienta/formulario");
 	};
@@ -60,10 +71,11 @@ export const Herramientas = () => {
 				handleNew={handleNew}
 			/>
 			<Table
+				uri={GQL.GET}
+				urlDelete={{ gql: GQL.DELETE, params: { deleteHerramientaId: "" } }}
+				dataCache={dataCache}
 				columns={columns}
-				rows={data ? data.getAllHerramientas?.rows : []}
-				loading={loading}
-				error={error}
+				showActions
 			/>
 		</>
 	);

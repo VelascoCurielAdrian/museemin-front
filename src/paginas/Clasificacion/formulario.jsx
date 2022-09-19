@@ -3,7 +3,6 @@ import { Formik } from "formik";
 import { FiSave } from "react-icons/fi";
 import Slide from "@mui/material/Slide";
 import { GiCancel } from "react-icons/gi";
-import { useQuery } from "@apollo/client";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogActions from "@mui/material/DialogActions";
@@ -20,14 +19,15 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 const columns = [
-	{ field: "id", headerName: "ID", width: 120 },
+	{ field: "id", headerName: "ID", width: 80 },
 	{
 		field: "descripcion",
 		headerName: "DESCRIPCIÓN",
-		width: 250,
+		width: 140,
 		editable: false,
 	},
 ];
+
 export const Clasificacion = ({ handleClose, open }) => {
 	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
 		{ action: "create" },
@@ -37,12 +37,6 @@ export const Clasificacion = ({ handleClose, open }) => {
 		GQL.GET,
 		handleClose,
 	);
-	const { data, loading, error } = useQuery(GQL.GET, {
-		variables: {
-			offset: null,
-			limit: null,
-		},
-	});
 
 	return (
 		<Dialog
@@ -86,10 +80,9 @@ export const Clasificacion = ({ handleClose, open }) => {
 				<br />
 				<div className='col-span-6 sm:col-span-2'>
 					<Table
+						uri={GQL.GET}
+						urlDelete={{ gql: GQL.DELETE, params: "deleteClasificacionId" }}
 						columns={columns}
-						rows={data ? data?.getAllCountClasificacion?.rows : []}
-						loading={loading}
-						error={error}
 						height={260}
 					/>
 				</div>

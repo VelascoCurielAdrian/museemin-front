@@ -1,9 +1,7 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import { DashBoard } from '../componentes/DashBoard';
-import { Cliente, Trabajadores } from '../paginas';
-
-import { Clasificacion, Clasificaciones } from '../paginas/Clasificacion';
-import { Herramienta, Herramientas } from '../paginas/Herramientas';
+import { Navigate, Route, Routes } from "react-router-dom";
+import { DashBoard } from "../componentes/DashBoard";
+import { Cliente, Trabajadores } from "../paginas";
+import { Herramienta, Herramientas } from "../paginas/Herramientas";
 
 export const DaashBoardRoutes = () => {
 	return (
@@ -15,10 +13,7 @@ export const DaashBoardRoutes = () => {
 
 					<Route path='herramientas' element={<Herramientas />} />
 					<Route path='herramienta/formulario' element={<Herramienta />} />
-
-					<Route path='clasificaciones/' element={<Clasificaciones />} />
-					<Route path='clasificacion/formulario' element={<Clasificacion />} />
-
+					<Route path='herramienta/formulario/:id' element={<Herramienta />} />
 					<Route path='/' element={<Navigate to='/home' />} />
 				</Routes>
 			</div>
