@@ -23,7 +23,11 @@ export const validacion = yup.object({
 	referencia: yup.string().required('Este Campo es requerido'),
 	calles: yup.string().required('Este Campo es requerido'),
 	estatus: yup.string().required('Este Campo es requerido'),
-	numeroExterior: yup.string().required('Este Campo es requerido'),
+	numeroExterior: yup
+		.string()
+		.min(4, 'debe tener como minimo 4 caracteres')
+		.max(4, 'debe tener como maximo 4 caracteres')
+		.required('Este Campo es requerido'),
 });
 
 export const estatus = [

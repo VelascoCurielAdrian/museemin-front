@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import GQL, { dataCache } from './helper';
-import { Header } from '../../componentes/Header/cointainer';
 import { Table } from '../../componentes/Table/container';
 import { Estatus } from '../../componentes/Estatus/component';
 import { Generos } from '../../componentes/Genero/component';
@@ -58,13 +57,10 @@ export const Trabajadores = () => {
 	};
 	return (
 		<>
-			<Header
+			<Table
 				title="Trabajadores"
 				subtitle="Moduló de Trabajadores"
-				listado
 				handleNew={handleNew}
-			/>
-			<Table
 				uri={GQL.GET}
 				urlDelete={{ gql: GQL.DELETE, params: 'deleteId' }}
 				dataCache={dataCache}

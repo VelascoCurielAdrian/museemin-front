@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import MuiListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { makeStyles, withStyles } from '@mui/styles';
+import { withStyles } from '@mui/styles';
 import paleta from '../../configuracion/paleta';
 
 const ListItem = withStyles({

@@ -138,13 +138,8 @@ export const Herramienta = () => {
 												labelProp='descripcion'
 												name='clasificacionID'
 												options={data?.getAllCountClasificacion?.rows || []}
-												helperText={
-													touched.clasificacionID && errors.clasificacionID
-												}
-												error={
-													touched.clasificacionID &&
-													Boolean(errors.clasificacionID)
-												}
+												helperText={touched.clasificacionID && errors.clasificacionID}
+												error={touched.clasificacionID && Boolean(errors.clasificacionID)}
 												value={values.clasificacionID || ""}
 												onChange={handleChange}
 											/>

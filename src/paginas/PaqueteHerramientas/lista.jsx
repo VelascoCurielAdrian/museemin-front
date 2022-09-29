@@ -1,10 +1,9 @@
-import { useQuery } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
+
 import GQL, { dataCache } from './helper';
-import { Header } from '../../componentes/Header/cointainer';
 import { Table } from '../../componentes/Table/container';
-import { EstadoHerramienta } from '../../componentes/EstadoHerramienta/component';
 import { Estatus } from '../../componentes/Estatus/component';
+import { EstadoHerramienta } from '../../componentes/EstadoHerramienta/component';
 
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 80 },
@@ -64,13 +63,10 @@ export const PaqueteHerramientas = () => {
 	};
 	return (
 		<>
-			<Header
+			<Table
 				title="Paquete de herramientas"
 				subtitle="Moduló de paquetes Herramientas"
-				listado
 				handleNew={handleNew}
-			/>
-			<Table
 				uri={GQL.GET}
 				urlDelete={{ gql: GQL.DELETE, params: 'deleteHerramientaId' }}
 				dataCache={dataCache}

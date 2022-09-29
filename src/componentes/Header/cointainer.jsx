@@ -1,4 +1,4 @@
-import * as React from 'react';
+import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
@@ -80,11 +80,23 @@ export const Header = ({
 	title,
 	subtitle,
 	listado,
+	buscar,
 	agregar,
 	handleNew,
 	handleCreate,
 	handleCancelar,
 }) => {
+	const [txtBusqueda, setTxtBusqueda] = useState('');
+	const [txtBusquedaAnterior, setTxtBusquedaAnterior] = useState('');
+
+	const manejadorKeyDown = (e) => {
+		if (e.key === 'Enter' && buscar)
+			if (txtBusquedaAnterior !== txtBusqueda) {
+				buscar(txtBusqueda);
+				setTxtBusquedaAnterior(txtBusqueda);
+			}
+	};
+
 	return (
 		<Actions>
 			<Container flex={1}>
@@ -113,7 +125,10 @@ export const Header = ({
 								size="large"
 								fullWidth
 								placeholder="Buscar"
+								value={txtBusqueda}
+								onChange={({ target: { value } }) => setTxtBusqueda(value)}
 								inputProps={{ 'aria-label': 'search' }}
+								onKeyDown={manejadorKeyDown}
 							/>
 						</Search>
 						<Search>

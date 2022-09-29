@@ -1,23 +1,25 @@
-import { useState } from "react";
-import { Box } from "@mui/system";
-import { toast } from "react-toastify";
+import { useState } from 'react';
+import { Box } from '@mui/system';
 import {
 	DataGrid,
 	gridPageCountSelector,
 	gridPageSelector,
 	useGridApiContext,
 	useGridSelector,
-} from "@mui/x-data-grid";
-import Pagination from "@mui/material/Pagination";
-import PaginationItem from "@mui/material/PaginationItem";
-import { GridActionsCellItem } from "@mui/x-data-grid";
-import { FiEdit } from "react-icons/fi";
-import { MdOutlineDelete } from "react-icons/md";
-import { NoRows } from "../../assets/noRows";
-import { Confirmation } from "../confirmation/component";
-import { useNavigate } from "react-router-dom";
-import { useMutation, useQuery } from "@apollo/client";
-import { parseError } from "../../helpers";
+} from '@mui/x-data-grid';
+import { toast } from 'react-toastify';
+import { FiEdit } from 'react-icons/fi';
+import { CgBrowse } from 'react-icons/cg';
+import { useNavigate } from 'react-router-dom';
+import { MdOutlineDelete } from 'react-icons/md';
+import Pagination from '@mui/material/Pagination';
+import { GridActionsCellItem } from '@mui/x-data-grid';
+import { useMutation, useQuery } from '@apollo/client';
+import PaginationItem from '@mui/material/PaginationItem';
+
+import { parseError } from '../../helpers';
+import { Header } from '../Header/cointainer';
+import { Confirmation } from '../confirmation/component';
 
 function CustomPagination() {
 	const apiRef = useGridApiContext();
@@ -26,9 +28,9 @@ function CustomPagination() {
 
 	return (
 		<Pagination
-			color='primary'
-			variant='outlined'
-			shape='rounded'
+			color="primary"
+			variant="outlined"
+			shape="rounded"
 			page={page + 1}
 			count={pageCount}
 			renderItem={(props2) => <PaginationItem {...props2} disableRipple />}
@@ -38,7 +40,10 @@ function CustomPagination() {
 }
 
 export const Table = ({
+	title,
+	subtitle,
 	uri,
+	handleNew,
 	columns,
 	height,
 	showActions,
@@ -48,6 +53,8 @@ export const Table = ({
 	const navigate = useNavigate();
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [deleteRow, setDeleteRow] = useState({});
+	const [filtros, setFiltros] = useState({ txtBusqueda: '' });
+
 	const open = Boolean(anchorEl);
 
 	const [_delete, { loading: loadingDelete }] = useMutation(urlDelete.gql, {
@@ -61,7 +68,7 @@ export const Table = ({
 		onError: (e) => {
 			const parseErrors = parseError(e);
 			parseErrors.forEach(({ message, name }) => {
-				if (name === "BAD_USER_INPUT") {
+				if (name === 'BAD_USER_INPUT') {
 					toast.error(`${Object.values(message)}`);
 				}
 			});
@@ -92,18 +99,22 @@ export const Table = ({
 		});
 	};
 
+	const buscar = (txtBusqueda) => {
+		setFiltros((current) => ({ ...current, txtBusqueda }));
+	};
+
 	const newColumns = [
 		...columns,
 		{
-			field: "actions",
-			type: "actions",
-			headerName: "ACCIONES",
+			field: 'actions',
+			type: 'actions',
+			headerName: 'ACCIONES',
 			width: 100,
 			getActions: ({ row, index }) => [
 				<GridActionsCellItem
 					onClick={() => handleEdit(row, index)}
 					icon={<FiEdit size={15} />}
-					label='Editar'
+					label="Editar"
 				/>,
 				<GridActionsCellItem
 					onClick={(e) => {
@@ -111,7 +122,7 @@ export const Table = ({
 						setDeleteRow({ [urlDelete.params]: row.id });
 					}}
 					icon={<MdOutlineDelete size={15} />}
-					label='Delete'
+					label="Delete"
 				/>,
 			],
 		},
@@ -119,28 +130,35 @@ export const Table = ({
 
 	return (
 		<>
+			<Header
+				title={title}
+				buscar={buscar}
+				subtitle={subtitle}
+				listado
+				handleNew={handleNew}
+			/>
 			<Box
 				sx={{
 					height: height ? height : 480,
-					width: "100%",
-					"& .MuiDataGrid-columnHeaders": {
-						outline: "none",
-						backgroundColor: "#E9EEFA",
-						color: "#212121",
+					width: '100%',
+					'& .MuiDataGrid-columnHeaders': {
+						outline: 'none',
+						backgroundColor: '#E9EEFA',
+						color: '#212121',
 						fontSize: 13,
 						fontWeight: 600,
 					},
-					"& .MuiDataGrid-iconSeparator": {
-						display: "none",
+					'& .MuiDataGrid-iconSeparator': {
+						display: 'none',
 					},
-					"& .MuiDataGrid-cell": {
+					'& .MuiDataGrid-cell': {
 						fontSize: 11,
 						fontWeight: 400,
-						backgroundColor: "#f5f5f5",
-						color: "#212121",
+						backgroundColor: '#f5f5f5',
+						color: '#212121',
 					},
-					"& .MuiDataGrid-cell:focus": {
-						outline: "none",
+					'& .MuiDataGrid-cell:focus': {
+						outline: 'none',
 					},
 				}}
 			>
@@ -152,11 +170,32 @@ export const Table = ({
 					pageSize={10}
 					autoHeight
 					components={{
-						NoRowsOverlay: NoRows,
+						NoRowsOverlay: () => (
+							<Box
+								sx={{
+									display: 'flex',
+									flexDirection: 'column',
+									alignItems: 'center',
+									justifyContent: 'center',
+									height: '100%',
+									marginTop: 0.2,
+									color: 'gray',
+									fontSize: 14,
+								}}
+							>
+								<CgBrowse size={50} />
+								<Box
+									sx={{
+										mt: 1,
+									}}
+								>
+									No hay registros
+								</Box>
+							</Box>
+						),
 						Pagination: CustomPagination,
 					}}
 					disableColumnMenu
-					GridLinesVisibility='None'
 					rowsPerPageOptions={[5]}
 					disableSelectionOnClick
 				/>
