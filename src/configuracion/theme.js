@@ -1,18 +1,15 @@
 import { createTheme } from '@mui/material';
-// 6674520201
-// 6671449475
-
 export const theme = createTheme({
-	breakpoints: {
-		values: {
-			xs: 0,
-			sm: 600,
-			md: 1000,
-			lg: 1200,
-			xl: 1920,
-		},
-	},
 	components: {
+		MuiListItemButton: {
+			styleOverrides: {
+				root: {
+					'&.Mui-selected': {
+						borderLeft: `5px solid red`,
+					},
+				},
+			},
+		},
 		MuiButton: {
 			defaultProps: {
 				disableElevation: true,
@@ -165,7 +162,7 @@ export const theme = createTheme({
 			contrastText: '#FFFFFF',
 		},
 		secondary: {
-			main: '#10B981',
+			main: '#f50057',
 			light: '#3FC79A',
 			dark: '#0B815A',
 			contrastText: '#FFFFFF',
@@ -181,6 +178,8 @@ export const theme = createTheme({
 			light: '#64B6F7',
 			dark: '#0B79D0',
 			contrastText: '#FFFFFF',
+			masculino: '#2196f3',
+			femenino: '#f50057',
 		},
 		warning: {
 			main: '#FFB020',
@@ -198,6 +197,11 @@ export const theme = createTheme({
 			primary: '#121828',
 			secondary: '#65748B',
 			disabled: 'rgba(55, 65, 81, 0.48)',
+		},
+		generos: {
+			main: '#f50057',
+			primary: '#2196f3',
+			secondary: '#f50057',
 		},
 	},
 	shape: {

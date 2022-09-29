@@ -1,16 +1,19 @@
 import { gql } from '@apollo/client';
 import * as yup from 'yup';
 
-export const dataCache = 'getAllTrabajador';
+export const dataCache = 'getAllCliente';
+
 const phoneRegExp =
 	/^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 export const validacion = yup.object({
-	nombres: yup.string().required('Este Campo es requerido'),
-	primerApellido: yup.string().required('Este Campo es requerido'),
-	segundoApellido: yup.string().required('Este Campo es requerido'),
-	sexo: yup.string().required('Este Campo es requerido'),
-	telefono: yup
+	nombre: yup.string().required('Este Campo es requerido'),
+	primerTelefono: yup
+		.string()
+		.max(10, 'telefono debe tener como minimo 10 caracteres')
+		.matches(phoneRegExp, 'Numero de telefono invalido')
+		.required('Este Campo es requerido'),
+	segundoTelefono: yup
 		.string()
 		.max(10, 'telefono debe tener como minimo 10 caracteres')
 		.matches(phoneRegExp, 'Numero de telefono invalido')
@@ -23,7 +26,18 @@ export const validacion = yup.object({
 	referencia: yup.string().required('Este Campo es requerido'),
 	calles: yup.string().required('Este Campo es requerido'),
 	estatus: yup.string().required('Este Campo es requerido'),
-	numeroExterior: yup.string().required('Este Campo es requerido'),
+	codigoPostal: yup
+		.string()
+		.required('Este Campo es requerido')
+		.min(6, 'Este campo ddebe tener como minimo 6 caracteres'),
+	numeroExterior: yup
+		.string()
+		.required('Este Campo es requerido')
+		.min(4, 'Este campo ddebe tener como minimo 4 caracteres'),
+	numeroInterior: yup
+		.string()
+		.required('Este Campo es requerido')
+		.min(4, 'Este campo ddebe tener como minimo 4 caracteres'),
 });
 
 export const estatus = [
@@ -31,28 +45,24 @@ export const estatus = [
 	{ id: false, nombre: 'Inactivo' },
 ];
 
-export const Generos = [
-	{ id: 'M', nombre: 'Masculino' },
-	{ id: 'F', nombre: 'Femenino' },
-];
-
 const CREATE = gql`
-	mutation CrearTrabajador($input: trabajadorDatos!) {
-		createTrabajador(input: $input) {
+	mutation CreateCliente($input: clienteDatos!) {
+		createCliente(input: $input) {
 			mensaje
 			respuesta {
 				id
-				nombres
-				primerApellido
-				segundoApellido
-				sexo
-				telefono
+				nombre
+				primerTelefono
+				segundoTelefono
 				correo
 				colonia
 				calles
 				referencia
 				numeroExterior
+				numeroInterior
+				codigoPostal
 				usuarioRegistroID
+				activo
 				estatus
 			}
 		}
@@ -60,22 +70,23 @@ const CREATE = gql`
 `;
 
 const UPDATE = gql`
-	mutation actualizarTrabajador($input: trabajadorDatos!, $updateId: ID!) {
-		updateTrabajador(id: $updateId, input: $input) {
+	mutation UpdateCliente($input: clienteDatos!, $updateId: ID!) {
+		updateCliente(id: $updateId, input: $input) {
 			mensaje
 			respuesta {
 				id
-				nombres
-				primerApellido
-				segundoApellido
-				sexo
-				telefono
+				nombre
+				primerTelefono
+				segundoTelefono
 				correo
 				colonia
 				calles
 				referencia
 				numeroExterior
+				numeroInterior
+				codigoPostal
 				usuarioRegistroID
+				activo
 				estatus
 			}
 		}
@@ -83,22 +94,23 @@ const UPDATE = gql`
 `;
 
 const DELETE = gql`
-	mutation EliminarTrabajador($deleteId: ID) {
-		deleteTrabajador(id: $deleteId) {
+	mutation DeleteCliente($deleteClienteId: ID) {
+		deleteCliente(id: $deleteClienteId) {
 			mensaje
 			respuesta {
 				id
-				nombres
-				primerApellido
-				segundoApellido
-				sexo
-				telefono
+				nombre
+				primerTelefono
+				segundoTelefono
 				correo
 				colonia
 				calles
 				referencia
 				numeroExterior
+				numeroInterior
+				codigoPostal
 				usuarioRegistroID
+				activo
 				estatus
 			}
 		}
@@ -106,42 +118,45 @@ const DELETE = gql`
 `;
 
 const GET = gql`
-	query ObtenerTrabajadores($offset: Int, $limit: Int) {
-		getAllTrabajador(offset: $offset, limit: $limit) {
+	query GetAllCliente($offset: Int, $limit: Int) {
+		getAllCliente(offset: $offset, limit: $limit) {
 			count
 			rows {
 				id
-				nombres
-				primerApellido
-				segundoApellido
-				sexo
-				telefono
+				nombre
+				primerTelefono
+				segundoTelefono
 				correo
 				colonia
 				calles
 				referencia
 				numeroExterior
+				numeroInterior
+				codigoPostal
 				usuarioRegistroID
+				activo
 				estatus
 			}
 		}
 	}
 `;
 const GET_BYID = gql`
-	query Trabajador($trabajadorId: ID!) {
-		getTrabajador(id: $trabajadorId) {
+	query GetCliente($getClienteId: ID!) {
+		getCliente(id: $getClienteId) {
 			id
-			nombres
-			primerApellido
-			segundoApellido
-			sexo
-			telefono
+			nombre
+			primerTelefono
+			segundoTelefono
 			correo
 			colonia
 			calles
-			estatus
 			referencia
 			numeroExterior
+			numeroInterior
+			codigoPostal
+			usuarioRegistroID
+			activo
+			estatus
 		}
 	}
 `;

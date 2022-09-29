@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Box } from '@mui/system';
-// import { gql, useQuery } from '@apollo/client';
 import CssBaseline from '@mui/material/CssBaseline';
 import { styled } from '@mui/material/styles';
 import { Appbar } from './appbar';
 import { Drawer } from './drawer';
+import paleta from '../../configuracion/paleta';
+import { Box } from '@mui/material';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
@@ -13,19 +13,19 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 	justifyContent: 'flex-end',
 }));
 
-// export const USER_QUERY = gql`
-// 	query getUsuarioAuth {
-// 		getUsuarioAuth {
-// 			usuario
-// 			nombre
-// 			correo
-// 		}
-// 	}
-// `;
+const Main = styled(Box)(({ theme }) => ({
+	paddingRight: theme.spacing(3),
+	display: 'flex',
+	flex: 1,
+	flexDirection: 'column',
+	backgroundColor: paleta.sidebar.backgroundColor,
+	[theme.breakpoints.only('xs')]: {
+		paddingRight: theme.spacing(2),
+	},
+}));
 
 export const DashBoard = ({ children }) => {
 	const [open, setOpen] = useState(false);
-	// const { data, loading, error } = useQuery(USER_QUERY);
 	const handleDrawerOpen = () => {
 		setOpen(true);
 	};
@@ -39,10 +39,10 @@ export const DashBoard = ({ children }) => {
 			<CssBaseline />
 			<Appbar open={open} handleDrawerOpen={handleDrawerOpen} />
 			<Drawer open={open} handleDrawerClose={handleDrawerClose} />
-			<Box component='main' sx={{ flexGrow: 1, paddingRight: 3, height: '100vh' }}>
+			<Main>
 				<DrawerHeader />
 				{children}
-			</Box>
+			</Main>
 		</Box>
 	);
 };

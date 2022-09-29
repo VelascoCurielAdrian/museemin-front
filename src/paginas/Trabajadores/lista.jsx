@@ -1,56 +1,50 @@
-import { useQuery } from "@apollo/client";
-import { useNavigate } from "react-router-dom";
-import GQL, { dataCache } from "./helper";
-import { Header } from "../../componentes/Header/cointainer";
-import { Table } from "../../componentes/Table/container";
-import { EstadoHerramienta } from "../../componentes/EstadoHerramienta/component";
-import { Estatus } from "../../componentes/Estatus/component";
+import { useNavigate } from 'react-router-dom';
+import GQL, { dataCache } from './helper';
+import { Header } from '../../componentes/Header/cointainer';
+import { Table } from '../../componentes/Table/container';
+import { Estatus } from '../../componentes/Estatus/component';
+import { Generos } from '../../componentes/Genero/component';
 
 const columns = [
-	{ field: "id", headerName: "ID", width: 80 },
+	{ field: 'id', headerName: 'ID', width: 30 },
 	{
-		field: "nombre",
-		headerName: "Nombre",
-		width: 150,
+		field: 'nombres',
+		headerName: 'NOMBRE',
+		width: 180,
+		editable: false,
+		valueGetter: ({ row }) =>
+			`${row.nombres} ${row.primerApellido} ${row.segundoApellido}`,
+	},
+	{
+		field: 'telefono',
+		headerName: 'TÉLEFONO',
+		width: 100,
 		editable: false,
 	},
 	{
-		field: "descripcion",
-		headerName: "DESCRIPCIÓN",
-		width: 150,
+		field: 'correo',
+		headerName: 'CORREO',
+		width: 180,
 		editable: false,
 	},
 	{
-		field: "precio",
-		headerName: "PRECIO",
-		width: 80,
+		field: 'colonia',
+		headerName: 'DOMICILIO',
+		width: 300,
 		editable: false,
+		valueGetter: ({ row }) =>
+			`${row.colonia} ${row.calles} ${row.referencia} ${row.numeroExterior}`,
 	},
 	{
-		field: "marca",
-		headerName: "MARCA",
-		width: 80,
-		editable: false,
-	},
-	{
-		field: "clasificacion",
-		headerName: "CLASIFICACIÓN",
-		width: 150,
-		editable: false,
-		valueGetter: ({ value }) => value.descripcion,
-	},
-	{
-		field: "estado",
-		headerName: "CONDICIÓN",
+		field: 'sexo',
+		headerName: 'Genero',
 		width: 120,
 		editable: false,
-		renderCell: ({ value, index }) => (
-			<EstadoHerramienta key={index} value={value} />
-		),
+		renderCell: ({ value, index }) => <Generos key={index} value={value} />,
 	},
 	{
-		field: "estatus",
-		headerName: "ACTIVO",
+		field: 'estatus',
+		headerName: 'ACTIVO',
 		width: 120,
 		editable: false,
 		renderCell: ({ value, index }) => <Estatus key={index} value={value} />,
@@ -60,19 +54,19 @@ const columns = [
 export const Trabajadores = () => {
 	const navigate = useNavigate();
 	const handleNew = () => {
-		navigate("/trabajador/formulario");
+		navigate('/trabajador/formulario');
 	};
 	return (
 		<>
 			<Header
-				title='Herramientas'
-				subtitle='Moduló de Herramientas'
+				title="Trabajadores"
+				subtitle="Moduló de Trabajadores"
 				listado
 				handleNew={handleNew}
 			/>
 			<Table
 				uri={GQL.GET}
-				urlDelete={{ gql: GQL.DELETE, params: "deleteHerramientaId" }}
+				urlDelete={{ gql: GQL.DELETE, params: 'deleteId' }}
 				dataCache={dataCache}
 				columns={columns}
 				showActions

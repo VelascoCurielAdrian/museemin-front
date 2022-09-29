@@ -7,39 +7,41 @@ import TextField from '../../componentes/TextField';
 import { Header } from '../../componentes/Header/cointainer';
 import { SelecField } from '../../componentes/Select/component';
 
-import GQL, { estatus, Generos, validacion, dataCache } from './helper';
+import GQL, { estatus, validacion, dataCache } from './helper';
 import { useFormularion } from '../../hooks/useForm';
 
 const dataInicial = {
-	nombres: '',
-	primerApellido: '',
-	segundoApellido: '',
-	telefono: '',
+	nombre: '',
+	primerTelefono: '',
+	segundoTelefono: '',
 	correo: '',
 	colonia: '',
-	referencia: '',
 	calles: '',
+	referencia: '',
 	numeroExterior: '',
+	numeroInterior: '',
+	codigoPostal: '',
+	usuarioRegistroID: '',
 	estatus: '',
-	sexo: '',
 };
 
-export const Trabajador = () => {
+export const Cliente = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [dataForm, setDataForm] = useState({ ...dataInicial });
-	const [getTrabajador, { loading }] = useLazyQuery(GQL.GET_BYID, {
+
+	const [getCliente, { loading }] = useLazyQuery(GQL.GET_BYID, {
 		onCompleted: (response) => {
-			setDataForm({ ...response.getTrabajador });
+			setDataForm({ ...response.getCliente });
 		},
 	});
 
 	useMemo(() => {
-		id && getTrabajador({ variables: { trabajadorId: id } });
+		id && getCliente({ variables: { getClienteId: id } });
 	}, [id]);
 
 	const handleBack = () => {
-		navigate('/trabajadores', {
+		navigate('/clientes', {
 			replace: true,
 		});
 	};
@@ -57,8 +59,8 @@ export const Trabajador = () => {
 	return (
 		<>
 			<Header
-				title="Trabajadores"
-				subtitle="Moduló de trabajadores"
+				title="Clientes"
+				subtitle="Moduló de clientes"
 				handleCancelar={handleBack}
 				handleCreate={submitForm}
 				loading={isLoading}
@@ -78,17 +80,18 @@ export const Trabajador = () => {
 						validationSchema={validacion}
 						onSubmit={(values) => {
 							const input = {
-								nombres: values.nombres,
-								primerApellido: values.primerApellido,
-								segundoApellido: values.segundoApellido,
-								telefono: String(values.telefono),
+								nombre: values.nombre,
+								primerTelefono: String(values.primerTelefono),
+								segundoTelefono: String(values.segundoTelefono),
 								correo: values.correo,
 								colonia: values.colonia,
-								referencia: values.referencia,
 								calles: values.calles,
+								referencia: values.referencia,
+								numeroExterior: values.numeroExterior,
+								numeroInterior: values.numeroInterior,
+								codigoPostal: values.codigoPostal,
 								usuarioRegistroID: 1,
-								sexo: values.sexo,
-								numeroExterior: String(values.numeroExterior),
+								estatus: values.estatus,
 							};
 							ActionForm({
 								variables: { updateId: id, input },
@@ -103,74 +106,49 @@ export const Trabajador = () => {
 											<TextField
 												fullWidth
 												size="small"
-												label="Nombres"
-												name="nombres"
+												label="Nombre"
+												name="nombre"
 												autoFocus
-												value={values.nombres}
+												value={values.nombre}
 												onChange={handleChange}
-												helperText={touched.nombres && errors.nombres}
-												error={touched.nombres && Boolean(errors.nombres)}
+												helperText={touched.nombre && errors.nombre}
+												error={touched.nombre && Boolean(errors.nombre)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
 											<TextField
 												fullWidth
 												size="small"
-												label="Apellido Paterno"
-												name="primerApellido"
-												value={values.primerApellido}
-												onChange={handleChange}
-												helperText={
-													touched.primerApellido && errors.primerApellido
-												}
-												error={
-													touched.primerApellido &&
-													Boolean(errors.primerApellido)
-												}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<TextField
-												fullWidth
-												size="small"
-												label="Apellido Materno"
-												name="segundoApellido"
-												value={values.segundoApellido}
-												onChange={handleChange}
-												helperText={
-													touched.segundoApellido && errors.segundoApellido
-												}
-												error={
-													touched.segundoApellido &&
-													Boolean(errors.segundoApellido)
-												}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<SelecField
-												fullWidth
-												size="small"
-												label="Sexo"
-												labelProp="nombre"
-												name="sexo"
-												options={Generos}
-												onChange={handleChange}
-												value={values.sexo}
-												helperText={touched.sexo && errors.sexo}
-												error={touched.sexo && Boolean(errors.sexo)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<TextField
-												fullWidth
 												type="number"
-												size="small"
-												label="Telefono"
-												name="telefono"
-												value={values.telefono}
+												label="Teléfono"
+												name="primerTelefono"
+												value={values.primerTelefono}
 												onChange={handleChange}
-												helperText={touched.telefono && errors.telefono}
-												error={touched.telefono && Boolean(errors.telefono)}
+												helperText={
+													touched.primerTelefono && errors.primerTelefono
+												}
+												error={
+													touched.primerTelefono &&
+													Boolean(errors.primerTelefono)
+												}
+											/>
+										</div>
+										<div className="col-span-6 sm:col-span-2">
+											<TextField
+												fullWidth
+												size="small"
+												type="number"
+												label="Segundo Teléfono"
+												name="segundoTelefono"
+												value={values.segundoTelefono}
+												onChange={handleChange}
+												helperText={
+													touched.segundoTelefono && errors.segundoTelefono
+												}
+												error={
+													touched.segundoTelefono &&
+													Boolean(errors.segundoTelefono)
+												}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -214,7 +192,7 @@ export const Trabajador = () => {
 												fullWidth
 												type="number"
 												size="small"
-												label="Numero Casa"
+												label="Numero Exterior"
 												name="numeroExterior"
 												value={values.numeroExterior}
 												onChange={handleChange}
@@ -224,6 +202,39 @@ export const Trabajador = () => {
 												error={
 													touched.numeroExterior &&
 													Boolean(errors.numeroExterior)
+												}
+											/>
+										</div>
+										<div className="col-span-6 sm:col-span-2">
+											<TextField
+												fullWidth
+												type="number"
+												size="small"
+												label="Numero Interior"
+												name="numeroInterior"
+												value={values.numeroInterior}
+												onChange={handleChange}
+												helperText={
+													touched.numeroInterior && errors.numeroInterior
+												}
+												error={
+													touched.numeroInterior &&
+													Boolean(errors.numeroInterior)
+												}
+											/>
+										</div>
+										<div className="col-span-6 sm:col-span-2">
+											<TextField
+												fullWidth
+												type="number"
+												size="small"
+												label="Codigo Postal"
+												name="codigoPostal"
+												value={values.codigoPostal}
+												onChange={handleChange}
+												helperText={touched.codigoPostal && errors.codigoPostal}
+												error={
+													touched.codigoPostal && Boolean(errors.codigoPostal)
 												}
 											/>
 										</div>

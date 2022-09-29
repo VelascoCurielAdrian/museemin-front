@@ -2,6 +2,7 @@ import { gql } from "@apollo/client";
 import * as yup from "yup";
 
 export const dataCache = "getAllHerramientas";
+
 export const validacion = yup.object({
 	clasificacionID: yup.string().required("La clasificación es requerida"),
 	nombre: yup.string().required("El nombre es requerido"),

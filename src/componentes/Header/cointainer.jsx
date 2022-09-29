@@ -10,7 +10,6 @@ import { GiCancel } from 'react-icons/gi';
 import { FiSave } from 'react-icons/fi';
 import paleta from '../../configuracion/paleta';
 
-
 const Search = styled('div')(({ theme }) => ({
 	position: 'relative',
 	borderRadius: theme.shape.borderRadius,
@@ -18,7 +17,6 @@ const Search = styled('div')(({ theme }) => ({
 	'&:hover': {
 		backgroundColor: alpha(theme.palette.common.white, 0.25),
 	},
-	marginLeft: 0,
 	margin: 6,
 	width: '100%',
 	[theme.breakpoints.up('sm')]: {
@@ -65,10 +63,10 @@ const Container = styled(Box)(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
 	flexDirection: 'row',
+	marginBottom: 10,
 	[theme.breakpoints.only('xs')]: {
-		marginBottom: 50,
+		marginBottom: 60,
 		flexDirection: 'column',
-		alignItems: 'flex-start',
 		maxHeight: 100,
 	},
 }));
@@ -87,16 +85,15 @@ export const Header = ({
 	handleCreate,
 	handleCancelar,
 }) => {
-
 	return (
 		<Actions>
 			<Container flex={1}>
 				<TitleContainer>
-					<Typography variant='subtitle' noWrap>
+					<Typography variant="subtitle" noWrap>
 						{title}
 					</Typography>
 					<Typography
-						variant='subtitle2'
+						variant="subtitle2"
 						sx={{
 							color: paleta.bar.elements,
 							fontSize: 12,
@@ -113,17 +110,17 @@ export const Header = ({
 								<FaSearch />
 							</SearchIconWrapper>
 							<StyledInputBase
-								size='large'
+								size="large"
 								fullWidth
-								placeholder='Buscar'
+								placeholder="Buscar"
 								inputProps={{ 'aria-label': 'search' }}
 							/>
 						</Search>
 						<Search>
 							<Button
-								size='medium'
+								size="medium"
 								fullWidth
-								variant='contained'
+								variant="contained"
 								onClick={handleNew}
 								startIcon={<BsPlusLg size={16} />}
 							>
@@ -137,9 +134,9 @@ export const Header = ({
 					<>
 						<Search>
 							<Button
-								size='medium'
+								size="medium"
 								fullWidth
-								variant='contained'
+								variant="contained"
 								onClick={handleCancelar}
 								startIcon={<GiCancel size={16} />}
 							>
@@ -148,9 +145,9 @@ export const Header = ({
 						</Search>
 						<Search>
 							<Button
-								size='medium'
+								size="medium"
 								fullWidth
-								variant='contained'
+								variant="contained"
 								onClick={handleCreate}
 								startIcon={<FiSave size={16} />}
 							>

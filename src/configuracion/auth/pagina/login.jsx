@@ -51,9 +51,9 @@ export const Login = () => {
 		},
 	});
 	return (
-		<div className='h-full w-full flex items-center justify-center py-12 px-2 sm:px-6 lg:px-8'>
+		<div className='h-full w-full flex items-center justify-center py-20 px-6 sm:px-6 lg:px-8'>
 			<Box className='max-w-md w-full'>
-				<img src={logo} className='mx-auto h-24 w-auto' />
+				<img src={logo} className='mx-auto h-32 w-auto' />
 				<form onSubmit={formik.handleSubmit} className='mt-8 space-y-5'>
 					<TexField
 						fullWidth

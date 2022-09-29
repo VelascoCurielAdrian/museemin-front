@@ -29,8 +29,11 @@ const closedMixin = (theme) => ({
 	}),
 	overflowX: 'hidden',
 	width: `calc(${theme.spacing(7)} + 1px)`,
+	[theme.breakpoints.down('sm')]: {
+		width: 0,
+	},
 	[theme.breakpoints.up('sm')]: {
-		width: `calc(${theme.spacing(7.5)} + 2px)`,
+		width: `calc(${theme.spacing(6)} + 2px)`,
 	},
 });
 
@@ -63,12 +66,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export const Drawer = ({ open, handleDrawerClose }) => {
 	return (
-		<DrawerCustomized variant='permanent' open={open}>
+		<DrawerCustomized variant="permanent" open={open}>
 			<DrawerHeader>
 				<ListItem sx={{ width: 'auto' }}>
 					<ListItemText
-						primary='Adrian Velasco Curiel'
-						secondary='Administrador'
+						primary="Adrian Velasco Curiel"
+						secondary="Administrador"
 					/>
 				</ListItem>
 				<IconButton onClick={handleDrawerClose}>
@@ -76,7 +79,7 @@ export const Drawer = ({ open, handleDrawerClose }) => {
 				</IconButton>
 			</DrawerHeader>
 			<Divider />
-			<NavItems open={open} />
+			<NavItems open={open} handleClick={handleDrawerClose} />
 		</DrawerCustomized>
 	);
 };

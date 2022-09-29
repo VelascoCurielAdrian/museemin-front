@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Formik } from "formik";
 import { BsTools } from "react-icons/bs";
 import { useLazyQuery, useQuery } from "@apollo/client";
@@ -17,7 +17,6 @@ import GQL, {
 } from "./helper";
 import { Clasificacion } from "../Clasificacion/formulario";
 import { useFormularion } from "../../hooks/useForm";
-import { useMemo } from "react";
 
 const dataInicial = {
 	clasificacionID: "",
@@ -37,8 +36,7 @@ export const Herramienta = () => {
 
 	const [getHerramienta, { loading }] = useLazyQuery(GQL.GET_BYID, {
 		onCompleted: (response) => {
-			console.log(response);
-			setDataForm({ ...response.getHerramienta, estadoID: "" });
+			setDataForm({ ...response.getHerramienta });
 		},
 	});
 
