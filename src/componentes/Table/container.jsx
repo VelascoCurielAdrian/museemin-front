@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box } from '@mui/system';
 import {
 	DataGrid,
@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdOutlineDelete } from 'react-icons/md';
 import Pagination from '@mui/material/Pagination';
 import { GridActionsCellItem } from '@mui/x-data-grid';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery, useLazyQuery } from '@apollo/client';
 import PaginationItem from '@mui/material/PaginationItem';
 
 import { parseError } from '../../helpers';
@@ -74,12 +74,21 @@ export const Table = ({
 			});
 		},
 	});
-	const { data, loading, error } = useQuery(uri, {
-		variables: {
-			offset: null,
-			limit: null,
-		},
+
+	const [getRegistros, { data, loading, error }] = useLazyQuery(uri, {
+		fetchPolicy: 'cache-and-network',
+		nextFetchPolicy: 'cache-first',
 	});
+
+	useEffect(() => {
+		getRegistros({
+			variables: {
+				offset: null,
+				limit: null,
+				...filtros,
+			},
+		});
+	}, [filtros]);
 
 	const handleClose = () => {
 		setAnchorEl(null);

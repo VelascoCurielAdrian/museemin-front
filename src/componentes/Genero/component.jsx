@@ -8,7 +8,6 @@ const Container = styled(Chip)(() => ({
 }));
 
 export const Generos = ({ value, key }) => {
-	console.log(value);
 	return (
 		<Container
 			key={key}
