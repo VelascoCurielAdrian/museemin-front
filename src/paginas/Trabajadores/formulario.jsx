@@ -1,14 +1,11 @@
-import { useState, useMemo } from 'react';
 import { Formik } from 'formik';
-import { useLazyQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import TextField from '../../componentes/TextField';
+import { useFormularion } from '../../hooks/useForm';
 import { Header } from '../../componentes/Header/cointainer';
 import { SelecField } from '../../componentes/Select/component';
-
 import GQL, { estatus, Generos, validacion, dataCache } from './helper';
-import { useFormularion } from '../../hooks/useForm';
 
 const dataInicial = {
 	nombres: '',
@@ -27,31 +24,24 @@ const dataInicial = {
 export const Trabajador = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const [dataForm, setDataForm] = useState({ ...dataInicial });
-	const [getTrabajador, { loading }] = useLazyQuery(GQL.GET_BYID, {
-		onCompleted: (response) => {
-			setDataForm({ ...response.getTrabajador });
-		},
-	});
-
-	useMemo(() => {
-		id && getTrabajador({ variables: { trabajadorId: id } });
-	}, [id]);
-
 	const handleBack = () => {
 		navigate('/trabajadores', {
 			replace: true,
 		});
 	};
 
-	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
-		{ action: id ? 'update' : 'create', filters: id },
-		dataCache,
-		GQL.CREATE,
-		GQL.UPDATE,
-		GQL.GET,
-		handleBack,
-	);
+	const { ActionForm, submitForm, isLoading, formikRef, dataForm, loading } =
+		useFormularion(
+			{ action: id ? 'update' : 'create' },
+			{ filter: 'trabajadorId', id },
+			dataInicial,
+			dataCache,
+			GQL.CREATE,
+			GQL.UPDATE,
+			GQL.GET,
+			GQL.GET_BYID,
+			handleBack,
+		);
 
 	if (loading) return <div>Cargando...</div>;
 	return (
@@ -87,6 +77,7 @@ export const Trabajador = () => {
 								referencia: values.referencia,
 								calles: values.calles,
 								usuarioRegistroID: 1,
+								estatus: values.estatus,
 								sexo: values.sexo,
 								numeroExterior: String(values.numeroExterior),
 							};

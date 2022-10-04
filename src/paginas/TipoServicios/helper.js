@@ -1,15 +1,33 @@
 import { gql } from '@apollo/client';
 import * as yup from 'yup';
 
-export const dataCache = 'getAllCountClasificacion';
+export const dataCache = 'getAllTipoServicios';
 
 export const validacion = yup.object({
 	nombre: yup.string('Ecriba el nombre').required('El nombre es requerido'),
 });
 
 const CREATE = gql`
-	mutation CrearClasificacion($input: clasificacionDatos!) {
-		createClasificacion(input: $input) {
+	mutation CreateTipoServicio($input: TipoServicioDatos!) {
+		createTipoServicio(input: $input) {
+			mensaje
+			respuesta {
+				id
+				descripcion
+				usuarioRegistroID
+				activo
+				estatus
+			}
+		}
+	}
+`;
+
+const UPDATE = gql`
+	mutation UpdateTipoServicio(
+		$updateTipoServicioId: ID!
+		$input: TipoServicioDatos!
+	) {
+		updateTipoServicio(id: $updateTipoServicioId, input: $input) {
 			mensaje
 			respuesta {
 				id
@@ -23,8 +41,8 @@ const CREATE = gql`
 `;
 
 const DELETE = gql`
-	mutation eliminarClasificacion($deleteClasificacionId: ID) {
-		deleteClasificacion(id: $deleteClasificacionId) {
+	mutation DeleteTipoServicio($deleteTipoServicioId: ID) {
+		deleteTipoServicio(id: $deleteTipoServicioId) {
 			mensaje
 			respuesta {
 				id
@@ -38,14 +56,8 @@ const DELETE = gql`
 `;
 
 const GET = gql`
-	query obtenerClasificaciones(
-		$offset: Int
-		$limit: Int
-	) {
-		getAllCountClasificacion(
-			offset: $offset
-			limit: $limit
-		) {
+	query Query($offset: Int, $limit: Int) {
+		getAllTipoServicios(offset: $offset, limit: $limit) {
 			count
 			rows {
 				id
@@ -60,6 +72,7 @@ const GET = gql`
 
 const exportedObject = {
 	CREATE,
+	UPDATE,
 	DELETE,
 	GET,
 };

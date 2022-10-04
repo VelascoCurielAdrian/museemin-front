@@ -7,7 +7,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from '../../componentes/Button';
 import TextField from '../../componentes/TextField';
 import { Header } from '../../componentes/Header/cointainer';
+import { Estatus } from '../../componentes/Estatus/component';
 import { SelecField } from '../../componentes/Select/component';
+import { EstadoHerramienta } from '../../componentes/EstadoHerramienta/component';
 
 import GQL, { estatus, validacion, dataCache } from './helper';
 import { useFormularion } from '../../hooks/useForm';
@@ -28,6 +30,22 @@ const columns = [
 		editable: false,
 		valueGetter: ({ value }) => value.descripcion,
 	},
+	{
+		field: 'estado',
+		headerName: 'CONDICIÓN',
+		width: 120,
+		editable: false,
+		renderCell: ({ value, index }) => (
+			<EstadoHerramienta key={index} value={value} />
+		),
+	},
+	{
+		field: 'estatus',
+		headerName: 'ESTATUS',
+		width: 120,
+		editable: false,
+		renderCell: ({ value, index }) => <Estatus key={index} value={value} />,
+	},
 ];
 
 const dataInicial = {
@@ -43,17 +61,6 @@ const dataInicial = {
 export const PaqueteHerramienta = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const [dataForm, setDataForm] = useState({ ...dataInicial });
-	const [getHerramienta, { loading }] = useLazyQuery(GQL.GET_BYID, {
-		onCompleted: (response) => {
-			setDataForm({ ...response.getHerramienta });
-		},
-	});
-
-	useMemo(() => {
-		id && getHerramienta({ variables: { getHerramientaId: id } });
-	}, [id]);
-
 	const { data } = useQuery(GQL.GET, {
 		variables: {
 			offset: null,
@@ -67,14 +74,18 @@ export const PaqueteHerramienta = () => {
 		});
 	};
 
-	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
-		{ action: id ? 'update' : 'create', filters: id },
-		dataCache,
-		GQL.CREATE,
-		GQL.UPDATE,
-		GQL.GET,
-		handleBack,
-	);
+	const { ActionForm, submitForm, isLoading, formikRef, dataForm, loading } =
+		useFormularion(
+			{ action: id ? 'update' : 'create' },
+			{ filter: 'getHerramientaId', id },
+			dataInicial,
+			dataCache,
+			GQL.CREATE,
+			GQL.UPDATE,
+			GQL.GET,
+			GQL.GET_BYID,
+			handleBack,
+		);
 
 	if (loading) return <div>Cargando...</div>;
 	return (
@@ -111,8 +122,8 @@ export const PaqueteHerramienta = () => {
 						{({ handleChange, values, touched, errors }) => (
 							<div className="overflow-hidden shadow sm:rounded-md">
 								<div className="bg-white px-5 py-5 sm:p-6">
-									<div className="grid grid-cols-6 gap-2">
-										<div className="col-span-6 sm:col-span-3 space-y-2">
+									<div className="grid grid-cols-8 gap-2">
+										<div className="col-span-8 sm:col-span-3 space-y-3">
 											<TextField
 												fullWidth
 												size="small"
@@ -145,8 +156,12 @@ export const PaqueteHerramienta = () => {
 												options={data?.getAllHerramientas?.rows || []}
 												onChange={handleChange}
 												value={values.herramientaID}
-												helperText={touched.herramientaID && errors.herramientaID}
-												error={touched.herramientaID && Boolean(errors.herramientaID)}
+												helperText={
+													touched.herramientaID && errors.herramientaID
+												}
+												error={
+													touched.herramientaID && Boolean(errors.herramientaID)
+												}
 											/>
 											<TextField
 												fullWidth
@@ -168,7 +183,7 @@ export const PaqueteHerramienta = () => {
 												icono={<BsTools size={16} />}
 											/>
 										</div>
-										<div className="col-span-6 sm:col-span-3">
+										<div className="col-span-8 sm:col-span-5">
 											<label
 												htmlFor="label-form"
 												className="block mb-2 text-sm font-medium text-gray-700"
@@ -183,7 +198,6 @@ export const PaqueteHerramienta = () => {
 												}}
 												dataCache={dataCache}
 												columns={columns}
-												showActions
 											/>
 										</div>
 									</div>

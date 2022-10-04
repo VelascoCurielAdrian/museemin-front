@@ -12,7 +12,6 @@ export const snackbar = makeVar({
 });
 
 export const actionForm = makeVar({
-  isOpen: false,
   action: '',
   defaultData: {},
   callback: null,

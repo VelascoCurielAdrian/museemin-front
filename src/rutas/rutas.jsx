@@ -1,8 +1,10 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { DashBoard } from "../componentes/DashBoard";
 import { Cliente, Clientes } from "../paginas/Clientes";
+import { Servicio, Servicios } from "../paginas/Servicios";
 import { Trabajador, Trabajadores } from "../paginas/Trabajadores";
 import { Herramienta, Herramientas } from "../paginas/Herramientas";
+import { Almacen, TablaAlmacen } from "../paginas/Almacen";
 import { PaqueteHerramienta, PaqueteHerramientas } from "../paginas/PaqueteHerramientas";
 
 export const DaashBoardRoutes = () => {
@@ -21,6 +23,12 @@ export const DaashBoardRoutes = () => {
 					<Route path='herramientas' element={<Herramientas />} />
 					<Route path='herramienta/formulario' element={<Herramienta />} />
 					<Route path='herramienta/formulario/:id' element={<Herramienta />} />
+
+					<Route path='servicios' element={<Servicios />} />
+					<Route path='servicio/formulario' element={<Servicio />} />
+					<Route path='servicio/formulario/:id' element={<Servicio />} />
+
+					<Route path='almacen' element={<Almacen />} />
 
 					<Route path='paqueteHerramientas' element={<PaqueteHerramientas />} />
 					<Route path='paqueteHerramienta/formulario' element={<PaqueteHerramienta />} />

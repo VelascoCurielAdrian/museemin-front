@@ -50,6 +50,7 @@ export const Clientes = () => {
 			<Table
 				title="Clientes"
 				subtitle="Moduló de clientes"
+				showHeader
 				handleNew={handleNew}
 				uri={GQL.GET}
 				urlDelete={{ gql: GQL.DELETE, params: 'deleteClienteId' }}

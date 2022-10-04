@@ -118,8 +118,8 @@ const DELETE = gql`
 `;
 
 const GET = gql`
-	query GetAllCliente($offset: Int, $limit: Int) {
-		getAllCliente(offset: $offset, limit: $limit) {
+	query GetAllCliente($offset: Int, $limit: Int, $txtBusqueda: String) {
+		getAllCliente(offset: $offset, limit: $limit, txtBusqueda: $txtBusqueda) {
 			count
 			rows {
 				id

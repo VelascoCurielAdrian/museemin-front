@@ -36,7 +36,7 @@ const columns = [
 	},
 	{
 		field: 'sexo',
-		headerName: 'Genero',
+		headerName: 'GÉNERO',
 		width: 120,
 		editable: false,
 		renderCell: ({ value, index }) => <Generos key={index} value={value} />,
@@ -60,6 +60,7 @@ export const Trabajadores = () => {
 			<Table
 				title="Trabajadores"
 				subtitle="Moduló de Trabajadores"
+				showHeader
 				handleNew={handleNew}
 				uri={GQL.GET}
 				urlDelete={{ gql: GQL.DELETE, params: 'deleteId' }}

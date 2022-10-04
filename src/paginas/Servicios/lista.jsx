@@ -7,12 +7,6 @@ import { EstadoHerramienta } from '../../componentes/EstadoHerramienta/component
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 80 },
 	{
-		field: 'nombre',
-		headerName: 'Nombre',
-		width: 150,
-		editable: false,
-	},
-	{
 		field: 'descripcion',
 		headerName: 'DESCRIPCIÓN',
 		width: 150,
@@ -20,31 +14,21 @@ const columns = [
 	},
 	{
 		field: 'precio',
-		headerName: 'PRECIO',
-		width: 80,
-		editable: false,
-	},
-	{
-		field: 'marca',
-		headerName: 'MARCA',
-		width: 80,
-		editable: false,
-	},
-	{
-		field: 'clasificacion',
-		headerName: 'CLASIFICACIÓN',
+		headerName: 'CLIENTE',
 		width: 150,
 		editable: false,
-		valueGetter: ({ value }) => value.descripcion,
 	},
 	{
-		field: 'estado',
-		headerName: 'CONDICIÓN',
-		width: 120,
+		field: 'preci',
+		headerName: 'TRABAJADORES',
+		width: 150,
 		editable: false,
-		renderCell: ({ value, index }) => (
-			<EstadoHerramienta key={index} value={value} />
-		),
+	},
+	{
+		field: '',
+		headerName: 'FECHA',
+		width: 80,
+		editable: false,
 	},
 	{
 		field: 'estatus',
@@ -55,16 +39,16 @@ const columns = [
 	},
 ];
 
-export const Herramientas = () => {
+export const Servicios = () => {
 	const navigate = useNavigate();
 	const handleNew = () => {
-		navigate('/herramienta/formulario');
+		navigate('/servicio/formulario');
 	};
 	return (
 		<>
 			<Table
-				title="Herramientas"
-				subtitle="Moduló de Herramientas"
+				title="Servicios"
+				subtitle="Moduló de servicios"
 				showHeader
 				handleNew={handleNew}
 				uri={GQL.GET}

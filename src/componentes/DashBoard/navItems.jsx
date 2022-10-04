@@ -56,7 +56,7 @@ export const NavItems = (props) => {
 			/>
 			<LinkButton
 				icon={<GrServices />}
-				url="/servicio"
+				url="/servicios"
 				label="Servicios"
 				handleClick={props.handleClick}
 			/>

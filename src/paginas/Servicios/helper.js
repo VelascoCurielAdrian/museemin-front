@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import * as yup from 'yup';
 
 export const dataCache = 'getAllHerramientas';
@@ -18,9 +18,9 @@ export const estatus = [
 ];
 
 export const estadoHerramienta = [
-	{ id: 1, nombre: 'Nuevo', color: 'success' },
-	{ id: 2, nombre: 'Usado', color: 'success' },
-	{ id: 3, nombre: 'Dañado', color: 'success' },
+	{ id: 1, nombre: 'Realizado', color: 'success' },
+	{ id: 2, nombre: 'En proceso', color: 'warning' },
+	{ id: 3, nombre: 'Pendiente', color: 'error' },
 ];
 
 const CREATE = gql`
@@ -138,17 +138,33 @@ const GET = gql`
 	}
 `;
 
-const GET_CLASIFICACION = gql`
-	query obtenerClasificaciones(
-		$offset: Int
-		$limit: Int
-		$txtBusqueda: String
-	) {
-		getAllCountClasificacion(
-			offset: $offset
-			limit: $limit
-			txtBusqueda: $txtBusqueda
-		) {
+const GET_CLIENTES = gql`
+	query GetAllCliente($offset: Int, $limit: Int, $txtBusqueda: String) {
+		getAllCliente(offset: $offset, limit: $limit, txtBusqueda: $txtBusqueda) {
+			count
+			rows {
+				id
+				nombre
+				primerTelefono
+				segundoTelefono
+				correo
+				colonia
+				calles
+				referencia
+				numeroExterior
+				numeroInterior
+				codigoPostal
+				usuarioRegistroID
+				activo
+				estatus
+			}
+		}
+	}
+`;
+
+const GET_TIPO_SERVICIO = gql`
+	query Query($offset: Int, $limit: Int) {
+		getAllTipoServicios(offset: $offset, limit: $limit) {
 			count
 			rows {
 				id
@@ -186,7 +202,8 @@ const GET_BYID = gql`
 `;
 
 const exportedObject = {
-	GET_CLASIFICACION,
+	GET_TIPO_SERVICIO,
+	GET_CLIENTES,
 	GET_BYID,
 	CREATE,
 	UPDATE,

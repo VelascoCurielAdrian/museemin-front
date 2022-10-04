@@ -1,28 +1,45 @@
-import { useMutation } from "@apollo/client";
-import { useRef } from "react";
-import { toast } from "react-toastify";
-import { parseError } from "../helpers";
+import { useRef, useState, useEffect } from 'react';
+import { useMutation, useLazyQuery } from '@apollo/client';
+import { toast } from 'react-toastify';
+import { parseError } from '../helpers';
 
 export const useFormularion = (
 	{ action },
+	{ filter, id },
+	dataInicial,
 	dataCache,
 	gqlPost,
 	gqlUpdate,
 	gqlGet,
+	gqlGetByID,
 	handleClose,
 ) => {
 	const formikRef = useRef(null);
-	const method = action === "create" ? gqlPost : gqlUpdate;
+
+	const [dataForm, setDataForm] = useState({ ...dataInicial });
+	const [getByID, { loading }] = useLazyQuery(gqlGetByID, {
+		fetchPolicy: 'no-cache',
+		onCompleted: (response) => {
+			setDataForm(Object.values(response)[0]);
+		},
+	});
+
+	useEffect(() => {
+		id && getByID({ variables: { [filter]: id } });
+	}, [id]);
+
+	const method = action === 'create' ? gqlPost : gqlUpdate;
 	const [ActionForm, { loading: isLoading }] = useMutation(method, {
 		update: (cache, { data: response }) => {
 			try {
-				if (action === "update") return false;
+				if (action === 'update') return false;
 				const dataResponse = response[Object.keys(response)[0]];
 				const oldQuery = cache.readQuery({
 					query: gqlGet,
 					variables: {
 						offset: null,
 						limit: null,
+						txtBusqueda: '',
 					},
 				});
 				cache.writeQuery({
@@ -30,6 +47,7 @@ export const useFormularion = (
 					variables: {
 						offset: null,
 						limit: null,
+						txtBusqueda: '',
 					},
 					data: {
 						[dataCache]: {
@@ -40,7 +58,7 @@ export const useFormularion = (
 					},
 				});
 			} catch (error) {
-				console.log(error.message);
+				return error;
 			}
 		},
 		onCompleted: (response) => {
@@ -53,7 +71,7 @@ export const useFormularion = (
 		onError: (e) => {
 			const parseErrors = parseError(e);
 			parseErrors.forEach(({ message, name }) => {
-				if (name === "BAD_USER_INPUT") {
+				if (name === 'BAD_USER_INPUT') {
 					toast.error(`${Object.values(message)}`);
 				}
 			});
@@ -66,8 +84,10 @@ export const useFormularion = (
 
 	return {
 		formikRef,
+		dataForm,
 		ActionForm,
 		submitForm,
+		loading,
 		isLoading,
 	};
 };

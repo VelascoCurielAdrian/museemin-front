@@ -1,6 +1,4 @@
-import { useState, useMemo } from 'react';
 import { Formik } from 'formik';
-import { useLazyQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import TextField from '../../componentes/TextField';
@@ -28,17 +26,6 @@ const dataInicial = {
 export const Cliente = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const [dataForm, setDataForm] = useState({ ...dataInicial });
-
-	const [getCliente, { loading }] = useLazyQuery(GQL.GET_BYID, {
-		onCompleted: (response) => {
-			setDataForm({ ...response.getCliente });
-		},
-	});
-
-	useMemo(() => {
-		id && getCliente({ variables: { getClienteId: id } });
-	}, [id]);
 
 	const handleBack = () => {
 		navigate('/clientes', {
@@ -46,12 +33,15 @@ export const Cliente = () => {
 		});
 	};
 
-	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
-		{ action: id ? 'update' : 'create', filters: id },
+	const { ActionForm, submitForm, isLoading, formikRef, dataForm, loading } = useFormularion(
+		{ action: id ? 'update' : 'create'},
+		{ filter: 'getClienteId', id },
+		dataInicial,
 		dataCache,
 		GQL.CREATE,
 		GQL.UPDATE,
 		GQL.GET,
+		GQL.GET_BYID,
 		handleBack,
 	);
 
@@ -124,13 +114,8 @@ export const Cliente = () => {
 												name="primerTelefono"
 												value={values.primerTelefono}
 												onChange={handleChange}
-												helperText={
-													touched.primerTelefono && errors.primerTelefono
-												}
-												error={
-													touched.primerTelefono &&
-													Boolean(errors.primerTelefono)
-												}
+												helperText={touched.primerTelefono && errors.primerTelefono}
+												error={touched.primerTelefono && Boolean(errors.primerTelefono)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -142,13 +127,8 @@ export const Cliente = () => {
 												name="segundoTelefono"
 												value={values.segundoTelefono}
 												onChange={handleChange}
-												helperText={
-													touched.segundoTelefono && errors.segundoTelefono
-												}
-												error={
-													touched.segundoTelefono &&
-													Boolean(errors.segundoTelefono)
-												}
+												helperText={touched.segundoTelefono && errors.segundoTelefono}
+												error={touched.segundoTelefono && Boolean(errors.segundoTelefono)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -196,13 +176,8 @@ export const Cliente = () => {
 												name="numeroExterior"
 												value={values.numeroExterior}
 												onChange={handleChange}
-												helperText={
-													touched.numeroExterior && errors.numeroExterior
-												}
-												error={
-													touched.numeroExterior &&
-													Boolean(errors.numeroExterior)
-												}
+												helperText={touched.numeroExterior && errors.numeroExterior}
+												error={touched.numeroExterior && Boolean(errors.numeroExterior)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -214,13 +189,8 @@ export const Cliente = () => {
 												name="numeroInterior"
 												value={values.numeroInterior}
 												onChange={handleChange}
-												helperText={
-													touched.numeroInterior && errors.numeroInterior
-												}
-												error={
-													touched.numeroInterior &&
-													Boolean(errors.numeroInterior)
-												}
+												helperText={touched.numeroInterior && errors.numeroInterior}
+												error={touched.numeroInterior && Boolean(errors.numeroInterior)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -233,9 +203,7 @@ export const Cliente = () => {
 												value={values.codigoPostal}
 												onChange={handleChange}
 												helperText={touched.codigoPostal && errors.codigoPostal}
-												error={
-													touched.codigoPostal && Boolean(errors.codigoPostal)
-												}
+												error={touched.codigoPostal && Boolean(errors.codigoPostal)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">

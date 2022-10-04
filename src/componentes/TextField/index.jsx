@@ -6,7 +6,9 @@ import { styled } from '@mui/material/styles';
 const CssTextField = styled(Input)(({ theme }) => ({
 	'& input': {
 		color: '#263238',
-		backgroundColor: '#fafafa',
+		backgroundColor: '#eceff1',
+		borderWidth: 1,
+		borderRadius: 10,
 	},
 	'& input:valid + fieldset': {
 		color: '#212121',

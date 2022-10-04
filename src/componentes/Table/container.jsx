@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import propTypes from 'prop-types';
 import { Box } from '@mui/system';
 import {
 	DataGrid,
@@ -43,6 +44,7 @@ export const Table = ({
 	title,
 	subtitle,
 	uri,
+	showHeader,
 	handleNew,
 	columns,
 	height,
@@ -75,20 +77,13 @@ export const Table = ({
 		},
 	});
 
-	const [getRegistros, { data, loading, error }] = useLazyQuery(uri, {
-		fetchPolicy: 'cache-and-network',
-		nextFetchPolicy: 'cache-first',
+	const { data, loading, error } = useQuery(uri, {
+		variables: {
+			offset: null,
+			limit: null,
+			...filtros,
+		},
 	});
-
-	useEffect(() => {
-		getRegistros({
-			variables: {
-				offset: null,
-				limit: null,
-				...filtros,
-			},
-		});
-	}, [filtros]);
 
 	const handleClose = () => {
 		setAnchorEl(null);
@@ -139,13 +134,15 @@ export const Table = ({
 
 	return (
 		<>
-			<Header
-				title={title}
-				buscar={buscar}
-				subtitle={subtitle}
-				listado
-				handleNew={handleNew}
-			/>
+			{showHeader && (
+				<Header
+					title={title}
+					buscar={buscar}
+					subtitle={subtitle}
+					listado
+					handleNew={handleNew}
+				/>
+			)}
 			<Box
 				sx={{
 					height: height ? height : 480,
@@ -218,4 +215,24 @@ export const Table = ({
 			/>
 		</>
 	);
+};
+
+Table.propTypes = {
+	title: propTypes.string,
+	subtitle: propTypes.string,
+	uri: propTypes.object,
+	showHeader: propTypes.bool,
+	handleNew: propTypes.func,
+	columns: propTypes.array,
+	height: propTypes.oneOfType([propTypes.string, propTypes.number]),
+	showActions: propTypes.bool,
+	urlDelete: propTypes.object,
+	dataCache: propTypes.string,
+};
+
+Table.defaultProps = {
+	title: '',
+	subtitle: '',
+	uri: {},
+	showHeader: false,
 };

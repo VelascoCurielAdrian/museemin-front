@@ -55,16 +55,16 @@ const columns = [
 	},
 ];
 
-export const Herramientas = () => {
+export const TablaAlmacen = () => {
 	const navigate = useNavigate();
 	const handleNew = () => {
-		navigate('/herramienta/formulario');
+		navigate('/servicio/formulario');
 	};
 	return (
 		<>
 			<Table
-				title="Herramientas"
-				subtitle="Moduló de Herramientas"
+				title="Almacén"
+				subtitle="Moduló de almacén"
 				showHeader
 				handleNew={handleNew}
 				uri={GQL.GET}

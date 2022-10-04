@@ -1,27 +1,26 @@
-import { gql } from "@apollo/client";
-import * as yup from "yup";
+import { gql } from '@apollo/client';
+import * as yup from 'yup';
 
-export const dataCache = "getAllHerramientas";
-
+export const dataCache = 'getAllHerramientas';
 export const validacion = yup.object({
-	clasificacionID: yup.string().required("La clasificación es requerida"),
-	nombre: yup.string().required("El nombre es requerido"),
-	marca: yup.string().required("La marca es requerida"),
-	estado: yup.string().required("El estado es requerido"),
-	precio: yup.string().required("El precio es requerido"),
-	estatus: yup.string().required("El estatus es requerido"),
-	descripcion: yup.string().required("La descripcion es requerida"),
+	clasificacionID: yup.string().required('La clasificación es requerida'),
+	nombre: yup.string().required('El nombre es requerido'),
+	marca: yup.string().required('La marca es requerida'),
+	estado: yup.string().required('El estado es requerido'),
+	precio: yup.string().required('El precio es requerido'),
+	estatus: yup.string().required('El estatus es requerido'),
+	descripcion: yup.string().required('La descripcion es requerida'),
 });
 
 export const estatus = [
-	{ id: true, nombre: "Activo" },
-	{ id: false, nombre: "Inactivo" },
+	{ id: true, nombre: 'Activo' },
+	{ id: false, nombre: 'Inactivo' },
 ];
 
 export const estadoHerramienta = [
-	{ id: 1, nombre: "Nuevo", color: "success" },
-	{ id: 2, nombre: "Usado", color: "success" },
-	{ id: 3, nombre: "Dañado", color: "success" },
+	{ id: 1, nombre: 'Nuevo', color: 'success' },
+	{ id: 2, nombre: 'Usado', color: 'success' },
+	{ id: 3, nombre: 'Dañado', color: 'success' },
 ];
 
 const CREATE = gql`
@@ -109,8 +108,12 @@ const DELETE = gql`
 `;
 
 const GET = gql`
-	query GetAllHerramientas($offset: Int, $limit: Int) {
-		getAllHerramientas(offset: $offset, limit: $limit) {
+	query GetAllHerramientas($offset: Int, $limit: Int, $txtBusqueda: String) {
+		getAllHerramientas(
+			offset: $offset
+			limit: $limit
+			txtBusqueda: $txtBusqueda
+		) {
 			count
 			rows {
 				id
@@ -136,8 +139,16 @@ const GET = gql`
 `;
 
 const GET_CLASIFICACION = gql`
-	query obtenerClasificaciones($offset: Int, $limit: Int) {
-		getAllCountClasificacion(offset: $offset, limit: $limit) {
+	query obtenerClasificaciones(
+		$offset: Int
+		$limit: Int
+		$txtBusqueda: String
+	) {
+		getAllCountClasificacion(
+			offset: $offset
+			limit: $limit
+			txtBusqueda: $txtBusqueda
+		) {
 			count
 			rows {
 				id

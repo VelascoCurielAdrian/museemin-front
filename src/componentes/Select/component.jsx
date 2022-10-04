@@ -14,7 +14,7 @@ import styles from "./styles";
 
 const CssSelect = styled(Select)(({ theme }) => ({
 	color: "#263238",
-	backgroundColor: "#fafafa",
+	backgroundColor: "#eceff1",
 	"& MuiNativeSelect-select": {
 		color: "#212121",
 		borderWidth: 1,

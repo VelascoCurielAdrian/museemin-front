@@ -110,8 +110,12 @@ const DELETE = gql`
 `;
 
 const GET = gql`
-	query ObtenerTrabajadores($offset: Int, $limit: Int) {
-		getAllTrabajador(offset: $offset, limit: $limit) {
+	query ObtenerTrabajadores($offset: Int, $limit: Int, $txtBusqueda: String) {
+		getAllTrabajador(
+			offset: $offset
+			limit: $limit
+			txtBusqueda: $txtBusqueda
+		) {
 			count
 			rows {
 				id

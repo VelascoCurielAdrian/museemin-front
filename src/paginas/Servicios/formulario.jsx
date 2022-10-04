@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Formik } from 'formik';
-import { BsTools } from 'react-icons/bs';
+import { IoIosArrowDown } from 'react-icons/io';
+import { MdOutlineMiscellaneousServices } from 'react-icons/md';
 import { useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -9,17 +10,13 @@ import TextField from '../../componentes/TextField';
 import { Header } from '../../componentes/Header/cointainer';
 import { SelecField } from '../../componentes/Select/component';
 
-import GQL, {
-	estadoHerramienta,
-	estatus,
-	validacion,
-	dataCache,
-} from './helper';
-import { Clasificacion } from '../Clasificacion/formulario';
+import GQL, { estadoHerramienta, validacion, dataCache } from './helper';
 import { useFormularion } from '../../hooks/useForm';
-
+import { TipoServicio } from '../TipoServicios/formulario';
 const dataInicial = {
-	clasificacionID: '',
+	tipoServicioID: '',
+	clienteID: '',
+	trabajadores: [],
 	estado: '',
 	estatus: '',
 	nombre: '',
@@ -28,12 +25,21 @@ const dataInicial = {
 	descripcion: '',
 };
 
-export const Herramienta = () => {
+export const Servicio = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
 
-	const { data } = useQuery(GQL.GET_CLASIFICACION, {
+	const { data: Clientes } = useQuery(GQL.GET_CLIENTES, {
+		variables: {
+			limit: null,
+			offset: null,
+		},
+	});
+
+	console.log(Clientes);
+
+	const { data } = useQuery(GQL.GET_TIPO_SERVICIO, {
 		variables: {
 			offset: null,
 			limit: null,
@@ -41,7 +47,7 @@ export const Herramienta = () => {
 	});
 
 	const handleBack = () => {
-		navigate('/herramientas', {
+		navigate('/servicios', {
 			replace: true,
 		});
 	};
@@ -71,8 +77,8 @@ export const Herramienta = () => {
 	return (
 		<>
 			<Header
-				title="Herramientas"
-				subtitle="Moduló de Herramientas"
+				title="Servicios"
+				subtitle="Moduló de servicios"
 				handleCancelar={handleBack}
 				handleCreate={submitForm}
 				loading={isLoading}
@@ -111,38 +117,30 @@ export const Herramienta = () => {
 								<div className="bg-white px-4 py-5 sm:p-6">
 									<div className="grid grid-cols-6 gap-6">
 										<div className="col-span-6 sm:col-span-2">
-											<TextField
-												fullWidth
-												size="small"
-												label="Nombre"
-												name="nombre"
-												autoFocus
-												value={values.nombre}
-												onChange={handleChange}
-												helperText={touched.nombre && errors.nombre}
-												error={touched.nombre && Boolean(errors.nombre)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
 											<SelecField
 												fullWidth
 												size="small"
-												label="Clasificaciones"
+												label="Tipo de servicio"
 												labelProp="descripcion"
-												name="clasificacionID"
+												name="tipoServicioID"
 												onChange={handleChange}
-												value={values.clasificacionID || ''}
-												options={data?.getAllCountClasificacion?.rows || []}
-												helperText={touched.clasificacionID && errors.clasificacionID}
-												error={touched.clasificacionID && Boolean(errors.clasificacionID)}
+												value={values.tipoServicioID || ''}
+												options={data?.getAllTipoServicios?.rows || []}
+												helperText={
+													touched.tipoServicioID && errors.tipoServicioID
+												}
+												error={
+													touched.tipoServicioID &&
+													Boolean(errors.tipoServicioID)
+												}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
 											<label
-												htmlFor="clasificacion"
+												htmlFor="tipoServicio"
 												className="block text-sm mb-1 font-medium text-gray-700"
 											>
-												Gestionar Clasificaciones
+												Gestionar tipos de servicios
 											</label>
 											<Button
 												size="medium"
@@ -150,32 +148,53 @@ export const Herramienta = () => {
 												fullWidth
 												className="bg-gray-700"
 												onClick={handleClickOpen}
-												icono={<BsTools size={16} />}
+												icono={<MdOutlineMiscellaneousServices size={16} />}
+											/>
+										</div>
+										<div className="col-span-6 sm:col-span-2">
+											<SelecField
+												fullWidth
+												size="small"
+												labelProp="nombre"
+												name="clienteID"
+												onChange={handleChange}
+												value={values.clienteID}
+												label="Cliente"
+												options={Clientes?.getAllCliente?.rows || []}
+												helperText={touched.clienteID && errors.clienteID}
+												error={touched.clienteID && Boolean(errors.clienteID)}
+											/>
+										</div>
+										<div className="col-span-6 sm:col-span-2">
+											<SelecField
+												fullWidth
+												size="small"
+												labelProp="nombre"
+												name="trabajadores"
+												onChange={handleChange}
+												value={[]}
+												label="Trabjadores"
+												multiple
+												options={estadoHerramienta}
+												IconComponent={(props) => (
+													<IoIosArrowDown {...props} size={20} />
+												)}
+												helperText={touched.trabajadores && errors.trabajadores}
+												error={
+													touched.trabajadores && Boolean(errors.trabajadores)
+												}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
 											<TextField
 												fullWidth
 												size="small"
-												label="Precio"
-												type="number"
-												name="precio"
-												value={values.precio}
+												label="Fecha del servicio"
+												name="nombre"
+												value={values.estado}
 												onChange={handleChange}
-												helperText={touched.precio && errors.precio}
-												error={touched.precio && Boolean(errors.precio)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<TextField
-												fullWidth
-												size="small"
-												label="Marca"
-												name="marca"
-												value={values.marca}
-												onChange={handleChange}
-												helperText={touched.marca && errors.marca}
-												error={touched.marca && Boolean(errors.marca)}
+												helperText={touched.estado && errors.estado}
+												error={touched.estado && Boolean(errors.estado)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -186,24 +205,10 @@ export const Herramienta = () => {
 												name="estado"
 												onChange={handleChange}
 												value={values.estado}
-												label="Estado de la herramienta"
+												label="Estatus"
 												options={estadoHerramienta}
 												helperText={touched.estado && errors.estado}
 												error={touched.estado && Boolean(errors.estado)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<SelecField
-												fullWidth
-												size="small"
-												label="Estatus"
-												labelProp="nombre"
-												name="estatus"
-												options={estatus}
-												onChange={handleChange}
-												value={values.estatus}
-												helperText={touched.estatus && errors.estatus}
-												error={touched.estatus && Boolean(errors.estatus)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-3">
@@ -215,7 +220,9 @@ export const Herramienta = () => {
 												value={values.descripcion}
 												onChange={handleChange}
 												helperText={touched.descripcion && errors.descripcion}
-												error={touched.descripcion && Boolean(errors.descripcion)}
+												error={
+													touched.descripcion && Boolean(errors.descripcion)
+												}
 											/>
 										</div>
 									</div>
@@ -225,7 +232,7 @@ export const Herramienta = () => {
 					</Formik>
 				</div>
 			</>
-			<Clasificacion open={open} handleClose={handleClose} />
+			<TipoServicio open={open} handleClose={handleClose} />
 		</>
 	);
 };

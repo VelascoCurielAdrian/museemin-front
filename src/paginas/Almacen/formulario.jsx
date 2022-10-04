@@ -28,7 +28,7 @@ const dataInicial = {
 	descripcion: '',
 };
 
-export const Herramienta = () => {
+export const Almacen = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
@@ -41,7 +41,7 @@ export const Herramienta = () => {
 	});
 
 	const handleBack = () => {
-		navigate('/herramientas', {
+		navigate('/servicios', {
 			replace: true,
 		});
 	};
@@ -71,8 +71,8 @@ export const Herramienta = () => {
 	return (
 		<>
 			<Header
-				title="Herramientas"
-				subtitle="Moduló de Herramientas"
+				title="Almacén"
+				subtitle="Moduló de almacén"
 				handleCancelar={handleBack}
 				handleCreate={submitForm}
 				loading={isLoading}
@@ -133,8 +133,13 @@ export const Herramienta = () => {
 												onChange={handleChange}
 												value={values.clasificacionID || ''}
 												options={data?.getAllCountClasificacion?.rows || []}
-												helperText={touched.clasificacionID && errors.clasificacionID}
-												error={touched.clasificacionID && Boolean(errors.clasificacionID)}
+												helperText={
+													touched.clasificacionID && errors.clasificacionID
+												}
+												error={
+													touched.clasificacionID &&
+													Boolean(errors.clasificacionID)
+												}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -215,7 +220,9 @@ export const Herramienta = () => {
 												value={values.descripcion}
 												onChange={handleChange}
 												helperText={touched.descripcion && errors.descripcion}
-												error={touched.descripcion && Boolean(errors.descripcion)}
+												error={
+													touched.descripcion && Boolean(errors.descripcion)
+												}
 											/>
 										</div>
 									</div>
