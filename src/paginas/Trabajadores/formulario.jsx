@@ -1,11 +1,12 @@
+import { Fragment } from 'react';
 import { Formik } from 'formik';
-import { useNavigate, useParams } from 'react-router-dom';
-
+import { useParams } from 'react-router-dom';
+import useFormActions from '../../hooks/useFormv2';
 import TextField from '../../componentes/TextField';
-import { useFormularion } from '../../hooks/useForm';
-import { Header } from '../../componentes/Header/cointainer';
+import { estatus, Generos } from '../../helpers/constants';
+import { Header } from '../../componentes/Header/component';
 import { SelecField } from '../../componentes/Select/component';
-import GQL, { estatus, Generos, validacion, dataCache } from './helper';
+import { TrabajadoresActions, Validate } from '../../actions/trabajadores';
 
 const dataInicial = {
 	nombres: '',
@@ -23,34 +24,23 @@ const dataInicial = {
 
 export const Trabajador = () => {
 	const { id } = useParams();
-	const navigate = useNavigate();
-	const handleBack = () => {
-		navigate('/trabajadores', {
-			replace: true,
-		});
-	};
-
-	const { ActionForm, submitForm, isLoading, formikRef, dataForm, loading } =
-		useFormularion(
-			{ action: id ? 'update' : 'create' },
-			{ filter: 'trabajadorId', id },
-			dataInicial,
-			dataCache,
-			GQL.CREATE,
-			GQL.UPDATE,
-			GQL.GET,
-			GQL.GET_BYID,
-			handleBack,
-		);
+	const { save, formRef, values, loading, isLoading, actionForm } = useFormActions({
+		method: id ? 'update' : 'create',
+		actions: TrabajadoresActions,
+		operation: 'getAllTrabajador',
+		formData: dataInicial,
+		name: 'trabajadores',
+		id,
+	});
 
 	if (loading) return <div>Cargando...</div>;
 	return (
-		<>
+		<Fragment>
 			<Header
+				name="trabajadores"
 				title="Trabajadores"
 				subtitle="Moduló de trabajadores"
-				handleCancelar={handleBack}
-				handleCreate={submitForm}
+				handleCreate={save}
 				loading={isLoading}
 				agregar
 			/>
@@ -60,29 +50,20 @@ export const Trabajador = () => {
 						<div className="border-t border-gray-200" />
 					</div>
 				</div>
-
+				
 				<div className="mt-5 md:col-span-2 md:mt-0">
 					<Formik
-						innerRef={formikRef}
-						initialValues={dataForm}
-						validationSchema={validacion}
+						innerRef={formRef}
+						initialValues={values}
+						validationSchema={Validate}
 						onSubmit={(values) => {
-							const input = {
-								nombres: values.nombres,
-								primerApellido: values.primerApellido,
-								segundoApellido: values.segundoApellido,
-								telefono: String(values.telefono),
-								correo: values.correo,
-								colonia: values.colonia,
-								referencia: values.referencia,
-								calles: values.calles,
-								usuarioRegistroID: 1,
-								estatus: values.estatus,
-								sexo: values.sexo,
-								numeroExterior: String(values.numeroExterior),
-							};
-							ActionForm({
-								variables: { updateId: id, input },
+							actionForm({
+								variables: {
+									updateId: id,
+									...values,
+									telefono: String(values.telefono),
+									numeroExterior: String(values.numeroExterior),
+								},
 							});
 						}}
 					>
@@ -111,13 +92,8 @@ export const Trabajador = () => {
 												name="primerApellido"
 												value={values.primerApellido}
 												onChange={handleChange}
-												helperText={
-													touched.primerApellido && errors.primerApellido
-												}
-												error={
-													touched.primerApellido &&
-													Boolean(errors.primerApellido)
-												}
+												helperText={touched.primerApellido && errors.primerApellido}
+												error={touched.primerApellido && Boolean(errors.primerApellido)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -128,13 +104,8 @@ export const Trabajador = () => {
 												name="segundoApellido"
 												value={values.segundoApellido}
 												onChange={handleChange}
-												helperText={
-													touched.segundoApellido && errors.segundoApellido
-												}
-												error={
-													touched.segundoApellido &&
-													Boolean(errors.segundoApellido)
-												}
+												helperText={touched.segundoApellido && errors.segundoApellido}
+												error={touched.segundoApellido &&Boolean(errors.segundoApellido)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -209,13 +180,8 @@ export const Trabajador = () => {
 												name="numeroExterior"
 												value={values.numeroExterior}
 												onChange={handleChange}
-												helperText={
-													touched.numeroExterior && errors.numeroExterior
-												}
-												error={
-													touched.numeroExterior &&
-													Boolean(errors.numeroExterior)
-												}
+												helperText={touched.numeroExterior && errors.numeroExterior}
+												error={touched.numeroExterior && Boolean(errors.numeroExterior)}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -251,6 +217,6 @@ export const Trabajador = () => {
 					</Formik>
 				</div>
 			</>
-		</>
+		</Fragment>
 	);
 };

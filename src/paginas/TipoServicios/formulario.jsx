@@ -11,7 +11,7 @@ import DialogContent from '@mui/material/DialogContent';
 import Button from '../../componentes/Button';
 import TextField from '../../componentes/TextField';
 import GQL, { validacion, dataCache } from './helper';
-import { Table } from '../../componentes/Table/container';
+import { Table } from '../../componentes/Table/component';
 import { useFormularion } from '../../componentes/Formulario/component';
 
 const Transition = forwardRef(function Transition(props, ref) {
@@ -43,7 +43,7 @@ export const TipoServicio = ({ handleClose, open }) => {
 			open={open}
 			TransitionComponent={Transition}
 			keepMounted
-			maxWidth='sm'
+			maxWidth="sm"
 			fullWidth
 			onClose={handleClose}
 		>

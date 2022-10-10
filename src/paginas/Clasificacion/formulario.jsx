@@ -1,28 +1,29 @@
-import { forwardRef } from "react";
-import { Formik } from "formik";
-import { FiSave } from "react-icons/fi";
-import Slide from "@mui/material/Slide";
-import { GiCancel } from "react-icons/gi";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
+import { forwardRef } from 'react';
+import { Formik } from 'formik';
+import { FiSave } from 'react-icons/fi';
+import Slide from '@mui/material/Slide';
+import { GiCancel } from 'react-icons/gi';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
 
-import Button from "../../componentes/Button";
-import TextField from "../../componentes/TextField";
-import GQL, { validacion, dataCache } from "./helper";
-import { Table } from "../../componentes/Table/container";
-import { useFormularion } from "../../componentes/Formulario/component";
+import Button from '../../componentes/Button';
+import TextField from '../../componentes/TextField';
+import GQL, { validacion, dataCache } from './helper';
+import { Table } from '../../componentes/Table/component';
+import { useFormularion } from '../../componentes/Formulario/component';
+import { ClasificacionActions } from '../../actions';
 
 const Transition = forwardRef(function Transition(props, ref) {
-	return <Slide direction='down' ref={ref} {...props} />;
+	return <Slide direction="down" ref={ref} {...props} />;
 });
 
 const columns = [
-	{ field: "id", headerName: "ID", width: 80 },
+	{ field: 'id', headerName: 'ID', width: 80 },
 	{
-		field: "descripcion",
-		headerName: "DESCRIPCIÓN",
+		field: 'descripcion',
+		headerName: 'DESCRIPCIÓN',
 		width: 140,
 		editable: false,
 	},
@@ -30,7 +31,7 @@ const columns = [
 
 export const Clasificacion = ({ handleClose, open }) => {
 	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
-		{ action: "create" },
+		{ action: 'create' },
 		dataCache,
 		GQL.CREATE,
 		GQL.CREATE,
@@ -49,7 +50,7 @@ export const Clasificacion = ({ handleClose, open }) => {
 			<DialogContent>
 				<Formik
 					innerRef={formikRef}
-					initialValues={{ nombre: "" }}
+					initialValues={{ nombre: '' }}
 					validationSchema={validacion}
 					onSubmit={(values) => {
 						const input = {
@@ -63,12 +64,12 @@ export const Clasificacion = ({ handleClose, open }) => {
 					}}
 				>
 					{({ handleChange, values, touched, errors }) => (
-						<div className='col-span-6 sm:col-span-2 mb-2'>
+						<div className="col-span-6 sm:col-span-2 mb-2">
 							<TextField
 								fullWidth
-								size='small'
-								label='Nombre'
-								name='nombre'
+								size="small"
+								label="Nombre"
+								name="nombre"
 								value={values.nombre}
 								onChange={handleChange}
 								helperText={touched.nombre && errors.nombre}
@@ -78,10 +79,10 @@ export const Clasificacion = ({ handleClose, open }) => {
 					)}
 				</Formik>
 				<br />
-				<div className='col-span-6 sm:col-span-2'>
+				<div className="col-span-6 sm:col-span-2">
 					<Table
-						uri={GQL.GET}
-						urlDelete={{ gql: GQL.DELETE, params: "deleteClasificacionId" }}
+						uri={ClasificacionActions.GET}
+						urlDelete={{ gql: ClasificacionActions.DELETE, params: 'deleteClasificacionId'}}
 						columns={columns}
 						showActions
 						height={260}
@@ -91,14 +92,14 @@ export const Clasificacion = ({ handleClose, open }) => {
 			<DialogActions sx={{ marginRight: 2 }}>
 				<Button
 					onClick={handleClose}
-					label='Cancelar'
+					label="Cancelar"
 					fullWidth
 					icono={<GiCancel size={16} />}
 				/>
 				<Button
 					showLoading
 					onClick={submitForm}
-					label='Guardar'
+					label="Guardar"
 					fullWidth
 					loading={isLoading}
 					icono={<FiSave size={16} />}

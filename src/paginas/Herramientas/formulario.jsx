@@ -6,7 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Button from '../../componentes/Button';
 import TextField from '../../componentes/TextField';
-import { Header } from '../../componentes/Header/cointainer';
+import { Header } from '../../componentes/Header/component';
 import { SelecField } from '../../componentes/Select/component';
 
 import GQL, {
@@ -17,6 +17,7 @@ import GQL, {
 } from './helper';
 import { Clasificacion } from '../Clasificacion/formulario';
 import { useFormularion } from '../../hooks/useForm';
+import { ClasificacionActions } from '../../actions';
 
 const dataInicial = {
 	clasificacionID: '',
@@ -33,7 +34,7 @@ export const Herramienta = () => {
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
 
-	const { data } = useQuery(GQL.GET_CLASIFICACION, {
+	const { data } = useQuery(ClasificacionActions.GET, {
 		variables: {
 			offset: null,
 			limit: null,

@@ -42,7 +42,7 @@ export const filterForm = makeVar(false);
 export const loadingSettingCompany = makeVar(false);
 export const sessionCalendarForm = makeVar({ isOpen: false, Crms: [] });
 
-export const searchField = makeVar(null);
+export const searchField = makeVar('');
 
 export const exportPdf = makeVar({ export: false });
 export const exportXls = makeVar({ export: false });

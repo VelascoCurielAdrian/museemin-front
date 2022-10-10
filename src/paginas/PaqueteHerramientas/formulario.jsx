@@ -1,19 +1,14 @@
-import { useState, useMemo } from 'react';
 import { Formik } from 'formik';
-import { BsTools } from 'react-icons/bs';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
-
-import Button from '../../componentes/Button';
-import TextField from '../../componentes/TextField';
-import { Header } from '../../componentes/Header/cointainer';
+import { Header } from '../../componentes/Header/component';
 import { Estatus } from '../../componentes/Estatus/component';
-import { SelecField } from '../../componentes/Select/component';
 import { EstadoHerramienta } from '../../componentes/EstadoHerramienta/component';
 
 import GQL, { estatus, validacion, dataCache } from './helper';
 import { useFormularion } from '../../hooks/useForm';
-import { Table } from '../../componentes/Table/container';
+import { Table } from '../../componentes/Table/component';
+import { TableBase } from '../../componentes/TableBase/component';
 
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 80 },
@@ -124,63 +119,16 @@ export const PaqueteHerramienta = () => {
 								<div className="bg-white px-5 py-5 sm:p-6">
 									<div className="grid grid-cols-8 gap-2">
 										<div className="col-span-8 sm:col-span-3 space-y-3">
-											<TextField
-												fullWidth
-												size="small"
-												label="Nombre"
-												name="nombre"
-												autoFocus
-												value={values.nombre}
-												onChange={handleChange}
-												helperText={touched.nombre && errors.nombre}
-												error={touched.nombre && Boolean(errors.nombre)}
-											/>
-											<SelecField
-												fullWidth
-												size="small"
-												label="Estatus"
-												labelProp="nombre"
-												name="estatus"
-												options={estatus}
-												onChange={handleChange}
-												value={values.estatus}
-												helperText={touched.estatus && errors.estatus}
-												error={touched.estatus && Boolean(errors.estatus)}
-											/>
-											<SelecField
-												fullWidth
-												size="small"
-												label="Herramienta"
-												labelProp="nombre"
-												name="herramientaID"
-												options={data?.getAllHerramientas?.rows || []}
-												onChange={handleChange}
-												value={values.herramientaID}
-												helperText={
-													touched.herramientaID && errors.herramientaID
-												}
-												error={
-													touched.herramientaID && Boolean(errors.herramientaID)
-												}
-											/>
-											<TextField
-												fullWidth
-												size="small"
-												label="Descripción"
-												name="nombre"
-												autoFocus
-												value={values.nombre}
-												onChange={handleChange}
-												helperText={touched.nombre && errors.nombre}
-												error={touched.nombre && Boolean(errors.nombre)}
-											/>
-											<Button
-												size="medium"
-												label="Agregar"
-												fullWidth
-												className="bg-gray-700"
-												onClick={() => {}}
-												icono={<BsTools size={16} />}
+											<Table
+												handleNew={handleNew}
+												uri={GQL.GET}
+												urlDelete={{
+													gql: GQL.DELETE,
+													params: 'deleteHerramientaId',
+												}}
+												dataCache={dataCache}
+												columns={columns}
+												showActions
 											/>
 										</div>
 										<div className="col-span-8 sm:col-span-5">
@@ -190,13 +138,7 @@ export const PaqueteHerramienta = () => {
 											>
 												Tabla de herramientas
 											</label>
-											<Table
-												uri={GQL.GET}
-												urlDelete={{
-													gql: GQL.DELETE,
-													params: 'deleteHerramientaId',
-												}}
-												dataCache={dataCache}
+											<TableBase
 												columns={columns}
 											/>
 										</div>

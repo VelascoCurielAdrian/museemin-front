@@ -2,7 +2,7 @@ import { Formik } from 'formik';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import TextField from '../../componentes/TextField';
-import { Header } from '../../componentes/Header/cointainer';
+import { Header } from '../../componentes/Header/component';
 import { SelecField } from '../../componentes/Select/component';
 
 import GQL, { estatus, validacion, dataCache } from './helper';

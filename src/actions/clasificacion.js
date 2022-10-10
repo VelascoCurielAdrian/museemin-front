@@ -1,15 +1,8 @@
 import { gql } from '@apollo/client';
-import * as yup from 'yup';
 
-export const dataCache = 'getAllCountClasificacion';
-
-export const validacion = yup.object({
-	nombre: yup.string('Ecriba el nombre').required('El nombre es requerido'),
-});
-
-const fragments = {
-	comment: gql`
-		fragment dataClasificacion on clasificacion {
+const FRAGMENTS = {
+	Clasificacion: gql`
+		fragment data on clasificacion {
 			id
 			descripcion
 			usuarioRegistroID
@@ -24,11 +17,11 @@ const CREATE = gql`
 		createClasificacion(input: $input) {
 			mensaje
 			respuesta {
-				...dataClasificacion
+				...data
 			}
 		}
 	}
-	${fragments.comment}
+	${FRAGMENTS.Clasificacion}
 `;
 
 const DELETE = gql`
@@ -36,14 +29,11 @@ const DELETE = gql`
 		deleteClasificacion(id: $deleteClasificacionId) {
 			mensaje
 			respuesta {
-				id
-				descripcion
-				usuarioRegistroID
-				activo
-				estatus
+				...data
 			}
 		}
 	}
+	${FRAGMENTS.Clasificacion}
 `;
 
 const GET = gql`
@@ -51,20 +41,15 @@ const GET = gql`
 		getAllCountClasificacion(offset: $offset, limit: $limit) {
 			count
 			rows {
-				id
-				descripcion
-				usuarioRegistroID
-				activo
-				estatus
+				...data
 			}
 		}
 	}
+	${FRAGMENTS.Clasificacion}
 `;
 
-const exportedObject = {
+export const ClasificacionActions = {
 	CREATE,
 	DELETE,
 	GET,
 };
-
-export default exportedObject;

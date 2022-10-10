@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import GQL, { dataCache } from './helper';
-import { Table } from '../../componentes/Table/container';
+import { Table } from '../../componentes/Table/component';
 import { Estatus } from '../../componentes/Estatus/component';
 import { Generos } from '../../componentes/Genero/component';
 

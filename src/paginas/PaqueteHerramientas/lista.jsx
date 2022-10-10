@@ -1,19 +1,18 @@
-import { useState, useMemo } from 'react';
+import { useState, Fragment } from 'react';
 import { Formik } from 'formik';
-import { BsTools } from 'react-icons/bs';
-import { useLazyQuery, useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import Button from '../../componentes/Button';
-import TextField from '../../componentes/TextField';
-import { Header } from '../../componentes/Header/cointainer';
+import { Header } from '../../componentes/Header/component';
 import { Estatus } from '../../componentes/Estatus/component';
-import { SelecField } from '../../componentes/Select/component';
 import { EstadoHerramienta } from '../../componentes/EstadoHerramienta/component';
 
-import GQL, { estatus, validacion, dataCache } from './helper';
+import GQL, { validacion, dataCache } from './helper';
 import { useFormularion } from '../../hooks/useForm';
-import { Table } from '../../componentes/Table/container';
+import { Table } from '../../componentes/Table/component';
+import { SearchField } from '../../componentes/SearchField/component';
+import { IconButton, Tooltip } from '@mui/material';
+import { CgAdd } from 'react-icons/cg';
+import { TableBase } from '../../componentes/TableBase/component';
 
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 80 },
@@ -61,12 +60,7 @@ const dataInicial = {
 export const PaqueteHerramientas = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const { data } = useQuery(GQL.GET, {
-		variables: {
-			offset: null,
-			limit: null,
-		},
-	});
+	const [dataHerramientas, setDataHerramientas] = useState([]);
 
 	const handleBack = () => {
 		navigate('/paqueteHerramientas', {
@@ -86,6 +80,49 @@ export const PaqueteHerramientas = () => {
 			GQL.GET_BYID,
 			handleBack,
 		);
+
+	const handleAdd = (value) => {
+		setDataHerramientas([...dataHerramientas, value]);
+	};
+
+	const columnsHerramientas = [
+		{
+			field: 'nombre',
+			headerName: 'NOMBRE',
+			width: 150,
+			editable: false,
+		},
+		{
+			field: 'clasificacion',
+			headerName: 'CLASIFICACIÓN',
+			width: 150,
+			editable: false,
+			valueGetter: ({ value }) => value.descripcion,
+		},
+		{
+			field: 'actions',
+			headerName: 'ACCIÓN',
+			editable: false,
+			renderCell: ({ row, index }) => {
+				return (
+					<Fragment>
+						<Tooltip
+							title="Agregar"
+							placement="left"
+							arrow
+							onClick={() => {
+								handleAdd(row, index);
+							}}
+						>
+							<IconButton>
+								<CgAdd size={20} className="text-green-700" />
+							</IconButton>
+						</Tooltip>
+					</Fragment>
+				);
+			},
+		},
+	];
 
 	if (loading) return <div>Cargando...</div>;
 	return (
@@ -121,66 +158,26 @@ export const PaqueteHerramientas = () => {
 					>
 						{({ handleChange, values, touched, errors }) => (
 							<div className="overflow-hidden shadow sm:rounded-md">
-								<div className="bg-white px-5 py-5 sm:p-6">
+								<div className="bg-white px-5 py-5 sm:p-2">
 									<div className="grid grid-cols-8 gap-2">
 										<div className="col-span-8 sm:col-span-3 space-y-3">
-											<TextField
-												fullWidth
-												size="small"
-												label="Nombre"
-												name="nombre"
-												autoFocus
-												value={values.nombre}
-												onChange={handleChange}
-												helperText={touched.nombre && errors.nombre}
-												error={touched.nombre && Boolean(errors.nombre)}
-											/>
-											<SelecField
-												fullWidth
-												size="small"
-												label="Estatus"
-												labelProp="nombre"
-												name="estatus"
-												options={estatus}
-												onChange={handleChange}
-												value={values.estatus}
-												helperText={touched.estatus && errors.estatus}
-												error={touched.estatus && Boolean(errors.estatus)}
-											/>
-											<SelecField
-												fullWidth
-												size="small"
-												label="Herramienta"
-												labelProp="nombre"
-												name="herramientaID"
-												options={data?.getAllHerramientas?.rows || []}
-												onChange={handleChange}
-												value={values.herramientaID}
-												helperText={
-													touched.herramientaID && errors.herramientaID
-												}
-												error={
-													touched.herramientaID && Boolean(errors.herramientaID)
-												}
-											/>
-											<TextField
-												fullWidth
-												size="small"
-												label="Descripción"
-												name="nombre"
-												autoFocus
-												value={values.nombre}
-												onChange={handleChange}
-												helperText={touched.nombre && errors.nombre}
-												error={touched.nombre && Boolean(errors.nombre)}
-											/>
-											<Button
-												size="medium"
-												label="Agregar"
-												fullWidth
-												className="bg-gray-700"
-												onClick={() => {}}
-												icono={<BsTools size={16} />}
+											<label
+												htmlFor="label-form"
+												className="block mb-2 text-sm font-medium text-gray-700"
+											>
+												Seleccione las herramientas del paquete
+											</label>
+											<SearchField />
+											<Table
+												showPaginate={false}
+												height={250}
+												uri={GQL.GET}
+												urlDelete={{
+													gql: GQL.DELETE,
+													params: 'deleteHerramientaId',
+												}}
+												dataCache={dataCache}
+												columns={columnsHerramientas}
 											/>
 										</div>
 										<div className="col-span-8 sm:col-span-5">
@@ -188,16 +185,12 @@ export const PaqueteHerramientas = () => {
 												htmlFor="label-form"
 												className="block mb-2 text-sm font-medium text-gray-700"
 											>
-												Tabla de herramientas
+												Tabla de herramientas agregadas
 											</label>
-											<Table
-												uri={GQL.GET}
-												urlDelete={{
-													gql: GQL.DELETE,
-													params: 'deleteHerramientaId',
-												}}
-												dataCache={dataCache}
+											<TableBase
+												showPaginate={false}
 												columns={columns}
+												data={dataHerramientas}
 											/>
 										</div>
 									</div>

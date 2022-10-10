@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import CssBaseline from '@mui/material/CssBaseline';
+import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
 import { Appbar } from './appbar';
 import { Drawer } from './drawer';
 import paleta from '../../configuracion/paleta';
-import { Box } from '@mui/material';
+import { searchField } from '../../configuracion/apollo/cache';
 
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
@@ -31,6 +33,7 @@ export const DashBoard = ({ children }) => {
 	};
 
 	const handleDrawerClose = () => {
+		searchField('');
 		setOpen(false);
 	};
 

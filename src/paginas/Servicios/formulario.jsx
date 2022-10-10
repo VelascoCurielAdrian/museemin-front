@@ -1,18 +1,44 @@
 import { useState } from 'react';
 import { Formik } from 'formik';
-import { IoIosArrowDown } from 'react-icons/io';
 import { MdOutlineMiscellaneousServices } from 'react-icons/md';
 import { useQuery } from '@apollo/client';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import Button from '../../componentes/Button';
 import TextField from '../../componentes/TextField';
-import { Header } from '../../componentes/Header/cointainer';
+import { Header } from '../../componentes/Header/component';
 import { SelecField } from '../../componentes/Select/component';
 
+const clientes = [
+	{
+		id: 0,
+		name: 'Cedis Farmacon',
+	},
+	{
+		id: 1,
+		name: 'Cedis Coppel',
+	},
+	{
+		id: 2,
+		name: 'Cedis Walmart',
+	},
+	{
+		id: 3,
+		name: 'Cedis OXXO',
+	},
+	{
+		id: 4,
+		name: 'Cedis Frialsa',
+	},
+	{
+		id: 5,
+		name: 'Cedis Imms',
+	},
+];
 import GQL, { estadoHerramienta, validacion, dataCache } from './helper';
 import { useFormularion } from '../../hooks/useForm';
 import { TipoServicio } from '../TipoServicios/formulario';
+import { ListaTrabajdor } from '../../componentes/ListaTrabajador/component';
 const dataInicial = {
 	tipoServicioID: '',
 	clienteID: '',
@@ -36,8 +62,6 @@ export const Servicio = () => {
 			offset: null,
 		},
 	});
-
-	console.log(Clientes);
 
 	const { data } = useQuery(GQL.GET_TIPO_SERVICIO, {
 		variables: {
@@ -116,26 +140,26 @@ export const Servicio = () => {
 							<div className="overflow-hidden shadow sm:rounded-md">
 								<div className="bg-white px-4 py-5 sm:p-6">
 									<div className="grid grid-cols-6 gap-6">
-										<div className="col-span-6 sm:col-span-2">
+										<div className="col-span-6 sm:col-span-3 space-y-2">
 											<SelecField
 												fullWidth
 												size="small"
-												label="Tipo de servicio"
-												labelProp="descripcion"
-												name="tipoServicioID"
+												labelProp="name"
+												name="clienteID"
 												onChange={handleChange}
-												value={values.tipoServicioID || ''}
-												options={data?.getAllTipoServicios?.rows || []}
-												helperText={
-													touched.tipoServicioID && errors.tipoServicioID
-												}
-												error={
-													touched.tipoServicioID &&
-													Boolean(errors.tipoServicioID)
-												}
+												value={values.clienteID}
+												label="Clientes"
+												options={clientes || []}
+												helperText={touched.clienteID && errors.clienteID}
+												error={touched.clienteID && Boolean(errors.clienteID)}
 											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
+											<label
+												htmlFor="tipoServicio"
+												className="block text-sm mb-1 font-medium text-gray-700"
+											>
+												Tipo de servicio
+											</label>
+											<ListaTrabajdor />
 											<label
 												htmlFor="tipoServicio"
 												className="block text-sm mb-1 font-medium text-gray-700"
@@ -150,42 +174,20 @@ export const Servicio = () => {
 												onClick={handleClickOpen}
 												icono={<MdOutlineMiscellaneousServices size={16} />}
 											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<SelecField
+											<TextField
 												fullWidth
-												size="small"
-												labelProp="nombre"
-												name="clienteID"
+												type="multiline"
+												label="Comentarios"
+												name="descripcion"
+												value={values.descripcion}
 												onChange={handleChange}
-												value={values.clienteID}
-												label="Cliente"
-												options={Clientes?.getAllCliente?.rows || []}
-												helperText={touched.clienteID && errors.clienteID}
-												error={touched.clienteID && Boolean(errors.clienteID)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<SelecField
-												fullWidth
-												size="small"
-												labelProp="nombre"
-												name="trabajadores"
-												onChange={handleChange}
-												value={[]}
-												label="Trabjadores"
-												multiple
-												options={estadoHerramienta}
-												IconComponent={(props) => (
-													<IoIosArrowDown {...props} size={20} />
-												)}
-												helperText={touched.trabajadores && errors.trabajadores}
+												helperText={touched.descripcion && errors.descripcion}
 												error={
-													touched.trabajadores && Boolean(errors.trabajadores)
+													touched.descripcion && Boolean(errors.descripcion)
 												}
 											/>
 										</div>
-										<div className="col-span-6 sm:col-span-2">
+										<div className="col-span-6 sm:col-span-3 space-y-3">
 											<TextField
 												fullWidth
 												size="small"
@@ -196,8 +198,13 @@ export const Servicio = () => {
 												helperText={touched.estado && errors.estado}
 												error={touched.estado && Boolean(errors.estado)}
 											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
+											<label
+												htmlFor="tipoServicio"
+												className="block text-sm mb-1 font-medium text-gray-700"
+											>
+												Trabajadores
+											</label>
+											<ListaTrabajdor tipo="trabajadores" />
 											<SelecField
 												fullWidth
 												size="small"
@@ -209,20 +216,6 @@ export const Servicio = () => {
 												options={estadoHerramienta}
 												helperText={touched.estado && errors.estado}
 												error={touched.estado && Boolean(errors.estado)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-3">
-											<TextField
-												fullWidth
-												type="multiline"
-												label="Descripción"
-												name="descripcion"
-												value={values.descripcion}
-												onChange={handleChange}
-												helperText={touched.descripcion && errors.descripcion}
-												error={
-													touched.descripcion && Boolean(errors.descripcion)
-												}
 											/>
 										</div>
 									</div>
