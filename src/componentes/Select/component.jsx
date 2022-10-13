@@ -1,5 +1,4 @@
-import { memo } from "react";
-import propTypes from "prop-types";
+import propTypes from 'prop-types';
 import {
 	Chip,
 	FormControl,
@@ -7,16 +6,16 @@ import {
 	MenuItem,
 	Select,
 	Typography,
-} from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { AiOutlineCloseCircle } from "react-icons/ai";
-import styles from "./styles";
+} from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { AiOutlineCloseCircle } from 'react-icons/ai';
+import styles from './styles';
 
 const CssSelect = styled(Select)(({ theme }) => ({
-	color: "#263238",
-	backgroundColor: "#eceff1",
-	"& MuiNativeSelect-select": {
-		color: "#212121",
+	color: '#263238',
+	backgroundColor: '#E9EEFA',
+	'& MuiNativeSelect-select': {
+		color: '#212121',
 		borderWidth: 1,
 		borderRadius: 10,
 	},
@@ -55,16 +54,16 @@ export const SelecField = ({
 	return (
 		<div style={inputStyles}>
 			<label
-				htmlFor='label-form'
-				className='block mb-2 text-sm font-medium text-gray-700'
+				htmlFor="label-form"
+				className="block mb-2 text-sm font-medium text-gray-700"
 			>
 				{label}
 			</label>
 			<FormControl fullWidth error={error}>
 				<CssSelect
-					variant='outlined'
+					variant="outlined"
 					disabled={disabled}
-					size='small'
+					size="small"
 					fullWidth
 					onChange={customOnChange}
 					IconComponent={IconComponent}
@@ -78,10 +77,10 @@ export const SelecField = ({
 								value.includes(option[valueProp]),
 							);
 							renderValue =
-								option?.map((option) => option[labelProp]).join(", ") || "";
+								option?.map((option) => option[labelProp]).join(', ') || '';
 						} else {
 							option = options.find((option) => option[valueProp] === value);
-							renderValue = option ? option[labelProp] : "";
+							renderValue = option ? option[labelProp] : '';
 						}
 						if (Array.isArray(value) && onDelete) {
 							option = options.filter((option) =>
@@ -120,13 +119,13 @@ export const SelecField = ({
 										);
 									}
 									return null;
-								}) || "";
+								}) || '';
 						}
 						return (
 							<Typography
 								style={{
 									color: placeHolderColor,
-									paddingRight: "20px",
+									paddingRight: '20px',
 									...displayTextStyles,
 								}}
 							>
@@ -190,21 +189,21 @@ SelecField.propTypes = {
 };
 
 SelecField.defaultProps = {
-	label: "",
-	value: "",
+	label: '',
+	value: '',
 	isHandleChange: false,
 	required: false,
 	error: false,
-	tooltip: "",
-	className: "",
-	labelProp: "label",
-	valueProp: "id",
+	tooltip: '',
+	className: '',
+	labelProp: 'label',
+	valueProp: 'id',
 	multiple: false,
 	customLabel: null,
 	onDelete: null,
 	style: {},
 	disabled: false,
-	placeHolderColor: "black",
+	placeHolderColor: 'black',
 	displayTextStyles: {},
 };
 

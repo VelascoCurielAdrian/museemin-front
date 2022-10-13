@@ -3,13 +3,7 @@ import * as yup from 'yup';
 
 export const dataCache = 'getAllHerramientas';
 export const validacion = yup.object({
-	clasificacionID: yup.string().required('La clasificación es requerida'),
-	nombre: yup.string().required('El nombre es requerido'),
-	marca: yup.string().required('La marca es requerida'),
-	estado: yup.string().required('El estado es requerido'),
-	precio: yup.string().required('El precio es requerido'),
-	estatus: yup.string().required('El estatus es requerido'),
-	descripcion: yup.string().required('La descripcion es requerida'),
+	descripcion: yup.string().required('La descripción es requerida'),
 });
 
 export const estatus = [

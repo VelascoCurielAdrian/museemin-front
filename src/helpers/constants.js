@@ -1,4 +1,3 @@
-
 export const NUMBER_INVALID = 'Numero invalido';
 export const MESSAGE_REQUIRED = 'Este campo es requerido';
 export const TELEPHONE_VALIDATE = 'El télefono debe tener como minimo 10 dígitos';
@@ -15,4 +14,10 @@ export const estatus = [
 export const Generos = [
 	{ id: 'M', nombre: 'Masculino' },
 	{ id: 'F', nombre: 'Femenino' },
+];
+
+export const estadoHerramienta = [
+	{ id: 1, nombre: 'Nuevo' },
+	{ id: 2, nombre: 'Usado' },
+	{ id: 3, nombre: 'Dañado' },
 ];

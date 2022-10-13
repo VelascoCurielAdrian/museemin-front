@@ -1,4 +1,6 @@
 import { gql } from '@apollo/client';
+import * as yup from 'yup';
+import { MESSAGE_REQUIRED } from '../helpers/constants';
 
 const FRAGMENTS = {
 	Herramienta: gql`
@@ -25,8 +27,28 @@ const FRAGMENTS = {
 };
 
 const CREATE = gql`
-	mutation CreateHerramienta($input: herramientaDatos!) {
-		createHerramienta(input: $input) {
+	mutation CreateHerramienta(
+		$nombre: String!
+		$descripcion: String!
+		$marca: String!
+		$estado: Int!
+		$precio: Float!
+		$usuarioRegistroID: ID
+		$clasificacionID: ID!
+		$estatus: Boolean!
+	) {
+		createHerramienta(
+			input: {
+				nombre: $nombre
+				descripcion: $descripcion
+				marca: $marca
+				estado: $estado
+				precio: $precio
+				usuarioRegistroID: $usuarioRegistroID
+				clasificacionID: $clasificacionID
+				estatus: $estatus
+			}
+		) {
 			mensaje
 			respuesta {
 				...data
@@ -38,10 +60,29 @@ const CREATE = gql`
 
 const UPDATE = gql`
 	mutation UpdateHerramienta(
-		$updateHerramientaId: ID!
-		$input: herramientaDatos!
+		$updateID: ID!
+		$nombre: String!
+		$descripcion: String!
+		$marca: String!
+		$estado: Int!
+		$precio: Float!
+		$usuarioRegistroID: ID
+		$clasificacionID: ID!
+		$estatus: Boolean!
 	) {
-		updateHerramienta(id: $updateHerramientaId, input: $input) {
+		updateHerramienta(
+			id: $updateID
+			input: {
+				nombre: $nombre
+				descripcion: $descripcion
+				marca: $marca
+				estado: $estado
+				precio: $precio
+				usuarioRegistroID: $usuarioRegistroID
+				clasificacionID: $clasificacionID
+				estatus: $estatus
+			}
+		) {
 			mensaje
 			respuesta {
 				...data
@@ -80,13 +121,23 @@ const GET = gql`
 `;
 
 const GET_BYID = gql`
-	query GetHerramienta($getHerramientaId: ID!) {
-		getHerramienta(id: $getHerramientaId) {
+	query GetHerramienta($id: ID!) {
+		getHerramienta(id: $id) {
 			...data
 		}
 	}
 	${FRAGMENTS.Herramienta}
 `;
+
+export const Validate = yup.object({
+	clasificacionID: yup.string().required(MESSAGE_REQUIRED),
+	nombre: yup.string().required(MESSAGE_REQUIRED),
+	marca: yup.string().required(MESSAGE_REQUIRED),
+	estado: yup.string().required(MESSAGE_REQUIRED),
+	precio: yup.string().required(MESSAGE_REQUIRED),
+	estatus: yup.string().required(MESSAGE_REQUIRED),
+	descripcion: yup.string().required(MESSAGE_REQUIRED),
+});
 
 export const HerramientasActions = {
 	GET_BYID,

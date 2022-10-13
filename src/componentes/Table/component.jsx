@@ -141,7 +141,7 @@ Table.propTypes = {
 	handleNew: propTypes.func,
 	columns: propTypes.array,
 	rowsData: propTypes.array,
-	height: propTypes.oneOfType([propTypes.string, propTypes.number]),
+	height: propTypes.number,
 	showActions: propTypes.bool,
 	dataFixed: propTypes.bool,
 	showPaginate: propTypes.bool,

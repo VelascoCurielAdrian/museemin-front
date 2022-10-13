@@ -5,8 +5,6 @@ const ToasCustomized = () => {
 		<ToastContainer
 			pauseOnFocusLoss={false}
 			bodyClassName={'text-sm'}
-			autoClose={2000}
-			limit={1}
 			icon
 			position="top-right"
 		/>

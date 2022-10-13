@@ -2,22 +2,17 @@ import { useState } from 'react';
 import { Formik } from 'formik';
 import { BsTools } from 'react-icons/bs';
 import { useQuery } from '@apollo/client';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import Button from '../../componentes/Button';
+import useFormActions from '../../hooks/useFormv2';
 import TextField from '../../componentes/TextField';
+import { ClasificacionActions } from '../../actions';
+import { Clasificacion } from '../Clasificacion/formulario';
 import { Header } from '../../componentes/Header/component';
 import { SelecField } from '../../componentes/Select/component';
-
-import GQL, {
-	estadoHerramienta,
-	estatus,
-	validacion,
-	dataCache,
-} from './helper';
-import { Clasificacion } from '../Clasificacion/formulario';
-import { useFormularion } from '../../hooks/useForm';
-import { ClasificacionActions } from '../../actions';
+import { estadoHerramienta, estatus } from '../../helpers/constants';
+import { HerramientasActions, Validate } from '../../actions/herramientas';
 
 const dataInicial = {
 	clasificacionID: '',
@@ -31,8 +26,16 @@ const dataInicial = {
 
 export const Herramienta = () => {
 	const { id } = useParams();
-	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
+	const { save, formRef, values, loading, isLoading, actionForm } =
+		useFormActions({
+			method: id ? 'update' : 'create',
+			actions: HerramientasActions,
+			operation: 'getAllHerramientas',
+			formData: dataInicial,
+			name: 'herramientas',
+			id,
+		});
 
 	const { data } = useQuery(ClasificacionActions.GET, {
 		variables: {
@@ -40,25 +43,6 @@ export const Herramienta = () => {
 			limit: null,
 		},
 	});
-
-	const handleBack = () => {
-		navigate('/herramientas', {
-			replace: true,
-		});
-	};
-
-	const { ActionForm, submitForm, isLoading, formikRef, dataForm, loading } =
-		useFormularion(
-			{ action: id ? 'update' : 'create' },
-			{ filter: 'getHerramientaId', id },
-			dataInicial,
-			dataCache,
-			GQL.CREATE,
-			GQL.UPDATE,
-			GQL.GET,
-			GQL.GET_BYID,
-			handleBack,
-		);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -72,10 +56,10 @@ export const Herramienta = () => {
 	return (
 		<>
 			<Header
+				name="herramientas"
 				title="Herramientas"
 				subtitle="Moduló de Herramientas"
-				handleCancelar={handleBack}
-				handleCreate={submitForm}
+				handleCreate={save}
 				loading={isLoading}
 				agregar
 			/>
@@ -88,22 +72,12 @@ export const Herramienta = () => {
 
 				<div className="mt-5 md:col-span-2 md:mt-0">
 					<Formik
-						innerRef={formikRef}
-						initialValues={dataForm}
-						validationSchema={validacion}
+						innerRef={formRef}
+						initialValues={values}
+						validationSchema={Validate}
 						onSubmit={(values) => {
-							const input = {
-								nombre: values.nombre,
-								descripcion: values.descripcion,
-								marca: values.marca,
-								estado: values.estado,
-								precio: values.precio,
-								usuarioRegistroID: 1,
-								clasificacionID: values.clasificacionID,
-								estatus: values.estatus,
-							};
-							ActionForm({
-								variables: { updateHerramientaId: id, input },
+							actionForm({
+								variables: { updateID: id, ...values },
 							});
 						}}
 					>
@@ -134,8 +108,13 @@ export const Herramienta = () => {
 												onChange={handleChange}
 												value={values.clasificacionID || ''}
 												options={data?.getAllCountClasificacion?.rows || []}
-												helperText={touched.clasificacionID && errors.clasificacionID}
-												error={touched.clasificacionID && Boolean(errors.clasificacionID)}
+												helperText={
+													touched.clasificacionID && errors.clasificacionID
+												}
+												error={
+													touched.clasificacionID &&
+													Boolean(errors.clasificacionID)
+												}
 											/>
 										</div>
 										<div className="col-span-6 sm:col-span-2">
@@ -216,7 +195,9 @@ export const Herramienta = () => {
 												value={values.descripcion}
 												onChange={handleChange}
 												helperText={touched.descripcion && errors.descripcion}
-												error={touched.descripcion && Boolean(errors.descripcion)}
+												error={
+													touched.descripcion && Boolean(errors.descripcion)
+												}
 											/>
 										</div>
 									</div>

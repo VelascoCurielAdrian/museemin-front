@@ -5,6 +5,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { Container } from './styles';
 import { CustomPagination } from '../Pagination/component';
 import { EmptyRows } from '../EmptyRows/component';
+import { LinearProgress } from '@mui/material';
 
 export const TableBase = ({
 	data,
@@ -28,6 +29,7 @@ export const TableBase = ({
 					autoHeight
 					headerHeight={headerHeight}
 					components={{
+						LoadingOverlay: LinearProgress,
 						NoRowsOverlay: EmptyRows,
 						Pagination: showPaginate && CustomPagination,
 					}}
