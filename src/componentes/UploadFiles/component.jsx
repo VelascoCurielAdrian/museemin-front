@@ -15,12 +15,9 @@ export const UploadFile = ({ getUrl }) => {
 				setFilePreview(reader.result);
 			});
 			reader.readAsDataURL(file);
-			if (filePreview != '') {
-				const result = await Upload(file);
-				getUrl(result);
-			}
+			const result = await Upload(file);
+			getUrl(result);
 		} catch (error) {
-			console.log(error);
 			toast.error('Fallo interno intente mas tarde..');
 		}
 	};
@@ -62,6 +59,7 @@ export const UploadFile = ({ getUrl }) => {
 									name="file-upload"
 									type="file"
 									className="sr-only"
+									accept="image/png, image/jpeg"
 									onChange={(e) => setFile(e.target.files[0])}
 								/>
 							</label>

@@ -24,7 +24,7 @@ const dataInicial = {
 export const PaqueteHerramienta = () => {
 	const { id } = useParams();
 	const [dataHerramientas, setDataHerramientas] = useState([]);
-	const [filePreview, setFilePreview] = useState('');
+	const [image, setImage] = useState('');
 	const { save, formRef, values, loading, isLoading, actionForm } =
 		useFormActions({
 			method: id ? 'update' : 'create',
@@ -150,12 +150,11 @@ export const PaqueteHerramienta = () => {
 		const data = dataHerramientas.map((herramientas) => ({
 			herramientaID: herramientas.id,
 		}));
-
 		return data;
 	};
 
 	const getUrlImage = (url) => {
-		setFilePreview(url);
+		setImage(url);
 	};
 	if (loading) return <div>Cargando...</div>;
 	return (
@@ -181,10 +180,14 @@ export const PaqueteHerramienta = () => {
 						initialValues={values}
 						validationSchema={validacion}
 						onSubmit={(values) => {
+							if (!image) {
+								toast.error('Seleccione una imagen');
+							}
 							const input = {
 								descripcion: values.descripcion,
 								CapturaPaqueteHerramientas: ToolsAdd(),
 								usuarioRegistroID: 1,
+								imagen: image,
 							};
 							actionForm({
 								variables: { updatePaqueteHerramientaId: id, input },
@@ -219,7 +222,7 @@ export const PaqueteHerramienta = () => {
 											<SearchField />
 											<Table
 												showPaginate={false}
-												height={250}
+												height={350}
 												uri={GQL.GET}
 												urlDelete={{
 													gql: GQL.DELETE,

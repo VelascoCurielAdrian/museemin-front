@@ -22,7 +22,7 @@ export const storage = getStorage(app);
  */
 
 export async function Upload(file) {
-	const storageRef = ref(storage, v4());
+	const storageRef = ref(storage,`/PaqueteHerramientas/${v4()}`);
 	await uploadBytes(storageRef, file);
 	const url = await getDownloadURL(storageRef);
 	return url;

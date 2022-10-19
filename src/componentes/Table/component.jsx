@@ -23,6 +23,7 @@ export const Table = ({
 	handleNew,
 	urlDelete,
 	dataCache,
+	autoHeight,
 	showHeader,
 	showActions,
 	showPaginate,
@@ -118,6 +119,7 @@ export const Table = ({
 				error={error}
 				height={height}
 				loading={loading}
+				autoHeight={autoHeight}
 				showPaginate={showPaginate}
 				columns={showActions ? newColumns : columns}
 				data={Object.values(data || [])[0]?.rows || []}
@@ -145,6 +147,7 @@ Table.propTypes = {
 	showActions: propTypes.bool,
 	dataFixed: propTypes.bool,
 	showPaginate: propTypes.bool,
+	autoHeight: propTypes.bool,
 	urlDelete: propTypes.object,
 	dataCache: propTypes.string,
 };

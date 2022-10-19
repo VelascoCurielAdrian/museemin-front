@@ -14,6 +14,7 @@ export const TableBase = ({
 	loading,
 	columns,
 	pageSize,
+	autoHeight,
 	showPaginate,
 	headerHeight,
 }) => {
@@ -26,7 +27,7 @@ export const TableBase = ({
 					columns={columns}
 					rows={data}
 					pageSize={pageSize}
-					autoHeight
+					autoHeight={autoHeight}
 					headerHeight={headerHeight}
 					components={{
 						LoadingOverlay: LinearProgress,
@@ -61,6 +62,7 @@ TableBase.defaultProps = {
 	data: [],
 	newColumns: [],
 	pageSize: 10,
+	autoHeight: false,
 	showHeader: false,
 	showPaginate: true,
 	headerHeight: 50,

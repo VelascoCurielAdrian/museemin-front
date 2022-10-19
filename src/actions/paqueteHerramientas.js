@@ -41,11 +41,6 @@ const CREATE = gql`
 						precio
 						marca
 						estado
-						id
-						usuarioRegistroID
-						clasificacionID
-						activo
-						estatus
 					}
 					usuarioRegistroID
 					activo
@@ -53,6 +48,7 @@ const CREATE = gql`
 					id
 				}
 				activo
+				imagen
 				estatus
 			}
 		}
@@ -139,11 +135,6 @@ const GET = gql`
 						precio
 						marca
 						estado
-						id
-						usuarioRegistroID
-						clasificacionID
-						activo
-						estatus
 					}
 					usuarioRegistroID
 					activo
@@ -151,6 +142,7 @@ const GET = gql`
 					id
 				}
 				activo
+				imagen
 				estatus
 			}
 		}
