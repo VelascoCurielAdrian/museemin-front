@@ -82,7 +82,6 @@ const TextField = ({
 					helperText={helperText}
 					placeholder={placeHolder}
 					onChange={customOnChange}
-					// {...inputProps}
 				/>
 			) : (
 				<CssTextField
@@ -102,7 +101,6 @@ const TextField = ({
 					helperText={helperText}
 					placeholder={placeHolder}
 					onChange={customOnChange}
-					// {...inputProps}
 				/>
 			)}
 		</div>

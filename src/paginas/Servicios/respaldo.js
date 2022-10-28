@@ -1,20 +1,15 @@
 import { useState } from 'react';
-import { Formik, useFormik } from 'formik';
-import { FaToolbox } from 'react-icons/fa';
-import { HiUserGroup } from 'react-icons/hi';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Formik } from 'formik';
 import { MdOutlineMiscellaneousServices } from 'react-icons/md';
+import { useQuery } from '@apollo/client';
+import { useNavigate, useParams } from 'react-router-dom';
+import TextfieldMui from '@mui/material/TextField';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 import Button from '../../componentes/Button';
 import TextField from '../../componentes/TextField';
-import { useFormularion } from '../../hooks/useForm';
-import { TipoServicio } from '../TipoServicios/formulario';
 import { Header } from '../../componentes/Header/component';
 import { SelecField } from '../../componentes/Select/component';
-import { TrabajadoresActions } from '../../actions/trabajadores';
-import { ListCheckBox } from '../../componentes/ListCheckBox/component';
-import GQL, { estadoHerramienta, validacion, dataCache } from './helper';
 
 const clientes = [
 	{
@@ -42,6 +37,10 @@ const clientes = [
 		name: 'Cedis Imms',
 	},
 ];
+import GQL, { estadoHerramienta, validacion, dataCache } from './helper';
+import { useFormularion } from '../../hooks/useForm';
+import { TipoServicio } from '../TipoServicios/formulario';
+import { ListaTrabajdor } from '../../componentes/ListaTrabajador/component';
 const dataInicial = {
 	tipoServicioID: '',
 	clienteID: '',
@@ -54,11 +53,25 @@ const dataInicial = {
 	descripcion: '',
 };
 
-export const Servicios = () => {
+export const Servicio = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
 	const [value, setValue] = useState(new Date());
+
+	const { data: Clientes } = useQuery(GQL.GET_CLIENTES, {
+		variables: {
+			limit: null,
+			offset: null,
+		},
+	});
+
+	const { data } = useQuery(GQL.GET_TIPO_SERVICIO, {
+		variables: {
+			offset: null,
+			limit: null,
+		},
+	});
 
 	const handleBack = () => {
 		navigate('/servicios', {
@@ -78,16 +91,13 @@ export const Servicios = () => {
 			GQL.GET_BYID,
 			handleBack,
 		);
+
 	const handleClickOpen = () => {
 		setOpen(true);
 	};
 
 	const handleClose = () => {
 		setOpen(false);
-	};
-
-	const getFullName = (value) => {
-		return `${value.nombres} ${value.primerApellido} ${value.segundoApellido}`;
 	};
 
 	if (loading) return <div>Cargando...</div>;
@@ -132,8 +142,8 @@ export const Servicios = () => {
 						{({ handleChange, values, touched, errors }) => (
 							<div className="overflow-hidden shadow sm:rounded-md">
 								<div className="bg-white px-4 py-5 sm:p-6">
-									<div className="grid grid-cols-8 gap-2">
-										<div className="col-span-12 lg:col-span-3 md:col-span-12 sm:col-span-12 space-y-3">
+									<div className="grid grid-cols-6 gap-6">
+										<div className="col-span-6 sm:col-span-3 space-y-2">
 											<SelecField
 												fullWidth
 												size="small"
@@ -146,51 +156,13 @@ export const Servicios = () => {
 												helperText={touched.clienteID && errors.clienteID}
 												error={touched.clienteID && Boolean(errors.clienteID)}
 											/>
-										</div>
-										<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-2">
-											<MobileDatePicker
-												value={value}
-												onChange={(newValue) => {
-													setValue(newValue);
-												}}
-												renderInput={(params) => (
-													<TextField
-														{...params}
-														size="small"
-														fullWidth
-														label="Fecha del servicio"
-														value={params.inputProps.value}
-													/>
-												)}
-											/>
-										</div>
-										<div className="col-span-12 lg:col-span-3 md:col-span-12 sm:col-span-12 space-y-2">
-											<SelecField
-												fullWidth
-												size="small"
-												name="estado"
-												label="Estatus"
-												labelProp="nombre"
-												value={values.estado}
-												onChange={handleChange}
-												options={estadoHerramienta}
-												helperText={touched.estado && errors.estado}
-												error={touched.estado && Boolean(errors.estado)}
-											/>
-										</div>
-										<div className="col-span-12 lg:col-span-4 md:col-span-12 sm:col-span-12 space-y-2">
 											<label
 												htmlFor="tipoServicio"
 												className="block text-sm mb-1 font-medium text-gray-700"
 											>
-												Seleccione el tipo de servicio
+												Tipo de servicio
 											</label>
-											<ListCheckBox
-												gql={GQL.GET_TIPO_SERVICIO}
-												operation="getAllTipoServicios"
-												valueProp="descripcion"
-												icon={<FaToolbox size={16} className="text-white" />}
-											/>
+											<ListaTrabajdor />
 											<label
 												htmlFor="tipoServicio"
 												className="block text-sm mb-1 font-medium text-gray-700"
@@ -203,21 +175,7 @@ export const Servicios = () => {
 												fullWidth
 												className="bg-gray-700"
 												onClick={handleClickOpen}
-												icon={<MdOutlineMiscellaneousServices size={16} />}
-											/>
-										</div>
-										<div className="col-span-12 lg:col-span-4 md:col-span-12 sm:col-span-12 space-y-2">
-											<label
-												htmlFor="tipoServicio"
-												className="block text-sm mb-1 font-medium text-gray-700"
-											>
-												Trabajadores
-											</label>
-											<ListCheckBox
-												gql={TrabajadoresActions.GET}
-												operation="getAllTrabajador"
-												getValue={getFullName}
-												icon={<HiUserGroup size={16} className="text-white" />}
+												icono={<MdOutlineMiscellaneousServices size={16} />}
 											/>
 											<TextField
 												fullWidth
@@ -227,7 +185,55 @@ export const Servicios = () => {
 												value={values.descripcion}
 												onChange={handleChange}
 												helperText={touched.descripcion && errors.descripcion}
-												error={touched.descripcion && Boolean(errors.descripcion)}
+												error={
+													touched.descripcion && Boolean(errors.descripcion)
+												}
+											/>
+										</div>
+										<div className="col-span-6 sm:col-span-3 space-y-3">
+											<MobileDatePicker
+												value={value}
+												onChange={(newValue) => {
+													setValue(newValue);
+												}}
+												renderInput={(params) => (
+													<TextField
+														{...params}
+														value={params.inputProps.value}
+														size="small"
+														fullWidth
+														label="Fecha del servicio"
+													/>
+												)}
+											/>
+											{/* <TextField
+												fullWidth
+												size="small"
+												label="Fecha del servicio"
+												name="nombre"
+												value={values.estado}
+												onChange={handleChange}
+												helperText={touched.estado && errors.estado}
+												error={touched.estado && Boolean(errors.estado)}
+											/> */}
+											<label
+												htmlFor="tipoServicio"
+												className="block text-sm mb-1 font-medium text-gray-700"
+											>
+												Trabajadores
+											</label>
+											<ListaTrabajdor tipo="trabajadores" />
+											<SelecField
+												fullWidth
+												size="small"
+												labelProp="nombre"
+												name="estado"
+												onChange={handleChange}
+												value={values.estado}
+												label="Estatus"
+												options={estadoHerramienta}
+												helperText={touched.estado && errors.estado}
+												error={touched.estado && Boolean(errors.estado)}
 											/>
 										</div>
 									</div>

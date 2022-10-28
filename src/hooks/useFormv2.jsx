@@ -14,7 +14,7 @@ const useFormActions = ({
 	name,
 	id,
 }) => {
-	const formRef = useRef(null);
+	let formRef = useRef(null);
 	const navigate = useNavigate();
 	const [values, setValues] = useState({ ...formData });
 
@@ -81,7 +81,7 @@ const useFormActions = ({
 export default useFormActions;
 
 useFormActions.propTypes = {
-	id: propTypes.oneOfType([propTypes.string, propTypes.number]).isRequired,
+	id: propTypes.oneOfType([propTypes.string, propTypes.number]),
 	method: propTypes.string.isRequired,
 	name: propTypes.string,
 	params: propTypes.object,

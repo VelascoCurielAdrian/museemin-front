@@ -77,7 +77,7 @@ const columns = [
 	},
 ];
 
-export const Servicios = () => {
+export const Servicio = () => {
 	const navigate = useNavigate();
 	const handleNew = () => {
 		navigate('/servicio/formulario');

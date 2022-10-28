@@ -1,7 +1,7 @@
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material';
-import { BsPlusLg } from 'react-icons/bs';
+import { BsPlusLg, BsPrinterFill } from 'react-icons/bs';
 import { GiCancel } from 'react-icons/gi';
 import { FiSave } from 'react-icons/fi';
 import paleta from '../../configuracion/paleta';
@@ -11,11 +11,13 @@ import { Actions, Container, ContentButton, TitleContainer } from './styles';
 export const Header = ({
 	name,
 	title,
+	print,
 	subtitle,
 	listado,
 	agregar,
 	handleNew,
 	handleCreate,
+	handlePrint,
 }) => {
 	const navigate = useNavigate();
 	const handleBack = () => {
@@ -80,6 +82,19 @@ export const Header = ({
 								Guardar
 							</Button>
 						</ContentButton>
+						{print && (
+							<ContentButton>
+								<Button
+									size="medium"
+									fullWidth
+									variant="contained"
+									onClick={handlePrint}
+									startIcon={<BsPrinterFill size={16} />}
+								>
+									Imprimir
+								</Button>
+							</ContentButton>
+						)}
 					</>
 				)}
 			</Container>
