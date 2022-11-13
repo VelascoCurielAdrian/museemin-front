@@ -1,104 +1,150 @@
-import { forwardRef } from 'react';
-import { Formik } from 'formik';
+import { forwardRef, useState } from 'react';
 import { FiSave } from 'react-icons/fi';
 import Slide from '@mui/material/Slide';
 import { GiCancel } from 'react-icons/gi';
 import Dialog from '@mui/material/Dialog';
+import { useForm } from 'react-hook-form';
+import { useQuery } from '@apollo/client';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { MdEdit } from 'react-icons/md';
+import {
+	Table,
+	TableRow,
+	TableHead,
+	TableCell,
+	TableContainer,
+	TableBody,
+	Tooltip,
+	IconButton,
+	LinearProgress,
+} from '@mui/material';
 
 import Button from '../../componentes/Button';
-import TextField from '../../componentes/TextField';
-import GQL, { validacion, dataCache } from './helper';
-import { Table } from '../../componentes/Table/component';
-import { useFormularion } from '../../componentes/Formulario/component';
-import { ClasificacionActions } from '../../actions';
+import { filters } from '../../helpers/constants';
+import useFormActions from '../../hooks/useFormv2';
+import { ClasificacionActions, Validate } from '../../actions';
+import { EmptyRows } from '../../componentes/EmptyRows/component';
+import { TextFieldController } from '../../componentes/Formulario';
 
 const Transition = forwardRef(function Transition(props, ref) {
 	return <Slide direction="down" ref={ref} {...props} />;
 });
 
-const columns = [
-	{ field: 'id', headerName: 'ID', width: 80 },
-	{
-		field: 'descripcion',
-		headerName: 'DESCRIPCIÓN',
-		width: 140,
-		editable: false,
-	},
-];
-
 export const Clasificacion = ({ handleClose, open }) => {
-	const { ActionForm, submitForm, isLoading, formikRef } = useFormularion(
-		{ action: 'create' },
-		dataCache,
-		GQL.CREATE,
-		GQL.CREATE,
-		GQL.GET,
-		handleClose,
-	);
+	const [idClasificacion, setIDClasificacion] = useState('');
+	const [data, setData] = useState([]);
+	const {
+		control,
+		reset,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		resolver: yupResolver(Validate),
+		defaultValues: { descripcion: '' },
+	});
+
+	const { loading, isLoading, actionForm } = useFormActions({
+		method: idClasificacion ? 'update' : 'create',
+		actions: ClasificacionActions,
+		operation: 'getAllCountClasificacion',
+		name: 'clasificaion',
+		reset,
+		id: idClasificacion,
+		redirect: false,
+	});
+
+	useQuery(ClasificacionActions.GET, {
+		variables: { ...filters },
+		onCompleted: (data) => {
+			setData(data?.getAllCountClasificacion?.rows);
+		},
+	});
+
+	const onSubmit = async (data) => {
+		await actionForm({
+			variables: { updateID: idClasificacion, ...data },
+		});
+		handleClose();
+		reset({ descripcion: '' });
+	};
 
 	return (
 		<Dialog
 			open={open}
 			TransitionComponent={Transition}
-			keepMounted
 			onClose={handleClose}
+			sx={{ maxHeight: 590 }}
 		>
+			{loading && <LinearProgress />}
 			<DialogTitle>Agregue una clasificación de herremientas</DialogTitle>
 			<DialogContent>
-				<Formik
-					innerRef={formikRef}
-					initialValues={{ nombre: '' }}
-					validationSchema={validacion}
-					onSubmit={(values) => {
-						const input = {
-							descripcion: values.nombre,
-							usuarioRegistroID: 1,
-							estatus: true,
-						};
-						ActionForm({
-							variables: { input },
-						});
-					}}
-				>
-					{({ handleChange, values, touched, errors }) => (
-						<div className="col-span-6 sm:col-span-2 mb-2">
-							<TextField
-								fullWidth
-								size="small"
-								label="Nombre"
-								name="nombre"
-								value={values.nombre}
-								onChange={handleChange}
-								helperText={touched.nombre && errors.nombre}
-								error={touched.nombre && Boolean(errors.nombre)}
-							/>
-						</div>
-					)}
-				</Formik>
+				<div className="col-span-6 sm:col-span-2 mb-2">
+					<TextFieldController
+						autoFocus
+						label="Nombre"
+						name="descripcion"
+						control={control}
+						error={errors.descripcion}
+					/>
+				</div>
 				<br />
 				<div className="col-span-6 sm:col-span-2">
-					<Table
-						uri={ClasificacionActions.GET}
-						urlDelete={{ gql: ClasificacionActions.DELETE, params: 'deleteClasificacionId'}}
-						columns={columns}
-						showActions
-						height={260}
-					/>
+					<TableContainer sx={{ overflowY: 'auto', maxHeight: 290 }}>
+						<Table stickyHeader aria-label="sticky table">
+							<TableHead>
+								<TableRow>
+									<TableCell>DECRIPCIÓN</TableCell>
+									<TableCell>ACCIÓN</TableCell>
+								</TableRow>
+							</TableHead>
+							<TableBody>
+								{data.length > 0 ? (
+									data.map((item, index) => (
+										<TableRow key={item.id}>
+											<TableCell aling="left">{item.descripcion}</TableCell>
+											<TableCell>
+												<>
+													<Tooltip
+														title="Editar"
+														placement="left"
+														arrow
+														onClick={() => setIDClasificacion(item.id)}
+													>
+														<IconButton>
+															<MdEdit size={20} className="text-red-600" />
+														</IconButton>
+													</Tooltip>
+												</>
+											</TableCell>
+										</TableRow>
+									))
+								) : (
+									<TableRow>
+										<TableCell align="left" colSpan={23}>
+											<EmptyRows />
+										</TableCell>
+									</TableRow>
+								)}
+							</TableBody>
+						</Table>
+					</TableContainer>
 				</div>
 			</DialogContent>
 			<DialogActions sx={{ marginRight: 2 }}>
 				<Button
-					onClick={handleClose}
+					onClick={() => {
+						handleClose();
+						reset({ descripcion: '' });
+					}}
 					label="Cancelar"
 					fullWidth
 					icono={<GiCancel size={16} />}
 				/>
 				<Button
-					showLoading
-					onClick={submitForm}
+					onClick={handleSubmit(onSubmit)}
 					label="Guardar"
 					fullWidth
 					loading={isLoading}

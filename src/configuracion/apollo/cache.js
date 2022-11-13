@@ -5,21 +5,21 @@ export const socket = makeVar(null);
 export const pagination = makeVar([0, 25]);
 
 export const snackbar = makeVar({
-  isOpen: false,
-  time: null,
-  label: '',
-  severity: 'success',
+	isOpen: false,
+	time: null,
+	label: '',
+	severity: 'success',
 });
 
 export const actionForm = makeVar({
-  action: '',
-  defaultData: {},
-  callback: null,
+	action: '',
+	defaultData: {},
+	callback: null,
 });
 
 export const deleteForm = makeVar({
 	isOpen: false,
-  params: {},
+	params: {},
 });
 
 export const cart = makeVar({
@@ -30,7 +30,11 @@ export const cart = makeVar({
 	priceName: 'Estandar',
 });
 
-export const discountType = makeVar(localStorage.getItem('discountType') ? localStorage.getItem('discountType') : '%');
+export const discountType = makeVar(
+	localStorage.getItem('discountType')
+		? localStorage.getItem('discountType')
+		: '%',
+);
 
 export const form = makeVar({});
 export const item = makeVar({});
@@ -52,7 +56,11 @@ export const count = makeVar(0);
 export const actions = makeVar([]);
 
 export const subTitle = makeVar('');
-export const customerCalendarCheck = makeVar({ isOpen: false, dataId: null, type: '' });
+export const customerCalendarCheck = makeVar({
+	isOpen: false,
+	dataId: null,
+	type: '',
+});
 
 export const isCalendarFormOpen = makeVar([false, {}]);
 

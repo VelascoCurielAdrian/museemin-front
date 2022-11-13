@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-	content: ['./src/**/*.{html, js, ts, vue}', './src/**/*'],
+	content: [
+		'./src/**/*.{js,jsx,ts,tsx}',
+		'./src/**/*',
+		'./node_modules/react-tailwindcss-select/dist/index.esm.js',
+	],
 	important: '#root',
 	theme: {
 		extend: {

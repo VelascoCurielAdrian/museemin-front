@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -9,19 +9,17 @@ const useFormActions = ({
 	method,
 	actions,
 	operation,
-	formData,
 	params,
 	name,
+	reset,
 	id,
+	redirect,
 }) => {
-	let formRef = useRef(null);
 	const navigate = useNavigate();
-	const [values, setValues] = useState({ ...formData });
-
 	const [getById, { loading }] = useLazyQuery(actions.GET_BYID, {
 		fetchPolicy: 'no-cache',
 		onCompleted: (response) => {
-			setValues(Object.values(response)[0]);
+			reset(Object.values(response)[0]);
 		},
 	});
 
@@ -55,11 +53,12 @@ const useFormActions = ({
 			}
 		},
 		onCompleted: (response) => {
+			if (redirect) {
+				navigate(`/${name}`, {
+					replace: true,
+				});
+			}
 			toast.success(Object.values(response)[0].mensaje);
-			formRef.current.resetForm();
-			navigate(`/${name}`, {
-				replace: true,
-			});
 		},
 		onError: (e) => {
 			const parseErrors = parseError(e);
@@ -71,11 +70,7 @@ const useFormActions = ({
 		},
 	});
 
-	const save = () => {
-		formRef.current.submitForm();
-	};
-
-	return { save, formRef, values, loading, isLoading, actionForm };
+	return { loading, isLoading, actionForm };
 };
 
 export default useFormActions;
@@ -86,11 +81,12 @@ useFormActions.propTypes = {
 	name: propTypes.string,
 	params: propTypes.object,
 	actions: propTypes.object.isRequired,
-	formData: propTypes.object.isRequired,
 	operation: propTypes.string.isRequired,
+	redirect: propTypes.bool,
 };
 
 useFormActions.defaultProps = {
 	name: '',
 	params: {},
+	redirect: true,
 };

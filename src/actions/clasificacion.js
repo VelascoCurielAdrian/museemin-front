@@ -1,4 +1,6 @@
 import { gql } from '@apollo/client';
+import * as yup from 'yup';
+import { MESSAGE_REQUIRED } from '../helpers/constants';
 
 const FRAGMENTS = {
 	Clasificacion: gql`
@@ -13,8 +15,8 @@ const FRAGMENTS = {
 };
 
 const CREATE = gql`
-	mutation CrearClasificacion($input: clasificacionDatos!) {
-		createClasificacion(input: $input) {
+	mutation CrearClasificacion($descripcion: String!) {
+		createClasificacion(input: { descripcion: $descripcion }) {
 			mensaje
 			respuesta {
 				...data
@@ -36,6 +38,18 @@ const DELETE = gql`
 	${FRAGMENTS.Clasificacion}
 `;
 
+const UPDATE = gql`
+	mutation actualizarClasificacion($updateID: ID!, $descripcion: String!) {
+		updateClasificacion(id: $updateID, input: { descripcion: $descripcion }) {
+			mensaje
+			respuesta {
+				...data
+			}
+		}
+	}
+	${FRAGMENTS.Clasificacion}
+`;
+
 const GET = gql`
 	query obtenerClasificaciones($offset: Int, $limit: Int) {
 		getAllCountClasificacion(offset: $offset, limit: $limit) {
@@ -48,8 +62,23 @@ const GET = gql`
 	${FRAGMENTS.Clasificacion}
 `;
 
+const GET_BYID = gql`
+	query obtenerClasificacion($id: ID!) {
+		getClasificacion(id: $id) {
+			...data
+		}
+	}
+	${FRAGMENTS.Clasificacion}
+`;
+
+export const Validate = yup.object({
+	descripcion: yup.string().required(MESSAGE_REQUIRED)
+});
+
 export const ClasificacionActions = {
 	CREATE,
 	DELETE,
+	UPDATE,
 	GET,
+	GET_BYID,
 };

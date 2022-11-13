@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client';
+import { isBoolean } from 'lodash';
 import * as yup from 'yup';
 import {
 	EMAIL_INVALID,
@@ -29,8 +30,34 @@ const FRAGMENTS = {
 };
 
 const CREATE = gql`
-	mutation CreateCliente($input: clienteDatos!) {
-		createCliente(input: $input) {
+	mutation CreateCliente(
+		$nombre: String!
+		$primerTelefono: String!
+		$segundoTelefono: String!
+		$correo: String!
+		$colonia: String
+		$calles: String
+		$referencia: String
+		$numeroExterior: Int
+		$numeroInterior: Int
+		$codigoPostal: Int
+		$estatus: Boolean!
+	) {
+		createCliente(
+			input: {
+				nombre: $nombre
+				primerTelefono: $primerTelefono
+				segundoTelefono: $segundoTelefono
+				correo: $correo
+				colonia: $colonia
+				calles: $calles
+				referencia: $referencia
+				numeroExterior: $numeroExterior
+				numeroInterior: $numeroInterior
+				codigoPostal: $codigoPostal
+				estatus: $estatus
+			}
+		) {
 			mensaje
 			respuesta {
 				...data
@@ -41,8 +68,36 @@ const CREATE = gql`
 `;
 
 const UPDATE = gql`
-	mutation UpdateCliente($input: clienteDatos!, $updateId: ID!) {
-		updateCliente(id: $updateId, input: $input) {
+	mutation UpdateCliente(
+		$nombre: String!
+		$primerTelefono: String!
+		$segundoTelefono: String!
+		$correo: String!
+		$colonia: String
+		$calles: String
+		$referencia: String
+		$numeroExterior: Int
+		$numeroInterior: Int
+		$codigoPostal: Int
+		$estatus: Boolean!
+		$updateID: ID!
+	) {
+		updateCliente(
+			id: $updateID
+			input: {
+				nombre: $nombre
+				primerTelefono: $primerTelefono
+				segundoTelefono: $segundoTelefono
+				correo: $correo
+				colonia: $colonia
+				calles: $calles
+				referencia: $referencia
+				numeroExterior: $numeroExterior
+				numeroInterior: $numeroInterior
+				codigoPostal: $codigoPostal
+				estatus: $estatus
+			}
+		) {
 			mensaje
 			respuesta {
 				...data
@@ -77,8 +132,8 @@ const GET = gql`
 `;
 
 const GET_BYID = gql`
-	query GetCliente($getClienteId: ID!) {
-		getCliente(id: $getClienteId) {
+	query GetCliente($id: ID!) {
+		getCliente(id: $id) {
 			...data
 		}
 	}
@@ -88,29 +143,32 @@ const GET_BYID = gql`
 export const Validate = yup.object({
 	nombre: yup.string().required(MESSAGE_REQUIRED),
 	primerTelefono: yup
-		.number(TELEPHONE_INVALID)
-		.min(10, TELEPHONE_VALIDATE)
-		.required(MESSAGE_REQUIRED),
+		.string()
+		.required(MESSAGE_REQUIRED)
+		.min(10, TELEPHONE_VALIDATE),
 	segundoTelefono: yup
-		.number(TELEPHONE_INVALID)
-		.min(10, TELEPHONE_VALIDATE)
-		.required(MESSAGE_REQUIRED),
+		.string()
+		.required(MESSAGE_REQUIRED)
+		.min(10, TELEPHONE_VALIDATE),
 	correo: yup.string().email(EMAIL_INVALID).required(MESSAGE_REQUIRED),
 	colonia: yup.string().required(MESSAGE_REQUIRED),
 	referencia: yup.string().required(MESSAGE_REQUIRED),
 	calles: yup.string().required(MESSAGE_REQUIRED),
-	estatus: yup.string().required(MESSAGE_REQUIRED),
+	estatus: yup.boolean(),
 	codigoPostal: yup
-		.string()
-		.required('Este Campo es requerido')
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED)
 		.min(6, 'Este campo ddebe tener como minimo 6 caracteres'),
 	numeroExterior: yup
-		.string()
-		.required('Este Campo es requerido')
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED)
 		.min(4, 'Este campo ddebe tener como minimo 4 caracteres'),
 	numeroInterior: yup
-		.string()
-		.required('Este Campo es requerido')
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED)
 		.min(4, 'Este campo ddebe tener como minimo 4 caracteres'),
 });
 

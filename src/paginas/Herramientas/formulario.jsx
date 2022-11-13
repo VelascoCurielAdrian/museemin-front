@@ -1,23 +1,26 @@
 import { useState } from 'react';
-import { Formik } from 'formik';
+import { useForm } from 'react-hook-form';
 import { BsTools } from 'react-icons/bs';
 import { useQuery } from '@apollo/client';
 import { useParams } from 'react-router-dom';
+import { yupResolver } from '@hookform/resolvers/yup';
 
 import Button from '../../componentes/Button';
 import useFormActions from '../../hooks/useFormv2';
-import TextField from '../../componentes/TextField';
 import { ClasificacionActions } from '../../actions';
 import { Clasificacion } from '../Clasificacion/formulario';
 import { Header } from '../../componentes/Header/component';
-import { SelecField } from '../../componentes/Select/component';
-import { estadoHerramienta, estatus } from '../../helpers/constants';
+import { estadoHerramienta, estatus, filters } from '../../helpers/constants';
 import { HerramientasActions, Validate } from '../../actions/herramientas';
+import {
+	SelectFieldController,
+	TextFieldController,
+} from '../../componentes/Formulario';
 
 const dataInicial = {
 	clasificacionID: '',
 	estado: '',
-	estatus: '',
+	estatus: true,
 	nombre: '',
 	marca: '',
 	precio: '',
@@ -27,20 +30,25 @@ const dataInicial = {
 export const Herramienta = () => {
 	const { id } = useParams();
 	const [open, setOpen] = useState(false);
-	const { save, formRef, values, loading, isLoading, actionForm } =
-		useFormActions({
-			method: id ? 'update' : 'create',
-			actions: HerramientasActions,
-			operation: 'getAllHerramientas',
-			formData: dataInicial,
-			name: 'herramientas',
-			id,
-		});
+	const [clasificaciones, setClasificaciones] = useState([]);
+	const { control, reset, handleSubmit, formState: { errors } } = useForm({
+		resolver: yupResolver(Validate),
+		defaultValues: dataInicial,
+	});
+	const { loading, isLoading, actionForm } = useFormActions({
+		method: id ? 'update' : 'create',
+		actions: HerramientasActions,
+		operation: 'getAllHerramientas',
+		name: 'herramientas',
+		reset,
+		id,
+		redirect: true
+	});
 
-	const { data } = useQuery(ClasificacionActions.GET, {
-		variables: {
-			offset: null,
-			limit: null,
+	useQuery(ClasificacionActions.GET, {
+		variables: { ...filters },
+		onCompleted: (data) => {
+			setClasificaciones(data?.getAllCountClasificacion?.rows);
 		},
 	});
 
@@ -52,6 +60,12 @@ export const Herramienta = () => {
 		setOpen(false);
 	};
 
+	const onSubmit = (data) => {
+		actionForm({
+			variables: { updateID: id, ...data },
+		});
+	};
+
 	if (loading) return <div>Cargando...</div>;
 	return (
 		<>
@@ -59,7 +73,7 @@ export const Herramienta = () => {
 				name="herramientas"
 				title="Herramientas"
 				subtitle="Moduló de Herramientas"
-				handleCreate={save}
+				handleCreate={handleSubmit(onSubmit)}
 				loading={isLoading}
 				agregar
 			/>
@@ -71,140 +85,97 @@ export const Herramienta = () => {
 				</div>
 
 				<div className="mt-5 md:col-span-2 md:mt-0">
-					<Formik
-						innerRef={formRef}
-						initialValues={values}
-						validationSchema={Validate}
-						onSubmit={(values) => {
-							actionForm({
-								variables: { updateID: id, ...values },
-							});
-						}}
-					>
-						{({ handleChange, values, touched, errors }) => (
-							<div className="overflow-hidden shadow sm:rounded-md">
-								<div className="bg-white px-4 py-5 sm:p-6">
-									<div className="grid grid-cols-6 gap-6">
-										<div className="col-span-6 sm:col-span-2">
-											<TextField
-												fullWidth
-												size="small"
-												label="Nombre"
-												name="nombre"
-												autoFocus
-												value={values.nombre}
-												onChange={handleChange}
-												helperText={touched.nombre && errors.nombre}
-												error={touched.nombre && Boolean(errors.nombre)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<SelecField
-												fullWidth
-												size="small"
-												label="Clasificaciones"
-												labelProp="descripcion"
-												name="clasificacionID"
-												onChange={handleChange}
-												value={values.clasificacionID || ''}
-												options={data?.getAllCountClasificacion?.rows || []}
-												helperText={
-													touched.clasificacionID && errors.clasificacionID
-												}
-												error={
-													touched.clasificacionID &&
-													Boolean(errors.clasificacionID)
-												}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<label
-												htmlFor="clasificacion"
-												className="block text-sm mb-1 font-medium text-gray-700"
-											>
-												Gestionar Clasificaciones
-											</label>
-											<Button
-												size="medium"
-												label="Agregar"
-												fullWidth
-												className="bg-gray-700"
-												onClick={handleClickOpen}
-												icono={<BsTools size={16} />}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<TextField
-												fullWidth
-												size="small"
-												label="Precio"
-												type="number"
-												name="precio"
-												value={values.precio}
-												onChange={handleChange}
-												helperText={touched.precio && errors.precio}
-												error={touched.precio && Boolean(errors.precio)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<TextField
-												fullWidth
-												size="small"
-												label="Marca"
-												name="marca"
-												value={values.marca}
-												onChange={handleChange}
-												helperText={touched.marca && errors.marca}
-												error={touched.marca && Boolean(errors.marca)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<SelecField
-												fullWidth
-												size="small"
-												labelProp="nombre"
-												name="estado"
-												onChange={handleChange}
-												value={values.estado}
-												label="Estado de la herramienta"
-												options={estadoHerramienta}
-												helperText={touched.estado && errors.estado}
-												error={touched.estado && Boolean(errors.estado)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-2">
-											<SelecField
-												fullWidth
-												size="small"
-												label="Estatus"
-												labelProp="nombre"
-												name="estatus"
-												options={estatus}
-												onChange={handleChange}
-												value={values.estatus}
-												helperText={touched.estatus && errors.estatus}
-												error={touched.estatus && Boolean(errors.estatus)}
-											/>
-										</div>
-										<div className="col-span-6 sm:col-span-3">
-											<TextField
-												fullWidth
-												type="multiline"
-												label="Descripción"
-												name="descripcion"
-												value={values.descripcion}
-												onChange={handleChange}
-												helperText={touched.descripcion && errors.descripcion}
-												error={
-													touched.descripcion && Boolean(errors.descripcion)
-												}
-											/>
-										</div>
+					<form id="herramientas">
+						<div className="overflow-hidden shadow sm:rounded-md">
+							<div className="bg-white px-4 py-5 sm:p-6">
+								<div className="grid grid-cols-6 gap-6">
+									<div className="col-span-6 sm:col-span-2">
+										<TextFieldController
+											autoFocus
+											error={errors.nombre}
+											control={control}
+											label="Nombre"
+											name="nombre"
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-2">
+										<SelectFieldController
+											control={control}
+											label="Clasificaciones"
+											labelProp="descripcion"
+											name="clasificacionID"
+											options={clasificaciones}
+											error={errors.clasificacionID}
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-2">
+										<label
+											htmlFor="clasificacion"
+											className="block text-sm mb-1 font-medium text-gray-700"
+										>
+											Gestionar Clasificaciones
+										</label>
+										<Button
+											size="medium"
+											label="Agregar"
+											fullWidth
+											className="bg-gray-700"
+											onClick={handleClickOpen}
+											icono={<BsTools size={16} />}
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-2">
+										<TextFieldController
+											autoFocus
+											error={errors.precio}
+											control={control}
+											label="precio"
+											name="precio"
+											type="number"
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-2">
+										<TextFieldController
+											autoFocus
+											error={errors.marca}
+											control={control}
+											label="Marca"
+											name="marca"
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-2">
+										<SelectFieldController
+											label="Estado de la herramienta"
+											labelProp="nombre"
+											name="estado"
+											control={control}
+											options={estadoHerramienta}
+											error={errors.estado}
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-2">
+										<SelectFieldController
+											label="Estatus"
+											labelProp="nombre"
+											name="estatus"
+											options={estatus}
+											control={control}
+											error={errors.estatus}
+										/>
+									</div>
+									<div className="col-span-6 sm:col-span-3">
+										<TextFieldController
+											error={errors.descripcion}
+											control={control}
+											type="multiline"
+											label="Descripción"
+											name="descripcion"
+										/>
 									</div>
 								</div>
 							</div>
-						)}
-					</Formik>
+						</div>
+					</form>
 				</div>
 			</>
 			<Clasificacion open={open} handleClose={handleClose} />

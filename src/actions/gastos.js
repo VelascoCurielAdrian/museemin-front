@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import { MESSAGE_REQUIRED } from '../helpers/constants';
 
 const FRAGMENTS = {
-	Gasto: gql`
+	Gastos: gql`
 		fragment data on gastos {
 			id
 			trabajadorID
@@ -12,9 +12,10 @@ const FRAGMENTS = {
 			compania
 			fecha
 			metodoPago
+			tipoGasto
 			importe
 			diferencia
-			subtotal
+			subTotal
 			total
 			usuarioRegistroID
 			trabajador {
@@ -22,39 +23,21 @@ const FRAGMENTS = {
 				nombres
 				primerApellido
 				segundoApellido
-				sexo
-				telefono
-				correo
-				colonia
-				calles
-				referencia
-				numeroExterior
-				usuarioRegistroID
-				activo
-				estatus
 			}
 			cliente {
 				id
 				nombre
 				primerTelefono
-				segundoTelefono
-				correo
-				colonia
-				calles
-				referencia
-				numeroExterior
-				numeroInterior
-				codigoPostal
-				usuarioRegistroID
-				activo
-				estatus
 			}
 			DetalleGastos {
 				id
 				gastoID
 				descripcion
+				unidad
 				precio
 				cantidad
+				precioParcial
+				activo
 			}
 			activo
 			estatus
@@ -63,39 +46,101 @@ const FRAGMENTS = {
 };
 
 const CREATE = gql`
-	mutation CreateGasto($input: datosGastos!) {
-		createGastos(input: $input) {
+	mutation CreateGasto(
+		$trabajadorID: ID
+		$clienteID: ID
+		$descripcion: String
+		$compania: String
+		$fecha: Date
+		$metodoPago: Int
+		$tipoGasto: Int
+		$importe: Float
+		$diferencia: Float
+		$subTotal: Float
+		$total: Float
+		$usuarioRegistroID: ID
+		$CapturaDetalleGastos: [datosCapturaDetalleGastos]
+	) {
+		createGastos(
+			input: {
+				trabajadorID: $trabajadorID
+				clienteID: $clienteID
+				descripcion: $descripcion
+				compania: $compania
+				fecha: $fecha
+				metodoPago: $metodoPago
+				tipoGasto: $tipoGasto
+				importe: $importe
+				diferencia: $diferencia
+				subTotal: $subTotal
+				total: $total
+				usuarioRegistroID: $usuarioRegistroID
+				CapturaDetalleGastos: $CapturaDetalleGastos
+			}
+		) {
 			mensaje
 			respuesta {
 				...data
 			}
 		}
 	}
-	${FRAGMENTS.Gasto}
+	${FRAGMENTS.Gastos}
 `;
 
 const UPDATE = gql`
-	mutation CreateGasto($input: datosGastos!) {
-		createGastos(input: $input) {
+	mutation UpdateGastos(
+		$updateID: ID
+		$trabajadorID: ID
+		$clienteID: ID
+		$descripcion: String
+		$compania: String
+		$fecha: Date
+		$metodoPago: Int
+		$tipoGasto: Int
+		$importe: Float
+		$diferencia: Float
+		$subTotal: Float
+		$total: Float
+		$usuarioRegistroID: ID
+		$CapturaDetalleGastos: [datosCapturaDetalleGastos]
+	) {
+		updateGastos(
+			id: $updateID
+			input: {
+				trabajadorID: $trabajadorID
+				clienteID: $clienteID
+				descripcion: $descripcion
+				compania: $compania
+				fecha: $fecha
+				metodoPago: $metodoPago
+				tipoGasto: $tipoGasto
+				importe: $importe
+				diferencia: $diferencia
+				subTotal: $subTotal
+				total: $total
+				usuarioRegistroID: $usuarioRegistroID
+				CapturaDetalleGastos: $CapturaDetalleGastos
+			}
+		) {
 			mensaje
 			respuesta {
 				...data
 			}
 		}
 	}
-	${FRAGMENTS.Gasto}
+	${FRAGMENTS.Gastos}
 `;
 
 const DELETE = gql`
-	mutation DeleteGastos($deleteGastosId: ID) {
-		deleteGastos(id: $deleteGastosId) {
+	mutation DeleteGastos($deleteId: ID) {
+		deleteGastos(id: $deleteId) {
 			mensaje
 			respuesta {
 				...data
 			}
 		}
 	}
-	${FRAGMENTS.Gasto}
+	${FRAGMENTS.Gastos}
 `;
 
 const GET = gql`
@@ -107,7 +152,7 @@ const GET = gql`
 			}
 		}
 	}
-	${FRAGMENTS.Gasto}
+	${FRAGMENTS.Gastos}
 `;
 
 const GET_BYID = gql`
@@ -116,16 +161,25 @@ const GET_BYID = gql`
 			...data
 		}
 	}
-	${FRAGMENTS.Gasto}
+	${FRAGMENTS.Gastos}
 `;
 
-export const Validate = yup.object({
-	trabajadorID: yup.string().required(MESSAGE_REQUIRED),
-	clienteID: yup.string().required(MESSAGE_REQUIRED),
+export const ValidacionGasto = yup.object().shape({
 	compania: yup.string().required(MESSAGE_REQUIRED),
+	trabajadorID: yup.string().required(MESSAGE_REQUIRED),
 	metodoPago: yup.string().required(MESSAGE_REQUIRED),
+	clienteID: yup.string().required(MESSAGE_REQUIRED),
 	importe: yup.string().required(MESSAGE_REQUIRED),
 	diferencia: yup.string().required(MESSAGE_REQUIRED),
+	descripcion: yup.string().required(MESSAGE_REQUIRED),
+	articulos: yup.array().of(
+		yup.object().shape({
+			descripcion: yup.string(),
+			unidad: yup.string(),
+			precio: yup.string(),
+			cantidad: yup.string(),
+		}),
+	),
 });
 
 export const GastosActions = {

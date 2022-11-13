@@ -4,12 +4,13 @@ import { Cliente, Clientes } from '../paginas/Clientes';
 import { Servicio, Servicios } from '../paginas/Servicios';
 import { Trabajador, Trabajadores } from '../paginas/Trabajadores';
 import { Herramienta, Herramientas } from '../paginas/Herramientas';
-import { Almacen, TablaAlmacen } from '../paginas/Almacen';
+import { Almacen } from '../paginas/Almacen';
 import {
 	PaqueteHerramientas,
 	PaqueteHerramienta,
 } from '../paginas/PaqueteHerramientas';
 import { Gastos, Gasto } from '../paginas/Gastos';
+import { Cotizacion } from '../paginas/Cotizacion/lista';
 
 export const DaashBoardRoutes = () => {
 	return (
@@ -38,14 +39,11 @@ export const DaashBoardRoutes = () => {
 					<Route path="gastos/formulario/:id" element={<Gasto />} />
 
 					<Route path="paqueteHerramientas" element={<PaqueteHerramientas />} />
-					<Route
-						path="paqueteHerramientas/formulario"
-						element={<PaqueteHerramienta />}
-					/>
-					<Route
-						path="paqueteHerramientas/formulario/:id"
-						element={<PaqueteHerramienta />}
-					/>
+					<Route path="paqueteHerramientas/formulario" element={<PaqueteHerramienta />} />
+					<Route path="paqueteHerramientas/formulario/:id" element={<PaqueteHerramienta />}/>
+
+					<Route path="cotizacion" element={<Cotizacion />} />
+
 					<Route path="/" element={<Navigate to="/home" />} />
 				</Routes>
 			</div>

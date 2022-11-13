@@ -133,9 +133,15 @@ export const Validate = yup.object({
 	clasificacionID: yup.string().required(MESSAGE_REQUIRED),
 	nombre: yup.string().required(MESSAGE_REQUIRED),
 	marca: yup.string().required(MESSAGE_REQUIRED),
-	estado: yup.string().required(MESSAGE_REQUIRED),
-	precio: yup.string().required(MESSAGE_REQUIRED),
-	estatus: yup.string().required(MESSAGE_REQUIRED),
+	estado: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
+	precio: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
+	estatus: yup.bool(),
 	descripcion: yup.string().required(MESSAGE_REQUIRED),
 });
 

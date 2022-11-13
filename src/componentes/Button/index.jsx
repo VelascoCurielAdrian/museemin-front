@@ -12,6 +12,7 @@ const ButtonCustomized = ({
 	classesCustom,
 	onClick,
 	border,
+	disabled,
 	isSubmit,
 	fullWidth,
 	className,
@@ -30,6 +31,7 @@ const ButtonCustomized = ({
 					sx={stylesButton}
 					loading={loading}
 					onClick={onClick}
+					disabled={disabled}
 					type={isSubmit ? "submit" : "button"}
 					fullWidth={fullWidth}
 					variant='contained'
@@ -40,6 +42,7 @@ const ButtonCustomized = ({
 				<Button
 					sx={stylesButton}
 					size={size}
+					disabled={disabled}
 					className={className}
 					startIcon={icono}
 					onClick={onClick}
@@ -66,6 +69,7 @@ ButtonCustomized.propTypes = {
 	}),
 	onClick: propTypes.func,
 	border: propTypes.bool,
+	disabled: propTypes.bool,
 	isSubmit: propTypes.bool,
 };
 
@@ -76,6 +80,7 @@ ButtonCustomized.defaultProps = {
 	classesCustom: {},
 	onClick: null,
 	border: false,
+	disabled: false,
 	isSubmit: false,
 };
 

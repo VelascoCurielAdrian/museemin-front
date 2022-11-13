@@ -57,7 +57,7 @@ const TotalGasto = ({ subTotal, diferencia, importe, setValue }) => {
 	);
 };
 
-export const Gasto = () => {
+export const Cotizacion = () => {
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [tipoGasto, setTipoGasto] = useState({ interno: false, externo: true });
@@ -74,7 +74,7 @@ export const Gasto = () => {
 		resolver: yupResolver(ValidacionGasto),
 		defaultValues: dataInicial,
 	});
-	const { fields, append, replace, remove, update } = useFieldArray({
+	const { fields, append, replace, remove } = useFieldArray({
 		control,
 		name: 'articulos',
 	});
@@ -160,12 +160,7 @@ export const Gasto = () => {
 	};
 
 	const onSubmit = (data) => {
-		if (
-			fields.length === 0 ||
-			articulos.filter(({ activo }) => activo).length === 0
-		) {
-			return toast.warning('Es necesario agregar artículos.');
-		}
+		console.log(data);
 		const DetalleGastos = articulos.map((gasto) => {
 			delete gasto.__typename;
 			return {

@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import { FiEdit } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import { MdOutlineDelete } from 'react-icons/md';
 import { GridActionsCellItem } from '@mui/x-data-grid';
+import { MdOutlineDelete, MdPrint } from 'react-icons/md';
 import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 
 import { parseError } from '../../helpers';
@@ -15,7 +15,9 @@ import { TableBase } from '../TableBase/component';
 
 export const Table = ({
 	uri,
+	pdf,
 	title,
+	print,
 	height,
 	filters,
 	columns,
@@ -80,6 +82,10 @@ export const Table = ({
 		});
 	};
 
+	const handlePdf = (row) => {
+		pdf(row);
+	};
+
 	const newColumns = [
 		...columns,
 		{
@@ -100,6 +106,12 @@ export const Table = ({
 					}}
 					icon={<MdOutlineDelete size={15} />}
 					label="Delete"
+				/>,
+				<GridActionsCellItem
+					disabled={!print}
+					onClick={() => handlePdf(row, index)}
+					icon={<MdPrint size={15} />}
+					label="Imprimir"
 				/>,
 			],
 		},
@@ -136,27 +148,31 @@ export const Table = ({
 };
 
 Table.propTypes = {
-	title: propTypes.string,
-	subtitle: propTypes.string,
-	uri: propTypes.object,
-	showHeader: propTypes.bool,
-	handleNew: propTypes.func,
-	columns: propTypes.array,
-	rowsData: propTypes.array,
-	height: propTypes.number,
-	showActions: propTypes.bool,
-	dataFixed: propTypes.bool,
-	showPaginate: propTypes.bool,
-	autoHeight: propTypes.bool,
-	urlDelete: propTypes.object,
-	dataCache: propTypes.string,
+	title: PropTypes.string,
+	subtitle: PropTypes.string,
+	uri: PropTypes.object,
+	showHeader: PropTypes.bool,
+	handleNew: PropTypes.func,
+	columns: PropTypes.array,
+	rowsData: PropTypes.array,
+	height: PropTypes.number,
+	showActions: PropTypes.bool,
+	dataFixed: PropTypes.bool,
+	showPaginate: PropTypes.bool,
+	autoHeight: PropTypes.bool,
+	print: PropTypes.bool,
+	urlDelete: PropTypes.object,
+	dataCache: PropTypes.string,
+	pdf: PropTypes.func,
 };
 
 Table.defaultProps = {
 	title: '',
 	subtitle: '',
 	uri: {},
+	func: () => {},
 	showHeader: false,
 	showPaginate: true,
 	dataFixed: false,
+	print: true,
 };

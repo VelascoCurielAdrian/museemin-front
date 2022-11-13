@@ -1,5 +1,5 @@
 import { memo } from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { TextField as Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
@@ -46,10 +46,10 @@ const TextField = ({
 	fullWidth,
 	className,
 	onKeyDown,
-	helperText,
 	inputProps,
 	inputStyles,
 	placeHolder,
+	messageError,
 	isHandleChange,
 }) => {
 	const customOnChange = (e) => {
@@ -60,8 +60,8 @@ const TextField = ({
 	return (
 		<div style={inputStyles}>
 			<label
-				htmlFor='label-form'
-				className='block mb-2 text-sm font-medium text-gray-700'
+				htmlFor="label-form"
+				className="block mb-2 text-sm font-medium text-gray-700"
 			>
 				{label}
 			</label>
@@ -70,8 +70,8 @@ const TextField = ({
 					size={size}
 					name={name}
 					type={type}
-					value={value}
-					error={error}
+					value={value || ''}
+					error={!!error}
 					autoFocus={autoFocus}
 					disabled={disabled}
 					required={required}
@@ -79,7 +79,7 @@ const TextField = ({
 					className={className}
 					fullWidth={fullWidth}
 					InputProps={inputProps}
-					helperText={helperText}
+					helperText={messageError && error?.message}
 					placeholder={placeHolder}
 					onChange={customOnChange}
 				/>
@@ -98,7 +98,7 @@ const TextField = ({
 					className={className}
 					fullWidth={fullWidth}
 					InputProps={inputProps}
-					helperText={helperText}
+					helperText={!messageError && error?.message}
 					placeholder={placeHolder}
 					onChange={customOnChange}
 				/>
@@ -108,31 +108,39 @@ const TextField = ({
 };
 
 TextField.propTypes = {
-	label: propTypes.string,
-	value: propTypes.oneOfType([propTypes.string, propTypes.number]),
-	name: propTypes.string.isRequired,
-	type: propTypes.string,
-	onChange: propTypes.func,
-	isHandleChange: propTypes.bool,
-	inputProps: propTypes.object,
-	required: propTypes.bool,
-	tooltip: propTypes.string,
-	rows: propTypes.number,
-	helperText: propTypes.string,
-	placeHolder: propTypes.string,
-	className: propTypes.string,
-	onKeyDown: propTypes.func,
-	disabled: propTypes.bool,
-	inputClassName: propTypes.string,
-	inputStyles: propTypes.object,
+	label: PropTypes.string,
+	value: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.number,
+		PropTypes.bool,
+	]),
+	error: PropTypes.oneOfType([PropTypes.object, PropTypes.bool]),
+	name: PropTypes.string.isRequired,
+	type: PropTypes.string,
+	onChange: PropTypes.func,
+	isHandleChange: PropTypes.bool,
+	inputProps: PropTypes.object,
+	required: PropTypes.bool,
+	tooltip: PropTypes.string,
+	rows: PropTypes.number,
+	helperText: PropTypes.string,
+	placeHolder: PropTypes.string,
+	className: PropTypes.string,
+	onKeyDown: PropTypes.func,
+	disabled: PropTypes.bool,
+	messageError: PropTypes.bool,
+	inputClassName: PropTypes.string,
+	inputStyles: PropTypes.object,
 };
 
 TextField.defaultProps = {
+	size: 'small',
 	label: '',
 	value: '',
 	name: '',
 	type: 'text',
 	isHandleChange: false,
+	messageError: true,
 	inputProps: {},
 	required: false,
 	tooltip: '',
@@ -149,9 +157,7 @@ export default memo(TextField, (prev, next) => {
 	return (
 		prev.value === next.value &&
 		prev.error === next.error &&
-		prev.helperText === next.helperText &&
 		prev.disabled === next.disabled &&
-		prev.tooltip === next.tooltip &&
 		prev.onChange === next.onChange
 	);
 });

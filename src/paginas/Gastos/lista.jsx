@@ -1,17 +1,18 @@
 import { useNavigate } from 'react-router-dom';
-import { Table } from '../../componentes/Table/component';
-import { GastosActions } from '../../actions/gastos';
 import moment from 'moment';
+import { GastosActions } from '../../actions/gastos';
+import { Table } from '../../componentes/Table/component';
 import { EstadoMetodoPago } from '../../componentes/MetodoPago/component';
+import { formatPdfGasto } from './pdf';
 
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 30 },
 	{
 		field: 'fecha',
 		headerName: 'FECHA',
-		width: 170,
+		width: 80,
 		editable: false,
-		valueGetter: ({ row }) => moment(row.fecha).format('LL'),
+		valueGetter: ({ row }) => moment(row.fecha).format('L'),
 	},
 	{
 		field: 'trabajadorID',
@@ -19,14 +20,19 @@ const columns = [
 		width: 170,
 		editable: false,
 		valueGetter: ({ row }) =>
-			`${row.trabajador.nombres} ${row.trabajador.primerApellido} ${row.trabajador.segundoApellido}`,
+			`${row.trabajador.nombres} ${row.trabajador?.primerApellido} ${row.trabajador.segundoApellido}`,
 	},
 	{
-		field: 'clienteID',
-		headerName: 'CLIENTE',
-		width: 120,
+		field: 'tipoGasto',
+		headerName: 'TIPO DE GASTO',
+		width: 150,
 		editable: false,
-		valueGetter: ({ row }) => `${row.cliente.nombre}`,
+		valueGetter: ({ row }) => {
+			if (row.tipoGasto === 1) {
+				return `Externo a ${row?.cliente?.nombre}`;
+			}
+			return 'Gasto Interno';
+		},
 	},
 	{
 		field: 'importe',
@@ -41,7 +47,7 @@ const columns = [
 		editable: false,
 	},
 	{
-		field: 'subtotal',
+		field: 'subTotal',
 		headerName: 'SUB TOTAL',
 		width: 110,
 		editable: false,
@@ -58,11 +64,12 @@ const columns = [
 		width: 180,
 		editable: false,
 		renderCell: ({ value, index }) => (
-			<EstadoMetodoPago key={index} value={2} />
+			<EstadoMetodoPago key={index} value={value} />
 		),
 	},
 ];
 
+const dataCache = 'getAllGastos';
 export const Gastos = () => {
 	const navigate = useNavigate();
 	const handleNew = () => {
@@ -72,14 +79,16 @@ export const Gastos = () => {
 		<>
 			<Table
 				title="Gastos"
-				subtitle="Moduló de gastos internos"
+				subtitle="Moduló de gastos internos y externos"
 				showHeader
+				pdf={formatPdfGasto}
 				handleNew={handleNew}
 				uri={GastosActions.GET}
 				urlDelete={{ gql: GastosActions.DELETE, params: 'deleteId' }}
-				dataCache="getAllGastos"
+				dataCache={dataCache}
 				columns={columns}
 				showActions
+				print
 			/>
 		</>
 	);

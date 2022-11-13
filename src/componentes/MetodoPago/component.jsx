@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { Chip } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { metodoPago } from '../../helpers/constants';
+import { tiposMetodoPago } from '../../helpers/constants';
 
 const getEstado = (value) => {
-	return metodoPago.find((estado) => estado.id === value);
+	return tiposMetodoPago.find((estado) => estado.id === value);
 };
 
 const Container = styled(Chip)(() => ({
