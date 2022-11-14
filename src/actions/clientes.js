@@ -6,6 +6,7 @@ import {
 	MESSAGE_REQUIRED,
 	TELEPHONE_INVALID,
 	TELEPHONE_VALIDATE,
+	ZIP_CODE,
 } from '../helpers/constants';
 
 const FRAGMENTS = {
@@ -145,11 +146,13 @@ export const Validate = yup.object({
 	primerTelefono: yup
 		.string()
 		.required(MESSAGE_REQUIRED)
-		.min(10, TELEPHONE_VALIDATE),
+		.min(10, TELEPHONE_VALIDATE)
+		.max(10, TELEPHONE_VALIDATE),
 	segundoTelefono: yup
 		.string()
 		.required(MESSAGE_REQUIRED)
-		.min(10, TELEPHONE_VALIDATE),
+		.min(10, TELEPHONE_VALIDATE)
+		.max(10, TELEPHONE_VALIDATE),
 	correo: yup.string().email(EMAIL_INVALID).required(MESSAGE_REQUIRED),
 	colonia: yup.string().required(MESSAGE_REQUIRED),
 	referencia: yup.string().required(MESSAGE_REQUIRED),
@@ -159,17 +162,16 @@ export const Validate = yup.object({
 		.number()
 		.transform((value) => (isNaN(value) ? undefined : value))
 		.required(MESSAGE_REQUIRED)
-		.min(6, 'Este campo ddebe tener como minimo 6 caracteres'),
+		.min(6, ZIP_CODE)
+		.max(6, ZIP_CODE),
 	numeroExterior: yup
 		.number()
 		.transform((value) => (isNaN(value) ? undefined : value))
-		.required(MESSAGE_REQUIRED)
-		.min(4, 'Este campo ddebe tener como minimo 4 caracteres'),
+		.required(MESSAGE_REQUIRED),
 	numeroInterior: yup
 		.number()
 		.transform((value) => (isNaN(value) ? undefined : value))
-		.required(MESSAGE_REQUIRED)
-		.min(4, 'Este campo ddebe tener como minimo 4 caracteres'),
+		.required(MESSAGE_REQUIRED),
 });
 
 export const ClientesActions = {

@@ -260,7 +260,7 @@ export const Gasto = () => {
 									</label>
 									<TablaArticulos
 										setValue={setValue}
-										data={fields}
+										data={fields.filter(({ activo }) => activo) || []}
 										errors={errors}
 										control={control}
 										remove={remove}

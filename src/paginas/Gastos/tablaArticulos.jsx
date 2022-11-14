@@ -116,18 +116,20 @@ const TablaArticulos = ({ data, control, errors, setValue, remove }) => {
 										</label>
 									</TableCell>
 									<TableCell>
-										<>
-											<Tooltip
-												title="Eliminar"
-												placement="bottom-end"
-												arrow
-												onClick={() => remove(index)}
-											>
-												<IconButton>
-													<MdCancel size={20} className="text-red-600" />
-												</IconButton>
-											</Tooltip>
-										</>
+										{!articulos[index]?.gastoID && (
+											<>
+												<Tooltip
+													title="Eliminar"
+													placement="bottom-end"
+													arrow
+													onClick={() => remove(index)}
+												>
+													<IconButton>
+														<MdCancel size={20} className="text-red-600" />
+													</IconButton>
+												</Tooltip>
+											</>
+										)}
 									</TableCell>
 								</TableRow>
 							))

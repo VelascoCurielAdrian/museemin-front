@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import GQL, { dataCache } from './helper';
 import { Table } from '../../componentes/Table/component';
 import { Estatus } from '../../componentes/Estatus/component';
 import { Generos } from '../../componentes/Genero/component';
+import { TrabajadoresActions } from '../../actions/trabajadores';
 
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 30 },
@@ -62,9 +62,9 @@ export const Trabajadores = () => {
 				subtitle="Moduló de Trabajadores"
 				showHeader
 				handleNew={handleNew}
-				uri={GQL.GET}
-				urlDelete={{ gql: GQL.DELETE, params: 'deleteId' }}
-				dataCache={dataCache}
+				uri={TrabajadoresActions.GET}
+				urlDelete={{ gql: TrabajadoresActions.DELETE, params: 'deleteId' }}
+				dataCache="getAllTrabajador"
 				columns={columns}
 				showActions
 			/>

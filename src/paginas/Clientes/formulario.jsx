@@ -30,8 +30,8 @@ export const Cliente = () => {
 	const { id } = useParams();
 
 	const {
-		control,
 		reset,
+		control,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({

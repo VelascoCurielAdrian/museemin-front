@@ -174,10 +174,20 @@ export const ValidacionGasto = yup.object().shape({
 	descripcion: yup.string().required(MESSAGE_REQUIRED),
 	articulos: yup.array().of(
 		yup.object().shape({
-			descripcion: yup.string(),
-			unidad: yup.string(),
-			precio: yup.string(),
-			cantidad: yup.string(),
+			descripcion: yup.string().required(MESSAGE_REQUIRED),
+			unidad: yup
+				.number()
+				.transform((value) => (isNaN(value) ? undefined : value))
+				.required(MESSAGE_REQUIRED),
+			precio: yup
+				.number()
+				.transform((value) => (isNaN(value) ? undefined : value))
+				.required(MESSAGE_REQUIRED),
+
+			cantidad: yup
+				.number()
+				.transform((value) => (isNaN(value) ? undefined : value))
+				.required(MESSAGE_REQUIRED),
 		}),
 	),
 });

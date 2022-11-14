@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import GQL, { dataCache } from './helper';
 import { Table } from '../../componentes/Table/component';
 import { Estatus } from '../../componentes/Estatus/component';
+import { ClientesActions } from '../../actions/clientes';
 
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 80 },
@@ -52,9 +52,9 @@ export const Clientes = () => {
 				subtitle="Moduló de clientes"
 				showHeader
 				handleNew={handleNew}
-				uri={GQL.GET}
-				urlDelete={{ gql: GQL.DELETE, params: 'deleteClienteId' }}
-				dataCache={dataCache}
+				uri={ClientesActions.GET}
+				urlDelete={{ gql: ClientesActions.DELETE, params: 'deleteClienteId' }}
+				dataCache="getAllCliente"
 				columns={columns}
 				showActions
 			/>

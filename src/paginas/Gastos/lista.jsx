@@ -20,7 +20,7 @@ const columns = [
 		width: 170,
 		editable: false,
 		valueGetter: ({ row }) =>
-			`${row.trabajador.nombres} ${row.trabajador?.primerApellido} ${row.trabajador.segundoApellido}`,
+			`${row.trabajador.nombres} ${row.trabajador.primerApellido} ${row.trabajador.segundoApellido}`,
 	},
 	{
 		field: 'tipoGasto',

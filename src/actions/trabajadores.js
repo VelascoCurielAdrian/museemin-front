@@ -3,9 +3,6 @@ import * as yup from 'yup';
 import {
 	EMAIL_INVALID,
 	MESSAGE_REQUIRED,
-	NUMBER_ADDRESSLINE_MIN,
-	NUMBER_INVALID,
-	TELEPHONE_INVALID,
 	TELEPHONE_VALIDATE,
 } from '../helpers/constants';
 
@@ -83,10 +80,10 @@ const UPDATE = gql`
 		$numeroExterior: String
 		$usuarioRegistroID: ID
 		$estatus: Boolean!
-		$updateId: ID!
+		$updateID: ID!
 	) {
 		updateTrabajador(
-			id: $updateId
+			id: $updateID
 			input: {
 				nombres: $nombres
 				primerApellido: $primerApellido
@@ -155,17 +152,17 @@ export const Validate = yup.object({
 	referencia: yup.string().required(MESSAGE_REQUIRED),
 	colonia: yup.string().required(MESSAGE_REQUIRED),
 	nombres: yup.string().required(MESSAGE_REQUIRED),
-	estatus: yup.string().required(MESSAGE_REQUIRED),
+	estatus: yup.boolean(),
 	calles: yup.string().required(MESSAGE_REQUIRED),
 	sexo: yup.string().required(MESSAGE_REQUIRED),
 	numeroExterior: yup
-		.number(NUMBER_INVALID)
-		.min(4, NUMBER_ADDRESSLINE_MIN)
+		.string()
 		.required(MESSAGE_REQUIRED),
 	telefono: yup
-		.number(TELEPHONE_INVALID)
+		.string()
+		.required(MESSAGE_REQUIRED)
 		.min(10, TELEPHONE_VALIDATE)
-		.required(MESSAGE_REQUIRED),
+		.max(10, TELEPHONE_VALIDATE),
 });
 
 export const TrabajadoresActions = {

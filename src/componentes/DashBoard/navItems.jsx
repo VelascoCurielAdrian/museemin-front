@@ -5,24 +5,16 @@ import { MdBackpack } from 'react-icons/md';
 import { GrServices } from 'react-icons/gr';
 import { FaToolbox, FaUserTie, FaMoneyBillAlt } from 'react-icons/fa';
 import { LinkButton } from '../LinkButton/container';
-import paleta from '../../configuracion/paleta';
 
 export const NavItems = (props) => {
 	const [open, setOpen] = useState(false);
-
-	const handleClick = () => {
-		setOpen(!open);
-	};
 
 	return (
 		<List
 			sx={{
 				width: '100%',
-				bgcolor: paleta.bar.iconoBorder,
 				height: '100%',
-				color: '#4B5D6E',
 			}}
-			component="nav"
 		>
 			<LinkButton
 				icon={<FaTools />}

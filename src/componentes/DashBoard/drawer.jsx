@@ -1,11 +1,7 @@
 import MuiDrawer from '@mui/material/Drawer';
 import { styled } from '@mui/material/styles';
-import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import { VscTools } from 'react-icons/vsc';
 
 import { Divider, IconButton } from '@mui/material';
 import { AiOutlineMenuFold } from 'react-icons/ai';
@@ -38,7 +34,6 @@ const closedMixin = (theme) => ({
 });
 
 const DrawerCustomized = styled(MuiDrawer, {
-	backgroundColor: '#e0e0e0',
 	shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
 	width: drawerWidth,
