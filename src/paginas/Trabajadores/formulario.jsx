@@ -25,10 +25,8 @@ const dataInicial = {
 	estatus: true,
 	sexo: '',
 };
-
 export const Trabajador = () => {
 	const { id } = useParams();
-
 	const {
 		control,
 		reset,
@@ -55,7 +53,6 @@ export const Trabajador = () => {
 			variables: { updateID: id, ...data },
 		});
 	};
-
 	if (loading) return <div>Cargando...</div>;
 	return (
 		<Fragment>

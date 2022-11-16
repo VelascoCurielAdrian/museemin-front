@@ -1,26 +1,27 @@
 import { useEffect, useState } from 'react';
-import { format } from 'date-fns';
-import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
+import { useQuery, useLazyQuery } from '@apollo/client';
 import { Checkbox, FormControlLabel, Grow, Box } from '@mui/material';
 import { useForm, useFieldArray, useWatch } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { MdAddShoppingCart } from 'react-icons/md';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { format } from 'date-fns';
 
+import { GastosActions, ValidacionGasto } from '../../actions/gastos';
+import { filters, tiposMetodoPago } from '../../helpers/constants';
+import { TrabajadoresActions } from '../../actions/trabajadores';
+import { Header } from '../../componentes/Header/component';
+import { ClientesActions } from '../../actions/clientes';
+import useFormActions from '../../hooks/useFormv2';
+import Button from '../../componentes/Button';
+import TablaArticulos from './tablaArticulos';
 import {
 	DatePickerController,
 	SelectFieldController,
 	TextFieldController,
 } from '../../componentes/Formulario';
-import { Header } from '../../componentes/Header/component';
-import { GastosActions, ValidacionGasto } from '../../actions/gastos';
-import { filters, tiposMetodoPago } from '../../helpers/constants';
-import { TrabajadoresActions } from '../../actions/trabajadores';
-import { ClientesActions } from '../../actions/clientes';
-import Button from '../../componentes/Button';
-import TablaArticulos from './tablaArticulos';
-import { parseError } from '../../helpers';
+
 
 const dataInicial = {
 	trabajadorID: '',
@@ -59,7 +60,6 @@ const TotalGasto = ({ subTotal, diferencia, importe, setValue }) => {
 
 export const Gasto = () => {
 	const { id } = useParams();
-	const navigate = useNavigate();
 	const [tipoGasto, setTipoGasto] = useState({ interno: false, externo: true });
 	const [trabajadores, setTrabajadores] = useState([]);
 	const [clientes, setClientes] = useState([]);
@@ -74,65 +74,36 @@ export const Gasto = () => {
 		resolver: yupResolver(ValidacionGasto),
 		defaultValues: dataInicial,
 	});
-	const { fields, append, replace, remove, update } = useFieldArray({
+	const { fields, append, replace, remove } = useFieldArray({
 		control,
 		name: 'articulos',
+	});
+
+	const { isLoading, actionForm } = useFormActions({
+		method: id ? 'update' : 'create',
+		operation: 'getAllGastos',
+		actions: GastosActions,
+		formData: dataInicial,
+		setValues: false,
+		redirect: true,
+		name: 'gastos',
+		reset,
+		id,
 	});
 
 	const articulos = useWatch({ control, name: 'articulos' });
 	const subTotal = useWatch({ control, name: 'subTotal' });
 	const diferencia = useWatch({ control, name: 'diferencia' });
 	const importe = useWatch({ control, name: 'importe' });
-	const metodoPago = useWatch({ control, name: 'metodoPago' });
 
 	const [getById, { loading }] = useLazyQuery(GastosActions.GET_BYID, {
 		fetchPolicy: 'no-cache',
 		onCompleted: (response) => {
-			const { DetalleGastos, tipoGasto } = Object.values(response)[0];
+			const values = Object.values(response)[0];
+			const { DetalleGastos, tipoGasto } = values;
 			if (tipoGasto === 2) setTipoGasto({ interno: true });
-			reset(Object.values(response)[0]);
+			reset(values);
 			replace(DetalleGastos);
-		},
-	});
-
-	const endpoint = id ? GastosActions.UPDATE : GastosActions.CREATE;
-	const [actionForm, { loading: isLoading }] = useMutation(endpoint, {
-		update: (cache, { data: response }) => {
-			try {
-				if (id) return false;
-				const dataResponse = response[Object.keys(response)[0]];
-				const oldQuery = cache.readQuery({
-					query: GastosActions.GET,
-					variables: { offset: null, limit: null, txtBusqueda: '' },
-				});
-				cache.writeQuery({
-					query: GastosActions.GET,
-					variables: { offset: null, limit: null, txtBusqueda: '' },
-					data: {
-						['getAllGastos']: {
-							...oldQuery['getAllGastos'],
-							count: oldQuery['getAllGastos'].count + 1,
-							rows: [dataResponse.respuesta, ...oldQuery['getAllGastos'].rows],
-						},
-					},
-				});
-			} catch (error) {
-				return error;
-			}
-		},
-		onCompleted: (response) => {
-			toast.success(Object.values(response)[0].mensaje);
-			navigate(`/gastos`, {
-				replace: true,
-			});
-		},
-		onError: (e) => {
-			const parseErrors = parseError(e);
-			parseErrors.forEach(({ message, name }) => {
-				if (name === 'BAD_USER_INPUT') {
-					toast.error(`${Object.values(message)}`);
-				}
-			});
 		},
 	});
 
@@ -166,13 +137,14 @@ export const Gasto = () => {
 		) {
 			return toast.warning('Es necesario agregar artículos.');
 		}
+
 		const DetalleGastos = articulos.map((gasto) => {
 			delete gasto.__typename;
 			return {
 				...gasto,
 				precio: parseFloat(gasto.precio),
 				cantidad: parseInt(gasto.cantidad),
-				precioParcial: parseFloat(gasto.precioParcial),
+				precioParcial: parseInt(gasto.precioParcial),
 			};
 		});
 
@@ -182,10 +154,6 @@ export const Gasto = () => {
 			variables: {
 				...data,
 				tipoGasto: gasto,
-				subTotal: parseFloat(subTotal),
-				importe: parseFloat(importe),
-				diferencia: parseFloat(diferencia),
-				metodoPago: parseInt(metodoPago),
 				updateID: id,
 				CapturaDetalleGastos: DetalleGastos,
 			},
@@ -193,6 +161,7 @@ export const Gasto = () => {
 	};
 
 	if (loading) return <h1>...Cargando</h1>;
+
 	return (
 		<>
 			<Header

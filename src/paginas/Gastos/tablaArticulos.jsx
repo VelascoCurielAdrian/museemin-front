@@ -1,14 +1,7 @@
 import React, { useEffect } from 'react';
-import {
-	Paper,
-	Table,
-	TableRow,
-	TableHead,
-	TableCell,
-	TableContainer,
-	TableBody,
-	Tooltip,
-	IconButton,
+import { 
+	Paper, Table, TableRow, TableHead, TableCell, 
+	TableContainer, TableBody, Tooltip, IconButton
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useWatch } from 'react-hook-form';
@@ -112,11 +105,11 @@ const TablaArticulos = ({ data, control, errors, setValue, remove }) => {
 									</TableCell>
 									<TableCell>
 										<label className="text-sm m-2 font-bold text-green-700">
-											{`$ ${articulos[index]?.precioParcial || '0.00'}`}
+											{`$ ${articulos?.[index]?.precioParcial || '0.00'}`}
 										</label>
 									</TableCell>
 									<TableCell>
-										{!articulos[index]?.gastoID && (
+										{!articulos?.[index]?.gastoID && (
 											<>
 												<Tooltip
 													title="Eliminar"

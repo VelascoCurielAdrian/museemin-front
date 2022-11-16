@@ -85,6 +85,7 @@ export const Login = () => {
 						label="Iniciar Sessión"
 						isSubmit
 						loading={loading}
+						showLoading
 						fullWidth
 					/>
 				</form>

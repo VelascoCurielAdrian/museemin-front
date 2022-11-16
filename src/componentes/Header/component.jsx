@@ -1,11 +1,11 @@
 import Typography from '@mui/material/Typography';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material';
 import { BsPlusLg, BsPrinterFill } from 'react-icons/bs';
 import { GiCancel } from 'react-icons/gi';
 import { FiSave } from 'react-icons/fi';
 import paleta from '../../configuracion/paleta';
 import { SearchField } from '../SearchField/component';
+import Button from '../Button';
 import { Actions, Container, ContentButton, TitleContainer } from './styles';
 
 export const Header = ({
@@ -16,6 +16,7 @@ export const Header = ({
 	listado,
 	agregar,
 	handleNew,
+	isLoading,
 	handleCreate,
 	handlePrint,
 }) => {
@@ -50,10 +51,9 @@ export const Header = ({
 								fullWidth
 								variant="contained"
 								onClick={handleNew}
-								startIcon={<BsPlusLg size={16} />}
-							>
-								Agregar
-							</Button>
+								icono={<BsPlusLg size={16} />}
+								label='Agregar'
+							/>
 						</ContentButton>
 					</>
 				)}
@@ -66,10 +66,9 @@ export const Header = ({
 								fullWidth
 								variant="contained"
 								onClick={handleBack}
-								startIcon={<GiCancel size={16} />}
-							>
-								Cancelar
-							</Button>
+								icono={<GiCancel size={16} />}
+								label='Cancelar'
+							/>
 						</ContentButton>
 						<ContentButton>
 							<Button
@@ -77,10 +76,11 @@ export const Header = ({
 								fullWidth
 								variant="contained"
 								onClick={handleCreate}
-								startIcon={<FiSave size={16} />}
-							>
-								Guardar
-							</Button>
+								icono={<FiSave size={16} />}
+								label='Guardar'
+								showLoading
+								loading={isLoading}
+							/>
 						</ContentButton>
 						{print && (
 							<ContentButton>

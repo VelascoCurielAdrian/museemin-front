@@ -14,6 +14,7 @@ const useFormActions = ({
 	reset,
 	id,
 	redirect,
+	setValues,
 }) => {
 	const navigate = useNavigate();
 	const [getById, { loading }] = useLazyQuery(actions.GET_BYID, {
@@ -24,8 +25,10 @@ const useFormActions = ({
 	});
 
 	useEffect(() => {
-		id && getById({ variables: { id } });
-	}, [id]);
+		if (setValues || id) {
+			getById({ variables: { id } });
+		}
+	}, [id, setValues]);
 
 	const endpoint = method === 'create' ? actions.CREATE : actions.UPDATE;
 	const [actionForm, { loading: isLoading }] = useMutation(endpoint, {
@@ -83,10 +86,12 @@ useFormActions.propTypes = {
 	actions: propTypes.object.isRequired,
 	operation: propTypes.string.isRequired,
 	redirect: propTypes.bool,
+	setValues: propTypes.bool,
 };
 
 useFormActions.defaultProps = {
 	name: '',
 	params: {},
 	redirect: true,
+	setValues: true,
 };

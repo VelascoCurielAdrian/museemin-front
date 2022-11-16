@@ -167,10 +167,27 @@ const GET_BYID = gql`
 export const ValidacionGasto = yup.object().shape({
 	compania: yup.string().required(MESSAGE_REQUIRED),
 	trabajadorID: yup.string().required(MESSAGE_REQUIRED),
-	metodoPago: yup.string().required(MESSAGE_REQUIRED),
+	metodoPago: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
 	clienteID: yup.string().required(MESSAGE_REQUIRED),
-	importe: yup.string().required(MESSAGE_REQUIRED),
-	diferencia: yup.string().required(MESSAGE_REQUIRED),
+	importe: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
+	diferencia: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
+	subTotal: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
+	total: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
 	descripcion: yup.string().required(MESSAGE_REQUIRED),
 	articulos: yup.array().of(
 		yup.object().shape({
@@ -183,7 +200,6 @@ export const ValidacionGasto = yup.object().shape({
 				.number()
 				.transform((value) => (isNaN(value) ? undefined : value))
 				.required(MESSAGE_REQUIRED),
-
 			cantidad: yup
 				.number()
 				.transform((value) => (isNaN(value) ? undefined : value))

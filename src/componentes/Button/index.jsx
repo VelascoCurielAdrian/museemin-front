@@ -24,9 +24,7 @@ const ButtonCustomized = ({
 		<Box sx={{ display: "flex", alignItems: "center" }}>
 			{showLoading ? (
 				<LoadingButton
-					className={clsx(classes.boton, classesCustom.boton, {
-						[classes.border]: border,
-					})}
+					className={classes.boton}
 					startIcon={icono}
 					sx={stylesButton}
 					loading={loading}
