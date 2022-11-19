@@ -36,7 +36,7 @@ const FRAGMENTS = {
 				unidad
 				precio
 				cantidad
-				precioParcial
+				importe
 				activo
 			}
 			activo
@@ -171,7 +171,9 @@ export const ValidacionGasto = yup.object().shape({
 		.number()
 		.transform((value) => (isNaN(value) ? undefined : value))
 		.required(MESSAGE_REQUIRED),
-	clienteID: yup.string().required(MESSAGE_REQUIRED),
+	clienteID: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value)),
 	importe: yup
 		.number()
 		.transform((value) => (isNaN(value) ? undefined : value))
@@ -189,23 +191,22 @@ export const ValidacionGasto = yup.object().shape({
 		.transform((value) => (isNaN(value) ? undefined : value))
 		.required(MESSAGE_REQUIRED),
 	descripcion: yup.string().required(MESSAGE_REQUIRED),
-	articulos: yup.array().of(
-		yup.object().shape({
-			descripcion: yup.string().required(MESSAGE_REQUIRED),
-			unidad: yup
-				.number()
-				.transform((value) => (isNaN(value) ? undefined : value))
-				.required(MESSAGE_REQUIRED),
-			precio: yup
-				.number()
-				.transform((value) => (isNaN(value) ? undefined : value))
-				.required(MESSAGE_REQUIRED),
-			cantidad: yup
-				.number()
-				.transform((value) => (isNaN(value) ? undefined : value))
-				.required(MESSAGE_REQUIRED),
-		}),
-	),
+});
+
+export const ValidacionDetalleGasto = yup.object({
+	descripcion: yup.string().required(MESSAGE_REQUIRED),
+	unidad: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
+	precio: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
+	cantidad: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value))
+		.required(MESSAGE_REQUIRED),
 });
 
 export const GastosActions = {

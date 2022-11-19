@@ -24,7 +24,7 @@ import {
 
 import Button from '../../componentes/Button';
 import { filters } from '../../helpers/constants';
-import useFormActions from '../../hooks/useFormv2';
+import useFormActions from '../../hooks/useForm';
 import { ClasificacionActions, Validate } from '../../actions';
 import { EmptyRows } from '../../componentes/EmptyRows/component';
 import { TextFieldController } from '../../componentes/Formulario';

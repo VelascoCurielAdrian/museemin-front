@@ -6,7 +6,7 @@ import { useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import Button from '../../componentes/Button';
-import useFormActions from '../../hooks/useFormv2';
+import useFormActions from '../../hooks/useForm';
 import { ClasificacionActions } from '../../actions';
 import { Clasificacion } from '../Clasificacion/formulario';
 import { Header } from '../../componentes/Header/component';
@@ -126,7 +126,6 @@ export const Herramienta = () => {
 									</div>
 									<div className="col-span-6 sm:col-span-2">
 										<TextFieldController
-											autoFocus
 											error={errors.precio}
 											control={control}
 											label="precio"
@@ -136,7 +135,6 @@ export const Herramienta = () => {
 									</div>
 									<div className="col-span-6 sm:col-span-2">
 										<TextFieldController
-											autoFocus
 											error={errors.marca}
 											control={control}
 											label="Marca"

@@ -5,7 +5,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { Header } from '../../componentes/Header/component';
 import { ClientesActions, Validate } from '../../actions/clientes';
 import { estatus } from '../../helpers/constants';
-import useFormActions from '../../hooks/useFormv2';
+import useFormActions from '../../hooks/useForm';
 import {
 	SelectFieldController,
 	TextFieldController,

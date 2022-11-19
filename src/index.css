@@ -2,6 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
+.Table {
+  border: 1px solid gray;
+}
+
+.TableHead {
+  border: 1px dashed red;
+}
+
+.TableBody {
+  border: 1px dashed blue;
+}
+
+.TableRow {
+  border: 1px dashed yellow;
+}
+
+.TableCell {
+  border: 1px dashed lightgray;
+}
+
+/* long-term style */
+
+.TableRow {
+  z-index: 10;
+  position: relative;
+  margin-top: 0px;
+  display: flex;
+  background: white;
+  transition: all 0.2s ease-out;
+}
+
+.TableCell {
+  width: 100%;
+}
+
+/* tests */
+.slide-enter {
+  z-index: 1;
+  position: relative;
+  margin-top: -22px;
+}
+
+
 .container {
 	overflow-x: auto;
 	margin-right: auto;

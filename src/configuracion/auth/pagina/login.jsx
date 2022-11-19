@@ -1,4 +1,3 @@
-import { toast } from 'react-toastify';
 import { useMutation } from '@apollo/client';
 import { Box, Checkbox, FormControlLabel } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -14,7 +13,9 @@ import { accion, validacion } from './helper';
 import { useContext } from 'react';
 import { AuthContext } from '../context';
 import { TextFieldController } from '../../../componentes/Formulario';
+import { snackbar } from '../../apollo/cache';
 
+const defaultSnackbar = { isOpen: true, time: 3000 };
 const input = {
 	usuario: '',
 	password: '',
@@ -24,18 +25,28 @@ export const Login = () => {
 	const { login } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [Authenticate, { loading }] = useMutation(accion, {
-		onCompleted: async (data) => {
+		onCompleted: async (response) => {
+			console.log(response);
 			const lastPath = localStorage.getItem('lastPath') || '/';
-			login(`${data.authenticarUsuario?.token}`);
+			login(`${response.authenticarUsuario?.token}`);
 			navigate(lastPath, {
 				replace: true,
+			});
+			snackbar({
+				...defaultSnackbar,
+				label: Object.values(response)[0].mensaje,
+				severity: 'success',
 			});
 		},
 		onError: (e) => {
 			const parseErrors = parseError(e);
 			parseErrors.forEach(({ message, name }) => {
 				if (name === 'BAD_USER_INPUT') {
-					toast.error(`${Object.values(message)}`);
+					snackbar({
+						...defaultSnackbar,
+						label: Object.values(message),
+						severity: 'error',
+					});
 				}
 			});
 		},

@@ -1,123 +1,39 @@
-import React from "react";
-import { useForm, useFieldArray, Controller, useWatch } from "react-hook-form";
-import ReactDOM from "react-dom";
+import React from 'react'
 
-import "./styles.css";
+const Table = ({ children }) => (
+  <div className="Table">
+    {children}
+  </div>
+)
 
-let renderCount = 0;
+const Head = ({ children }) => (
+  <div className="TableHead">
+    {children}
+  </div>
+)
 
-function App() {
-  const { register, control, handleSubmit, reset, watch } = useForm({
-    defaultValues: {
-      test: [{ firstName: "Bill", lastName: "Luo" }]
-    }
-  });
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control,
-      name: "test"
-    }
-  );
+const Body = ({ children }) => (
+  <div className="TableBody">
+    {children}
+  </div>
+)
 
-  const onSubmit = (data) => console.log("data", data);
+const Row = ({ children }) => (
+  <div className="TableRow">
+    {children}
+  </div>
+)
 
-  // if you want to control your fields with watch
-  // const watchResult = watch("test");
-  // console.log(watchResult);
+const Cell = ({ children }) => (
+  <div className="TableCell">
+    {children}
+  </div>
+)
 
-  // The following is useWatch example
-  // console.log(useWatch({ name: "test", control }));
-
-  renderCount++;
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h1>Field Array </h1>
-      <p>The following demo allow you to delete, append, prepend items</p>
-      <span className="counter">Render Count: {renderCount}</span>
-      <ul>
-        {fields.map((item, index) => {
-          return (
-            <li key={item.id}>
-              <input
-                name={`test[${index}].firstName`}
-                defaultValue={`${item.firstName}`} // make sure to set up defaultValue
-                ref={register()}
-              />
-
-              <Controller
-                as={<input />}
-                name={`test[${index}].lastName`}
-                control={control}
-                defaultValue={item.lastName} // make sure to set up defaultValue
-              />
-              <button type="button" onClick={() => remove(index)}>
-                Delete
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <section>
-        <button
-          type="button"
-          onClick={() => {
-            append({ firstName: "appendBill", lastName: "appendLuo" });
-          }}
-        >
-          append
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            prepend({
-              firstName: "prependFirstName",
-              lastName: "prependLastName"
-            })
-          }
-        >
-          prepend
-        </button>
-        <button
-          type="button"
-          onClick={() =>
-            insert(parseInt(2, 10), {
-              firstName: "insertFirstName",
-              lastName: "insertLastName"
-            })
-          }
-        >
-          insert at
-        </button>
-
-        <button type="button" onClick={() => swap(1, 2)}>
-          swap
-        </button>
-
-        <button type="button" onClick={() => move(1, 2)}>
-          move
-        </button>
-
-        <button type="button" onClick={() => remove(1)}>
-          remove at
-        </button>
-
-        <button
-          type="button"
-          onClick={() =>
-            reset({
-              test: [{ firstName: "Bill", lastName: "Luo" }]
-            })
-          }
-        >
-          reset
-        </button>
-      </section>
-
-      <input type="submit" />
-    </form>
-  );
+export {
+  Table,
+  Head,
+  Body,
+  Row,
+  Cell
 }
-
-const rootElement = document.getElementById("root");
-ReactDOM.render(<App />, rootElement);

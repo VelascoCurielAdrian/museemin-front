@@ -4,6 +4,7 @@ import * as yup from 'yup';
 export const accion = gql`
 	mutation AuthenticarUsuario($input: UsuarioAuth!) {
 		authenticarUsuario(input: $input) {
+			mensaje
 			token
 		}
 	}

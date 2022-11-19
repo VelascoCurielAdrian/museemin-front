@@ -4,7 +4,7 @@ import { cache } from './cache';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:4000/graphql',
-  // uri: 'http://192.168.1.9:4000/graphql',
+  // uri: 'http://192.168.1.102:4000/graphql',
 });
 
 const authLink = setContext((_, { headers }) => {

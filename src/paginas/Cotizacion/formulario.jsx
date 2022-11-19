@@ -20,7 +20,6 @@ import {
 	TextFieldController,
 } from '../../componentes/Formulario';
 import { GestionGastos } from './dialog';
-import { Totals } from './totals';
 
 const dataInicial = {
 	trabajadorID: '',
@@ -35,12 +34,26 @@ const dataInicial = {
 	descripcion: '',
 };
 
-export const Gasto = () => {
+const getTotal = ({ diferencia, subTotal, importe }) => {
+	return parseFloat(importe) - parseFloat(subTotal) + parseFloat(diferencia);
+};
+
+const TotalGasto = ({ control, setValue }) => {
+	const diferencia = useWatch({ control, name: 'diferencia' });
+	const subTotal = useWatch({ control, name: 'subTotal' });
+	const importe = useWatch({ control, name: 'importe' });
+	const result = getTotal({ diferencia, subTotal, importe });
+
+	setValue('total', result);
+	return <p>${result || '0.00'}</p>;
+};
+
+export const Cotizacion = () => {
 	const { id } = useParams();
 	const [tipoGasto, setTipoGasto] = useState({ interno: false, externo: true });
-	const [detalleGastos, setDetalleGastos] = useState([]);
 	const [trabajadores, setTrabajadores] = useState([]);
 	const [clientes, setClientes] = useState([]);
+	const [detalleGastos, setDetalleGastos] = useState([]);
 	const [open, setOpen] = useState(false);
 
 	const {
@@ -67,6 +80,7 @@ export const Gasto = () => {
 	});
 
 	const diferencia = useWatch({ control, name: 'diferencia' });
+	const subTotal = useWatch({ control, name: 'subTotal' });
 	const importe = useWatch({ control, name: 'importe' });
 
 	const [getById, { loading }] = useLazyQuery(GastosActions.GET_BYID, {
@@ -112,14 +126,15 @@ export const Gasto = () => {
 
 	useEffect(() => {
 		let subTotal = 0;
-		subTotal = detalleGastos
-			.map(({ importe }) => importe)
-			.reduce((sum, i) => sum + i, 0);
+		if (detalleGastos?.length > 0) {
+			subTotal = detalleGastos
+				.map(({ importe }) => importe)
+				.reduce((sum, i) => sum + i, 0);
+		}
 		setValue('subTotal', subTotal);
 	}, [detalleGastos]);
 
 	const addGasto = (values) => {
-		values.id = detalleGastos.filter(({ activo }) => activo).length + 1;
 		setDetalleGastos((prev) => [values, ...prev]);
 	};
 
@@ -129,16 +144,20 @@ export const Gasto = () => {
 	};
 
 	const onSubmit = (data) => {
-		const DetalleGastos = detalleGastos.map((gasto) => {
+		const DetalleGastos = detalleGastos?.map((gasto) => {
 			delete gasto.__typename;
-			return gasto;
+			return {
+				...gasto,
+			};
 		});
+
+		const gasto = tipoGasto.externo ? 1 : 2;
 
 		actionForm({
 			variables: {
 				...data,
+				tipoGasto: gasto,
 				updateID: id,
-				tipoGasto: tipoGasto.externo ? 1 : 2,
 				CapturaDetalleGastos: DetalleGastos,
 			},
 		});
@@ -149,9 +168,9 @@ export const Gasto = () => {
 	return (
 		<>
 			<Header
-				title="Gastos"
-				name="gastos"
-				subtitle="Moduló de gastos internos y externos"
+				title="Cotizaciones"
+				name="cotizaciones"
+				subtitle="Moduló de cotizaciones"
 				handleCreate={handleSubmit(onSubmit)}
 				isLoading={isLoading}
 				agregar
@@ -203,6 +222,72 @@ export const Gasto = () => {
 										options={tiposMetodoPago}
 										error={errors.metodoPago}
 									/>
+								</div>
+								<div className="col-span-12 lg:col-span-6 md:col-span-12 sm:col-span-12 space-y-2">
+									<label
+										htmlFor="detalleGastos"
+										className="block text-sm mb-1 font-bold text-primary"
+									>
+										Detalle de los gastos
+									</label>
+									<div className="grid grid-cols-12 gap-2">
+										<div className="col-span-12 lg:col-span-6 md:col-span-12 sm:col-span-12 space-y-2">
+											<Button
+												size="medium"
+												label="Gestionar Articulos"
+												onClick={handleClickOpen}
+												disabled={diferencia === '' || importe === ''}
+												icono={<MdAddShoppingCart size={16} />}
+											/>
+											<TextFieldController
+												control={control}
+												type="multiline"
+												name="descripcion"
+												rows={4}
+												error={errors.descripcion}
+												label="Comentarios"
+											/>
+										</div>
+										<div className="col-span-12 lg:col-span-6 md:col-span-12 sm:col-span-12 space-y-2">
+											<dl>
+												<div className="bg-white px-2 py-2 sm:grid sm:grid-cols-3 sm:gap-20 sm:px-1">
+													<dt className="text-sm font-bold text-gray-500">
+														Sub Total
+													</dt>
+													<dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:ml-20">
+														${subTotal || '0.00'}
+													</dd>
+												</div>
+												<div className="border-t border-gray-300" />
+												<div className="bg-white px-2 py-2 sm:grid sm:grid-cols-3 sm:gap-20 sm:px-1">
+													<dt className="text-sm font-bold text-gray-500">
+														Importe
+													</dt>
+													<dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:ml-20">
+														${importe || '0.00'}
+													</dd>
+												</div>
+												<div className="border-t border-gray-300" />
+												<div className="bg-white px-2 py-2 sm:grid sm:grid-cols-3 sm:gap-20 sm:px-1">
+													<dt className="text-sm font-bold text-gray-500">
+														Importe del trabajador
+													</dt>
+													<dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:ml-20">
+														${diferencia || '0.00'}
+													</dd>
+												</div>
+												<div className="border-t border-gray-300" />
+												<div className="bg-white px-2 py-2 sm:grid sm:grid-cols-3 sm:gap-20 sm:px-1">
+													<dt className="text-sm font-bold text-gray-500">
+														Total
+													</dt>
+													<dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:ml-20">
+														<TotalGasto control={control} setValue={setValue} />
+													</dd>
+												</div>
+											</dl>
+										</div>
+									</div>
 								</div>
 								<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-2">
 									<label
@@ -267,36 +352,6 @@ export const Gasto = () => {
 										label="Importe del trabajador"
 										type="number"
 									/>
-								</div>
-								<div className="col-span-12 lg:col-span-6 md:col-span-12 sm:col-span-12 space-y-2">
-									<label
-										htmlFor="detalleGastos"
-										className="block text-sm mb-1 font-bold text-primary"
-									>
-										Detalle de los gastos
-									</label>
-									<div className="grid grid-cols-12 gap-2">
-										<div className="col-span-12 lg:col-span-6 md:col-span-12 sm:col-span-12 space-y-2">
-											<Button
-												size="medium"
-												label="Gestionar Articulos"
-												onClick={handleClickOpen}
-												disabled={diferencia === '' || importe === ''}
-												icono={<MdAddShoppingCart size={16} />}
-											/>
-											<TextFieldController
-												control={control}
-												type="multiline"
-												name="descripcion"
-												rows={4}
-												error={errors.descripcion}
-												label="Comentarios"
-											/>
-										</div>
-										<div className="col-span-12 lg:col-span-6 md:col-span-12 sm:col-span-12 space-y-2">
-											<Totals control={control} setValue={setValue} />
-										</div>
-									</div>
 								</div>
 							</div>
 						</div>

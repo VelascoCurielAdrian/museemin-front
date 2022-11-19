@@ -1,16 +1,10 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { DashBoard } from '../componentes/DashBoard';
 import { Cliente, Clientes } from '../paginas/Clientes';
-// import { Servicio, Servicios } from '../paginas/Servicios';
 import { Trabajador, Trabajadores } from '../paginas/Trabajadores';
 import { Herramienta, Herramientas } from '../paginas/Herramientas';
-// import { Almacen } from '../paginas/Almacen';
-// import {
-// 	PaqueteHerramientas,
-// 	PaqueteHerramienta,
-// } from '../paginas/PaqueteHerramientas';
 import { Gastos, Gasto } from '../paginas/Gastos';
-import { Cotizacion } from '../paginas/Cotizacion/lista';
+import { Cotizacion, Cotizaciones } from '../paginas/Cotizacion';
 
 export const DaashBoardRoutes = () => {
 	return (
@@ -38,11 +32,9 @@ export const DaashBoardRoutes = () => {
 					<Route path="gastos/formulario" element={<Gasto />} />
 					<Route path="gastos/formulario/:id" element={<Gasto />} />
 
-					{/* <Route path="paqueteHerramientas" element={<PaqueteHerramientas />} />
-					<Route path="paqueteHerramientas/formulario" element={<PaqueteHerramienta />} />
-					<Route path="paqueteHerramientas/formulario/:id" element={<PaqueteHerramienta />}/> */}
-
-					<Route path="cotizacion" element={<Cotizacion />} />
+					{/* <Route path="cotizaciones" element={<Cotizaciones />} />
+					<Route path="cotizacion/formulario" element={<Cotizacion />} />
+					<Route path="cotizacion/formulario/:id" element={<Cotizacion />} /> */}
 
 					<Route path="/" element={<Navigate to="/home" />} />
 				</Routes>

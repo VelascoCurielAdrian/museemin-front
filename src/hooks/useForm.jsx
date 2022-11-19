@@ -1,59 +1,54 @@
-import { useRef, useState, useEffect } from 'react';
-import { useMutation, useLazyQuery } from '@apollo/client';
-import { toast } from 'react-toastify';
+import { useEffect } from 'react';
+import { useLazyQuery, useMutation } from '@apollo/client';
+import { useNavigate } from 'react-router-dom';
+import propTypes from 'prop-types';
+
 import { parseError } from '../helpers';
-
-export const useFormularion = (
-	{ action },
-	{ filter, id },
-	dataInicial,
-	dataCache,
-	gqlPost,
-	gqlUpdate,
-	gqlGet,
-	gqlGetByID,
-	handleClose,
-) => {
-	const formikRef = useRef(null);
-
-	const [dataForm, setDataForm] = useState({ ...dataInicial });
-	const [getByID, { loading }] = useLazyQuery(gqlGetByID, {
+import { snackbar } from '../configuracion/apollo/cache';
+const defaultSnackbar = { isOpen: true, time: 3000 };
+const useFormActions = ({
+	method,
+	actions,
+	operation,
+	params,
+	name,
+	reset,
+	id,
+	redirect,
+	setValues,
+}) => {
+	const navigate = useNavigate();
+	const [getById, { loading }] = useLazyQuery(actions.GET_BYID, {
 		fetchPolicy: 'no-cache',
 		onCompleted: (response) => {
-			setDataForm(Object.values(response)[0]);
+			reset(Object.values(response)[0]);
 		},
 	});
 
 	useEffect(() => {
-		id && getByID({ variables: { [filter]: id } });
-	}, [id]);
+		if (setValues || id) {
+			getById({ variables: { id } });
+		}
+	}, [id, setValues]);
 
-	const method = action === 'create' ? gqlPost : gqlUpdate;
-	const [ActionForm, { loading: isLoading }] = useMutation(method, {
+	const endpoint = method === 'create' ? actions.CREATE : actions.UPDATE;
+	const [actionForm, { loading: isLoading }] = useMutation(endpoint, {
 		update: (cache, { data: response }) => {
 			try {
-				if (action === 'update') return false;
+				if (method === 'update') return false;
 				const dataResponse = response[Object.keys(response)[0]];
 				const oldQuery = cache.readQuery({
-					query: gqlGet,
-					variables: {
-						offset: null,
-						limit: null,
-						txtBusqueda: '',
-					},
+					query: actions.GET,
+					variables: { offset: null, limit: null, txtBusqueda: '', ...params },
 				});
 				cache.writeQuery({
-					query: gqlGet,
-					variables: {
-						offset: null,
-						limit: null,
-						txtBusqueda: '',
-					},
+					query: actions.GET,
+					variables: { offset: null, limit: null, txtBusqueda: '', ...params },
 					data: {
-						[dataCache]: {
-							...oldQuery[dataCache],
-							count: oldQuery[dataCache].count + 1,
-							rows: [dataResponse.respuesta, ...oldQuery[dataCache].rows],
+						[operation]: {
+							...oldQuery[operation],
+							count: oldQuery[operation].count + 1,
+							rows: [dataResponse.respuesta, ...oldQuery[operation].rows],
 						},
 					},
 				});
@@ -62,32 +57,50 @@ export const useFormularion = (
 			}
 		},
 		onCompleted: (response) => {
-			toast.success(Object.values(response)[0].mensaje);
-			formikRef.current.resetForm();
-			if (handleClose) {
-				handleClose();
+			if (redirect) {
+				navigate(`/${name}`, {
+					replace: true,
+				});
 			}
+			snackbar({
+				...defaultSnackbar,
+				label: Object.values(response)[0].mensaje,
+				severity: 'success',
+			});
 		},
 		onError: (e) => {
 			const parseErrors = parseError(e);
 			parseErrors.forEach(({ message, name }) => {
 				if (name === 'BAD_USER_INPUT') {
-					toast.error(`${Object.values(message)}`);
+					snackbar({
+						...defaultSnackbar,
+						label: Object.values(response)[0].mensaje,
+						severity: 'error',
+					});
 				}
 			});
 		},
 	});
 
-	const submitForm = () => {
-		formikRef.current.submitForm();
-	};
+	return { loading, isLoading, actionForm };
+};
 
-	return {
-		formikRef,
-		dataForm,
-		ActionForm,
-		submitForm,
-		loading,
-		isLoading,
-	};
+export default useFormActions;
+
+useFormActions.propTypes = {
+	id: propTypes.oneOfType([propTypes.string, propTypes.number]),
+	method: propTypes.string.isRequired,
+	name: propTypes.string,
+	params: propTypes.object,
+	actions: propTypes.object.isRequired,
+	operation: propTypes.string.isRequired,
+	redirect: propTypes.bool,
+	setValues: propTypes.bool,
+};
+
+useFormActions.defaultProps = {
+	name: '',
+	params: {},
+	redirect: true,
+	setValues: true,
 };

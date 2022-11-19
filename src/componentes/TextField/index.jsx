@@ -144,7 +144,7 @@ TextField.defaultProps = {
 	inputProps: {},
 	required: false,
 	tooltip: '',
-	rows: 1,
+	rows: 4,
 	helperText: '',
 	placeHolder: '',
 	className: '',

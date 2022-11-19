@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { toast } from 'react-toastify';
 import { FiEdit } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { GridActionsCellItem } from '@mui/x-data-grid';
@@ -10,9 +9,9 @@ import { useMutation, useQuery, useReactiveVar } from '@apollo/client';
 import { parseError } from '../../helpers';
 import { Header } from '../Header/component';
 import { Confirmation } from '../confirmation/component';
-import { searchField } from '../../configuracion/apollo/cache';
+import { searchField, snackbar } from '../../configuracion/apollo/cache';
 import { TableBase } from '../TableBase/component';
-
+const defaultSnackbar = { isOpen: true, time: 3000 };
 export const Table = ({
 	uri,
 	pdf,
@@ -43,13 +42,22 @@ export const Table = ({
 		},
 		onCompleted: (response) => {
 			searchField('');
+			snackbar({
+				...defaultSnackbar,
+				label: Object.values(response)[0].mensaje,
+				severity: 'success',
+			});
 			toast.success(Object.values(response)[0].mensaje);
 		},
 		onError: (e) => {
 			const parseErrors = parseError(e);
 			parseErrors.forEach(({ message, name }) => {
 				if (name === 'BAD_USER_INPUT') {
-					toast.error(`${Object.values(message)}`);
+					snackbar({
+						...defaultSnackbar,
+						label: Object.values(message),
+						severity: 'error',
+					});
 				}
 			});
 		},

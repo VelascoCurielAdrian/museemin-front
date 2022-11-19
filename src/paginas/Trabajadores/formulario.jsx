@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import useFormActions from '../../hooks/useFormv2';
+import useFormActions from '../../hooks/useForm';
 import { estatus, Generos } from '../../helpers/constants';
 import { Header } from '../../componentes/Header/component';
 import { TrabajadoresActions, Validate } from '../../actions/trabajadores';

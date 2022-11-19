@@ -1,9 +1,9 @@
 import { Fragment, useState } from 'react';
 import { BsUpload } from 'react-icons/bs';
 import { MdCancel } from 'react-icons/md';
-import { toast } from 'react-toastify';
+import { snackbar } from '../../configuracion/apollo/cache';
 import { Upload } from '../../configuracion/firebase/config';
-
+const defaultSnackbar = { isOpen: true, time: 3000 };
 export const UploadFile = ({ getUrl }) => {
 	const [file, setFile] = useState(null);
 	const [filePreview, setFilePreview] = useState('');
@@ -18,7 +18,11 @@ export const UploadFile = ({ getUrl }) => {
 			const result = await Upload(file);
 			getUrl(result);
 		} catch (error) {
-			toast.error('Fallo interno intente mas tarde..');
+			snackbar({
+				...defaultSnackbar,
+				label: 'Fallo interno intente mas tarde..',
+				severity: 'error',
+			});
 		}
 	};
 	return (

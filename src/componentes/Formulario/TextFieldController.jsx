@@ -11,7 +11,8 @@ export const TextFieldController = ({
 	variant,
 	onChangeCustom,
 	messageError,
-	autoFocus
+	autoFocus,
+	disabled,
 }) => {
 	return (
 		<Controller
@@ -36,6 +37,7 @@ export const TextFieldController = ({
 					messageError={messageError}
 					type={type}
 					rows={rows}
+					disabled={disabled}
 					autoFocus={autoFocus}
 				/>
 			)}

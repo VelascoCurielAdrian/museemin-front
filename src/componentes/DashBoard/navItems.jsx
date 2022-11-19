@@ -3,6 +3,7 @@ import { FaUsersCog, FaTools } from 'react-icons/fa';
 import { useState } from 'react';
 import { MdBackpack } from 'react-icons/md';
 import { GrServices } from 'react-icons/gr';
+import { GiPayMoney } from 'react-icons/gi';
 import { FaToolbox, FaUserTie, FaMoneyBillAlt } from 'react-icons/fa';
 import { LinkButton } from '../LinkButton/container';
 
@@ -56,6 +57,13 @@ export const NavItems = (props) => {
 				icon={<FaMoneyBillAlt />}
 				url="/gastos"
 				label="Gastos"
+				handleClick={props.handleClick}
+			/>
+
+			<LinkButton
+				icon={<GiPayMoney />}
+				url="/cotizaciones"
+				label="Cotizaciones"
 				handleClick={props.handleClick}
 			/>
 		</List>

@@ -26,7 +26,6 @@ const ButtonCustomized = ({
 				<LoadingButton
 					className={classes.boton}
 					startIcon={icono}
-					sx={stylesButton}
 					loading={loading}
 					onClick={onClick}
 					disabled={disabled}
@@ -38,7 +37,6 @@ const ButtonCustomized = ({
 				</LoadingButton>
 			) : (
 				<Button
-					sx={stylesButton}
 					size={size}
 					disabled={disabled}
 					className={className}
