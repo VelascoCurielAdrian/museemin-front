@@ -22,20 +22,18 @@ const useDebounce = (value, delay) => {
 export const PaqueteHerramientas = () => {
 	const navigate = useNavigate();
 	const txtBusqueda = useReactiveVar(searchField);
-	const { data, loading, error } = useQuery(PaqueteHerramientasActions.GET, {
+	const { data, loading } = useQuery(PaqueteHerramientasActions.GET, {
 		variables: {
 			offset: null,
 			limit: null,
 			txtBusqueda: '',
 		},
 	});
-	const loadingImage = useDebounce(loading, 1500);
+	const loadingImage = useDebounce(loading, 1000);
 
 	const handleNew = () => {
 		navigate('/paqueteHerramientas/formulario');
 	};
-
-	if (error) return <h1>Cargando...</h1>;
 	return (
 		<>
 			<Header
@@ -48,68 +46,34 @@ export const PaqueteHerramientas = () => {
 			<div className="bg-white">
 				<div className="mx-auto max-w-2xl py-10 px-4 sm:py-2 sm:px-2 lg:max-w-7xl lg:px-8">
 					<div className="mt-1 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-						{(loadingImage
-							? Array.from(
-									new Array(data?.getAllPaqueteHerramientas?.rows.length),
-							  )
-							: data?.getAllPaqueteHerramientas?.rows
-						).map((item, index) => (
-							<div key={`Herramientas-${index}`}>
-								{item ? (
-									<div className="group relative">
-										<h2 className="text-2xl m-2 font-bold tracking-tight text-gray-900">
-											{item.descripcion}
-										</h2>
-										<div className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80">
-											<img
-												src={item.imagen}
-												alt={`${item.imagen} - ${item.id}`}
-												className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+						<>
+							{loadingImage ? (
+								Array(8)
+									.fill(1)
+									.map((card, index) => (
+										<div className="group relative" key={index}>
+											<Skeleton className="text-2xl m-2 font-bold tracking-tight text-gray-900" />
+											<Skeleton
+												variant="rectangular"
+												className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80"
 											/>
+											<div className="mt-2 flex justify-between">
+												<Skeleton variant="circular">
+													<Avatar />
+												</Skeleton>
+												<Skeleton variant="circular">
+													<Avatar />
+												</Skeleton>
+												<Skeleton variant="circular">
+													<Avatar />
+												</Skeleton>
+											</div>
 										</div>
-										<div className="mt-2 flex justify-between">
-											<IconButton
-												sx={{ display: 'flex', flexDirection: 'column' }}
-											>
-												<CgDetailsMore size={20} />
-												<p className="text-xs text-gray-500">Detalles</p>
-											</IconButton>
-											<IconButton
-												sx={{ display: 'flex', flexDirection: 'column' }}
-											>
-												<MdEdit size={20} />
-												<p className="text-xs text-gray-500">Editar</p>
-											</IconButton>
-											<IconButton
-												sx={{ display: 'flex', flexDirection: 'column' }}
-											>
-												<MdDelete size={20} />
-												<p className="text-xs text-gray-500">Eliminar</p>
-											</IconButton>
-										</div>
-									</div>
-								) : (
-									<div className="group relative">
-										<Skeleton className="text-2xl m-2 font-bold tracking-tight text-gray-900" />
-										<Skeleton
-											variant="rectangular"
-											className="min-h-80 aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-80"
-										/>
-										<div className="mt-2 flex justify-between">
-											<Skeleton variant="circular">
-												<Avatar />
-											</Skeleton>
-											<Skeleton variant="circular">
-												<Avatar />
-											</Skeleton>
-											<Skeleton variant="circular">
-												<Avatar />
-											</Skeleton>
-										</div>
-									</div>
-								)}
-							</div>
-						))}
+									))
+							) : (
+								<h1>h</h1>
+							)}
+						</>
 					</div>
 				</div>
 			</div>

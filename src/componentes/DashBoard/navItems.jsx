@@ -1,15 +1,17 @@
 import { List } from '@mui/material';
-import { FaUsersCog, FaTools } from 'react-icons/fa';
-import { useState } from 'react';
 import { MdBackpack } from 'react-icons/md';
 import { GrServices } from 'react-icons/gr';
-import { GiPayMoney } from 'react-icons/gi';
-import { FaToolbox, FaUserTie, FaMoneyBillAlt } from 'react-icons/fa';
+import {
+	FaToolbox,
+	FaUserTie,
+	FaMoneyBillAlt,
+	FaUsersCog,
+	FaTools,
+	FaCashRegister,
+} from 'react-icons/fa';
 import { LinkButton } from '../LinkButton/container';
 
 export const NavItems = (props) => {
-	const [open, setOpen] = useState(false);
-
 	return (
 		<List
 			sx={{
@@ -61,7 +63,7 @@ export const NavItems = (props) => {
 			/>
 
 			<LinkButton
-				icon={<GiPayMoney />}
+				icon={<FaCashRegister />}
 				url="/cotizaciones"
 				label="Cotizaciones"
 				handleClick={props.handleClick}

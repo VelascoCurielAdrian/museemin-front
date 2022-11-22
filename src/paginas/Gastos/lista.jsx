@@ -4,6 +4,7 @@ import { GastosActions } from '../../actions/gastos';
 import { Table } from '../../componentes/Table/component';
 import { EstadoMetodoPago } from '../../componentes/MetodoPago/component';
 import { formatPdfGasto } from './pdf';
+import { TotalGasto } from '../../componentes/TotalGasto';
 
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 30 },
@@ -57,6 +58,14 @@ const columns = [
 		headerName: 'TOTAL',
 		width: 90,
 		editable: false,
+		renderCell: ({ row, index }) => (
+			<TotalGasto
+				key={index}
+				importe={row.importe}
+				subTotal={row.subTotal}
+				total={row.total}
+			/>
+		),
 	},
 	{
 		field: 'metodoPago',

@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, memo } from 'react';
 import propTypes from 'prop-types';
 import { DataGrid } from '@mui/x-data-grid';
 
@@ -7,7 +7,7 @@ import { CustomPagination } from '../Pagination/component';
 import { EmptyRows } from '../EmptyRows/component';
 import { LinearProgress } from '@mui/material';
 
-export const TableBase = ({
+const TableBase = ({
 	data,
 	error,
 	height,
@@ -35,8 +35,9 @@ export const TableBase = ({
 						Pagination: showPaginate && CustomPagination,
 					}}
 					disableColumnMenu
-					rowsPerPageOptions={[5]}
+					rowsPerPageOptions={[10]}
 					disableSelectionOnClick
+					disableColumnResize
 				/>
 			</Container>
 		</Fragment>
@@ -67,3 +68,5 @@ TableBase.defaultProps = {
 	showPaginate: true,
 	headerHeight: 50,
 };
+
+export default memo(TableBase);

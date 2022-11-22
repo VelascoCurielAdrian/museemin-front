@@ -31,7 +31,12 @@ export const Herramienta = () => {
 	const { id } = useParams();
 	const [open, setOpen] = useState(false);
 	const [clasificaciones, setClasificaciones] = useState([]);
-	const { control, reset, handleSubmit, formState: { errors } } = useForm({
+	const {
+		control,
+		reset,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
 		resolver: yupResolver(Validate),
 		defaultValues: dataInicial,
 	});
@@ -42,7 +47,7 @@ export const Herramienta = () => {
 		name: 'herramientas',
 		reset,
 		id,
-		redirect: true
+		redirect: true,
 	});
 
 	useQuery(ClasificacionActions.GET, {
@@ -88,8 +93,8 @@ export const Herramienta = () => {
 					<form id="herramientas">
 						<div className="overflow-hidden shadow sm:rounded-md">
 							<div className="bg-white px-4 py-5 sm:p-6">
-								<div className="grid grid-cols-6 gap-6">
-									<div className="col-span-6 sm:col-span-2">
+								<div className="grid grid-cols-8 gap-2">
+									<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-3">
 										<TextFieldController
 											autoFocus
 											error={errors.nombre}
@@ -98,7 +103,7 @@ export const Herramienta = () => {
 											name="nombre"
 										/>
 									</div>
-									<div className="col-span-6 sm:col-span-2">
+									<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-3">
 										<SelectFieldController
 											control={control}
 											label="Clasificaciones"
@@ -108,7 +113,7 @@ export const Herramienta = () => {
 											error={errors.clasificacionID}
 										/>
 									</div>
-									<div className="col-span-6 sm:col-span-2">
+									<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-3">
 										<label
 											htmlFor="clasificacion"
 											className="block text-sm mb-1 font-medium text-gray-700"
@@ -124,7 +129,7 @@ export const Herramienta = () => {
 											icono={<BsTools size={16} />}
 										/>
 									</div>
-									<div className="col-span-6 sm:col-span-2">
+									<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-3">
 										<TextFieldController
 											error={errors.precio}
 											control={control}
@@ -133,7 +138,7 @@ export const Herramienta = () => {
 											type="number"
 										/>
 									</div>
-									<div className="col-span-6 sm:col-span-2">
+									<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-3">
 										<TextFieldController
 											error={errors.marca}
 											control={control}
@@ -141,7 +146,7 @@ export const Herramienta = () => {
 											name="marca"
 										/>
 									</div>
-									<div className="col-span-6 sm:col-span-2">
+									<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-3">
 										<SelectFieldController
 											label="Estado de la herramienta"
 											labelProp="nombre"
@@ -151,7 +156,7 @@ export const Herramienta = () => {
 											error={errors.estado}
 										/>
 									</div>
-									<div className="col-span-6 sm:col-span-2">
+									<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-3">
 										<SelectFieldController
 											label="Estatus"
 											labelProp="nombre"
@@ -161,7 +166,7 @@ export const Herramienta = () => {
 											error={errors.estatus}
 										/>
 									</div>
-									<div className="col-span-6 sm:col-span-3">
+									<div className="col-span-12 lg:col-span-2 md:col-span-12 sm:col-span-12 space-y-3">
 										<TextFieldController
 											error={errors.descripcion}
 											control={control}

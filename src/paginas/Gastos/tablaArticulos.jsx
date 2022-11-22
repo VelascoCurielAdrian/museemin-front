@@ -16,30 +16,30 @@ import { EmptyRows } from '../../componentes/EmptyRows/component';
 import { styled } from '@mui/styles';
 import paleta from '../../configuracion/paleta';
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
 	[`&.${tableCellClasses.head}`]: {
-    backgroundColor: paleta.bar.border,
-    color: paleta.bar.details,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
+		backgroundColor: paleta.activo.primary,
+		color: paleta.bar.details,
+	},
+	[`&.${tableCellClasses.body}`]: {
+		fontSize: 14,
+	},
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(() => ({
 	'&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
+		backgroundColor: paleta.bar.details,
+	},
+	// hide last border
+	'&:last-child td, &:last-child th': {
+		border: 0,
+	},
 }));
 
 const TablaArticulos = ({ data, handleEdit, handleDelete }) => {
 	return (
 		<>
-			<TableContainer component={Paper} sx={{ width: '100%', height: '80%' }}>
+			<TableContainer component={Paper} sx={{ width: '100%', maxHeight: 400 }}>
 				<Table stickyHeader aria-label="sticky table">
 					<TableHead>
 						<StyledTableRow>

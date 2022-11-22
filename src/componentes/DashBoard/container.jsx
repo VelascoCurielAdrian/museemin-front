@@ -38,7 +38,7 @@ export const DashBoard = ({ children }) => {
 	};
 
 	return (
-		<Box sx={{ display: 'flex' }}>
+		<Box sx={{ flexGrow: 1, display: 'flex'}}>
 			<CssBaseline />
 			<Appbar open={open} handleDrawerOpen={handleDrawerOpen} />
 			<Drawer open={open} handleDrawerClose={handleDrawerClose} />

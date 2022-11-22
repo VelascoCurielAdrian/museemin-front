@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import propTypes from 'prop-types';
 import { FaSearch } from 'react-icons/fa';
 import { useReactiveVar } from '@apollo/client';
 import { searchField } from '../../configuracion/apollo/cache';
 import { Component, SearchIcon, SearchInput } from './styles';
 
-export const SearchField = () => {
+export const SearchField = ({ fullWidth }) => {
 	const textSearch = useReactiveVar(searchField);
 	const [txtBusqueda, setTxtBusqueda] = useState(textSearch);
 
@@ -19,7 +20,7 @@ export const SearchField = () => {
 			</SearchIcon>
 			<SearchInput
 				size="large"
-				fullWidth
+				fullWidth={fullWidth}
 				placeholder="Buscar"
 				value={txtBusqueda}
 				onChange={({ target: { value } }) => setTxtBusqueda(value)}
@@ -28,4 +29,12 @@ export const SearchField = () => {
 			/>
 		</Component>
 	);
+};
+
+SearchField.propTypes = {
+	fullWidth: propTypes.bool,
+};
+
+SearchField.defaultProps = {
+	fullWidth: true,
 };

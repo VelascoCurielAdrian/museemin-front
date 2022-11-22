@@ -161,9 +161,7 @@ export const Validate = yup.object({
 	codigoPostal: yup
 		.number()
 		.transform((value) => (isNaN(value) ? undefined : value))
-		.required(MESSAGE_REQUIRED)
-		.min(6, ZIP_CODE)
-		.max(6, ZIP_CODE),
+		.required(MESSAGE_REQUIRED),
 	numeroExterior: yup
 		.number()
 		.transform((value) => (isNaN(value) ? undefined : value))

@@ -12,17 +12,12 @@ const drawerWidth = 240;
 const openedMixin = (theme) => ({
 	width: drawerWidth,
 	transition: theme.transitions.create('width', {
-		easing: theme.transitions.easing.sharp,
 		duration: theme.transitions.duration.enteringScreen,
 	}),
 	overflowX: 'hidden',
 });
 
 const closedMixin = (theme) => ({
-	transition: theme.transitions.create('width', {
-		easing: theme.transitions.easing.sharp,
-		duration: theme.transitions.duration.leavingScreen,
-	}),
 	overflowX: 'hidden',
 	width: `calc(${theme.spacing(7)} + 1px)`,
 	[theme.breakpoints.down('sm')]: {
@@ -37,7 +32,7 @@ const DrawerCustomized = styled(MuiDrawer, {
 	shouldForwardProp: (prop) => prop !== 'open',
 })(({ theme, open }) => ({
 	width: drawerWidth,
-	flexShrink: 0,
+	flexShrink: 2,
 	whiteSpace: 'nowrap',
 	boxSizing: 'border-box',
 	...(open && {
@@ -53,7 +48,6 @@ const DrawerCustomized = styled(MuiDrawer, {
 const DrawerHeader = styled('div')(({ theme }) => ({
 	display: 'flex',
 	alignItems: 'center',
-	backgroundColor: paleta.bar.iconoBorder,
 	justifyContent: 'flex-end',
 	padding: theme.spacing(0, 1),
 	...theme.mixins.toolbar,
@@ -63,12 +57,6 @@ export const Drawer = ({ open, handleDrawerClose }) => {
 	return (
 		<DrawerCustomized variant="permanent" open={open}>
 			<DrawerHeader>
-				<ListItem sx={{ width: 'auto' }}>
-					<ListItemText
-						primary="Adrian Velasco Curiel"
-						secondary="Administrador"
-					/>
-				</ListItem>
 				<IconButton onClick={handleDrawerClose}>
 					<AiOutlineMenuFold />
 				</IconButton>

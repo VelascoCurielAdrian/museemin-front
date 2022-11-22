@@ -3,8 +3,12 @@ import { DashBoard } from '../componentes/DashBoard';
 import { Cliente, Clientes } from '../paginas/Clientes';
 import { Trabajador, Trabajadores } from '../paginas/Trabajadores';
 import { Herramienta, Herramientas } from '../paginas/Herramientas';
+import {
+	PaqueteHerramientas,
+	PaqueteHerramienta,
+} from '../paginas/PaqueteHerramientas';
 import { Gastos, Gasto } from '../paginas/Gastos';
-import { Cotizacion, Cotizaciones } from '../paginas/Cotizacion';
+import { Servicios } from '../paginas/Servicios';
 
 export const DaashBoardRoutes = () => {
 	return (
@@ -23,19 +27,19 @@ export const DaashBoardRoutes = () => {
 					<Route path="herramienta/formulario" element={<Herramienta />} />
 					<Route path="herramienta/formulario/:id" element={<Herramienta />} />
 
-					{/* <Route path="servicios" element={<Servicios />} />
-					<Route path="servicio/formulario" element={<Servicio />} />
-					<Route path="servicio/formulario/:id" element={<Servicio />} /> */}
-
-					{/* <Route path="almacen" element={<Almacen />} /> */}
+					<Route path="paqueteHerramientas" element={<PaqueteHerramientas />} />
+					<Route
+						path="paqueteHerramientas/formulario"
+						element={<PaqueteHerramienta />}
+					/>
+					<Route
+						path="paqueteHerramientas/formulario/:id"
+						element={<PaqueteHerramienta />}
+					/>
+					<Route path="servicios" element={<Servicios />} />
 					<Route path="gastos" element={<Gastos />} />
 					<Route path="gastos/formulario" element={<Gasto />} />
 					<Route path="gastos/formulario/:id" element={<Gasto />} />
-
-					{/* <Route path="cotizaciones" element={<Cotizaciones />} />
-					<Route path="cotizacion/formulario" element={<Cotizacion />} />
-					<Route path="cotizacion/formulario/:id" element={<Cotizacion />} /> */}
-
 					<Route path="/" element={<Navigate to="/home" />} />
 				</Routes>
 			</div>

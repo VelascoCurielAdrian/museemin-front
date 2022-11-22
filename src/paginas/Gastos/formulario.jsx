@@ -21,6 +21,7 @@ import {
 } from '../../componentes/Formulario';
 import { GestionGastos } from './dialog';
 import { Totals } from './totals';
+import { snackbar } from '../../configuracion/apollo/cache';
 
 const dataInicial = {
 	trabajadorID: '',
@@ -35,6 +36,7 @@ const dataInicial = {
 	descripcion: '',
 };
 
+const defaultSnackbar = { isOpen: true, time: 3000 };
 export const Gasto = () => {
 	const { id } = useParams();
 	const [tipoGasto, setTipoGasto] = useState({ interno: false, externo: true });
@@ -113,6 +115,7 @@ export const Gasto = () => {
 	useEffect(() => {
 		let subTotal = 0;
 		subTotal = detalleGastos
+			.filter(({ activo }) => activo)
 			.map(({ importe }) => importe)
 			.reduce((sum, i) => sum + i, 0);
 		setValue('subTotal', subTotal);
@@ -129,6 +132,17 @@ export const Gasto = () => {
 	};
 
 	const onSubmit = (data) => {
+		if (
+			detalleGastos.length === 0 ||
+			detalleGastos.filter(({ activo }) => activo).length === 0
+		) {
+			snackbar({
+				...defaultSnackbar,
+				label: 'Es necesario agregar los gastos!',
+				severity: 'warning',
+			});
+			return;
+		}
 		const DetalleGastos = detalleGastos.map((gasto) => {
 			delete gasto.__typename;
 			return gasto;

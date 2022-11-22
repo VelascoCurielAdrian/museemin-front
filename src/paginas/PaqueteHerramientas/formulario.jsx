@@ -1,9 +1,15 @@
-import { useState, Fragment } from 'react';
-import { Formik, useFormik } from 'formik';
-import { toast } from 'react-toastify';
-import { FcPlus, FcCancel } from 'react-icons/fc';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { IconButton, LinearProgress, Tooltip } from '@mui/material';
+import { FcPlus, FcCancel } from 'react-icons/fc';
+import { Header } from '../../componentes/Header/component';
+import { filters, MESSAGE_REQUIRED } from '../../helpers/constants';
+import { TextFieldController } from '../../componentes/Formulario';
+import { UploadFile } from '../../componentes/UploadFiles/component';
+import { useQuery, useReactiveVar } from '@apollo/client';
+import { HerramientasActions } from '../../actions/herramientas';
+import { useState } from 'react';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -11,85 +17,67 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
-function createData(name, calories, fat, carbs, protein) {
-	return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-	createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-	createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-	createData('Eclair', 262, 16.0, 24, 6.0),
-	createData('Cupcake', 305, 3.7, 67, 4.3),
-	createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-import useFormActions from '../../hooks/useFormv2';
-import GQL, { validacion, dataCache } from './helper';
-import TextField from '../../componentes/TextField';
-import { Table as TableMui } from '../../componentes/Table/component';
-import { Header } from '../../componentes/Header/component';
-import { Estatus } from '../../componentes/Estatus/component';
-import { TableBase } from '../../componentes/TableBase/component';
-import { SearchField } from '../../componentes/SearchField/component';
+import { IconButton, LinearProgress, Tooltip } from '@mui/material';
 import { EstadoHerramienta } from '../../componentes/EstadoHerramienta/component';
-import { PaqueteHerramientasActions } from '../../actions/paqueteHerramientas';
-import { HerramientasActions } from '../../actions/herramientas';
-import { UploadFile } from '../../componentes/UploadFiles/component';
-import { useMemo } from 'react';
-import { useLazyQuery, useQuery, useReactiveVar } from '@apollo/client';
-import { useEffect } from 'react';
+import { Estatus } from '../../componentes/Estatus/component';
+
+import Box from '@mui/material/Box';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import { FixedSizeList } from 'react-window';
+import { SearchField } from '../../componentes/SearchField/component';
 import { searchField } from '../../configuracion/apollo/cache';
 
-const dataInicial = {
-	descripcion: '',
-};
+function renderRow(props) {
+	const { index, style } = props;
+
+	return (
+		<ListItem style={style} key={index} component="div" disablePadding>
+			<ListItemButton>
+				<ListItemText primary={`Item ${index + 1}`}/>
+			</ListItemButton>
+		</ListItem>
+	);
+}
+
+export const Validate = yup.object({
+	descripcion: yup.string().required(MESSAGE_REQUIRED),
+});
+
 export const PaqueteHerramienta = () => {
 	const { id } = useParams();
+	const [herramientas, setHerramientas] = useState([]);
 	const txtBusqueda = useReactiveVar(searchField);
-	const [dataForm, setDataForm] = useState({ ...dataInicial });
-	const [image, setImage] = useState('');
 
-	const { data, loading: loadingData } = useQuery(HerramientasActions.GET, {
-		variables: {
-			offset: null,
-			limit: null,
-			txtBusqueda,
+	const { loading: LoadingTools } = useQuery(HerramientasActions.GET, {
+		variables: { ...filters, txtBusqueda: txtBusqueda },
+		onCompleted: (data) => {
+			setHerramientas(data?.getAllHerramientas?.rows);
 		},
 	});
-	const { values, loading, isLoading, actionForm } = useFormActions({
-		method: id ? 'update' : 'create',
-		actions: PaqueteHerramientasActions,
-		operation: 'getAllPaqueteHerramientas',
-		name: 'paqueteHerramientas',
-		formData: dataInicial,
-		id,
+
+	const {
+		control,
+		reset,
+		handleSubmit,
+		formState: { errors },
+	} = useForm({
+		resolver: yupResolver(Validate),
+		defaultValues: { descripcion: '' },
 	});
 
-	const handleChange = (e) => {
-		const { name, value } = e.target;
-		setDataForm({ ...dataForm, [name]: value });
-	};
-	const formik = useFormik({
-		initialValues: values,
-		validationSchema: validacion,
-		onSubmit: (values) => {
-			alert(JSON.stringify(values, null, 2));
-		},
-	});
 	const getUrlImage = (url) => {
 		setImage(url);
 	};
 
-	if (loading) return <div>Cargando...</div>;
 	return (
 		<>
 			<Header
 				name="paqueteHerramientas"
 				title="Paquete de herramientas"
 				subtitle="Moduló de paquetes Herramientas"
-				handleCreate={formik.handleSubmit}
-				loading={isLoading}
+				handleCreate={() => {}}
 				agregar
 			/>
 			<>
@@ -103,28 +91,31 @@ export const PaqueteHerramienta = () => {
 					<form>
 						<div className="overflow-hidden shadow sm:rounded-md">
 							<div className="bg-white px-5 py-5 sm:p-2">
-								<div className="grid grid-cols-8 gap-2">
-									<div className="col-span-12 lg:col-span-3 md:col-span-12 sm:col-span-12 space-y-3">
-										<TextField
-											fullWidth
-											id="usuario"
-											size="small"
-											name="descripcion"
+								<div className="grid grid-cols-12 gap-2">
+									<div className="col-span-12 lg:col-span-4 md:col-span-12 sm:col-span-12 space-y-3">
+										<TextFieldController
+											autoFocus
+											error={errors.descripcion}
+											control={control}
 											label="Nombre"
-											value={dataForm.descripcion}
-											onChange={handleChange}
+											name="descripcion"
 										/>
 										<UploadFile getUrl={getUrlImage} />
 									</div>
-									<div className="col-span-12 lg:col-span-5 md:col-span-12 sm:col-span-12 space-y-2">
-										<label
-											htmlFor="label-form"
-											className="block mb-2 text-sm font-medium text-gray-700"
-										>
-											Seleccione las herramientas del paquete
-										</label>
-										<SearchField />
-										{loadingData && <LinearProgress />}
+									<div className="col-span-12 lg:col-span-8 md:col-span-12 sm:col-span-12">
+										<div className="flex m-1">
+											<label
+												htmlFor="label-form"
+												className="block mt-4 text-sm font-medium text-gray-700"
+											>
+												Seleccione las herramientas del paquete
+											</label>
+											<div className="ml-auto">
+												<SearchField fullWidth={false} />
+											</div>
+										</div>
+
+										{LoadingTools && <LinearProgress />}
 										<TableContainer component={Paper} sx={{ maxHeight: 340 }}>
 											<Table
 												sx={{ width: '100%' }}
@@ -135,13 +126,13 @@ export const PaqueteHerramienta = () => {
 													<TableRow>
 														<TableCell>NOMBRE</TableCell>
 														<TableCell>CLASIFICACIÓN</TableCell>
-														<TableCell >CONDICIÓN</TableCell>
+														<TableCell>CONDICIÓN</TableCell>
 														<TableCell>ESTATUS</TableCell>
 														<TableCell>ACCIÓN</TableCell>
 													</TableRow>
 												</TableHead>
 												<TableBody>
-													{data?.getAllHerramientas?.rows.map((row) => (
+													{herramientas.map((row) => (
 														<TableRow key={row.id}>
 															<TableCell>{row.nombre}</TableCell>
 															<TableCell>
@@ -154,7 +145,7 @@ export const PaqueteHerramienta = () => {
 																<Estatus value={row.estatus} />
 															</TableCell>
 															<TableCell>
-																<Fragment>
+																<>
 																	<Tooltip
 																		title="Agregar"
 																		placement="left"
@@ -168,13 +159,39 @@ export const PaqueteHerramienta = () => {
 																			/>
 																		</IconButton>
 																	</Tooltip>
-																</Fragment>
+																</>
 															</TableCell>
 														</TableRow>
 													))}
 												</TableBody>
 											</Table>
 										</TableContainer>
+									</div>
+									<div className="col-span-12 lg:col-span-3 md:col-span-12 sm:col-span-12">
+										<label
+											htmlFor="label-form"
+											className="block mb-2 text-sm font-medium text-gray-700"
+										>
+											Herramientas Seleccionadas
+										</label>
+										<Box
+											sx={{
+												width: '100%',
+												height: 400,
+												maxWidth: 360,
+												bgcolor: 'background.paper',
+											}}
+										>
+											<FixedSizeList
+												height={300}
+												width={360}
+												itemSize={46}
+												itemCount={herramientas.length}
+												overscanCount={5}
+											>
+												{renderRow}
+											</FixedSizeList>
+										</Box>
 									</div>
 								</div>
 							</div>

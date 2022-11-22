@@ -26,7 +26,7 @@ export const formatPdfGasto = (data) => {
 		{ title: 'Unidad', dataKey: 'unidad' },
 		{ title: 'Precio', dataKey: 'precio' },
 		{ title: 'Cantidad', dataKey: 'cantidad' },
-		{ title: 'Precio Parcial', dataKey: 'precioParcial' },
+		{ title: 'Importe', dataKey: 'importe' },
 	];
 	const rows = DetalleGastos?.map((data) => {
 		const tipoUnidad = unidades.find(

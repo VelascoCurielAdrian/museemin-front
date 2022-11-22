@@ -11,7 +11,25 @@ const TotalGasto = ({ control, setValue }) => {
 	const result = getTotal({ diferencia, subTotal, importe });
 
 	setValue('total', result);
-	return <p>${result || '0.00'}</p>;
+	return (
+		<>
+			{subTotal <= importe ? (
+				<label
+					htmlFor="clasificacion"
+					className="block text-sm mb-1 font-bold text-green-700"
+				>
+					${result || '0.00'}
+				</label>
+			) : (
+				<label
+					htmlFor="clasificacion"
+					className="block text-sm mb-1 font-bold text-red-700"
+				>
+					${result || '0.00'}
+				</label>
+			)}
+		</>
+	);
 };
 
 export const Totals = ({ control, setValue }) => {

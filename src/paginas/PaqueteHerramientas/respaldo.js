@@ -1,9 +1,7 @@
 import { useState, Fragment } from 'react';
-import { Formik, useFormik } from 'formik';
-import { toast } from 'react-toastify';
 import { FcPlus, FcCancel } from 'react-icons/fc';
 import { useParams } from 'react-router-dom';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, LinearProgress, Tooltip } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -24,7 +22,7 @@ const rows = [
 	createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-import useFormActions from '../../hooks/useFormv2';
+import useFormActions from '../../hooks/useForm';
 import GQL, { validacion, dataCache } from './helper';
 import TextField from '../../componentes/TextField';
 import { Table as TableMui } from '../../componentes/Table/component';
@@ -37,18 +35,26 @@ import { PaqueteHerramientasActions } from '../../actions/paqueteHerramientas';
 import { HerramientasActions } from '../../actions/herramientas';
 import { UploadFile } from '../../componentes/UploadFiles/component';
 import { useMemo } from 'react';
-import { useLazyQuery, useQuery } from '@apollo/client';
+import { useLazyQuery, useQuery, useReactiveVar } from '@apollo/client';
 import { useEffect } from 'react';
+import { searchField } from '../../configuracion/apollo/cache';
 
 const dataInicial = {
 	descripcion: '',
 };
-
 export const PaqueteHerramienta = () => {
 	const { id } = useParams();
-	const [dataHerramientas, setDataHerramientas] = useState([]);
-	const [dataRows, setDataRows] = useState([]);
+	const txtBusqueda = useReactiveVar(searchField);
+	const [dataForm, setDataForm] = useState({ ...dataInicial });
 	const [image, setImage] = useState('');
+
+	const { data, loading: loadingData } = useQuery(HerramientasActions.GET, {
+		variables: {
+			offset: null,
+			limit: null,
+			txtBusqueda,
+		},
+	});
 	const { values, loading, isLoading, actionForm } = useFormActions({
 		method: id ? 'update' : 'create',
 		actions: PaqueteHerramientasActions,
@@ -58,153 +64,21 @@ export const PaqueteHerramienta = () => {
 		id,
 	});
 
-	const [getData, { data }] = useLazyQuery(HerramientasActions.GET, {
-		variables: {
-			offset: null,
-			limit: null,
-			txtBusqueda: '',
-		},
-	});
-
-	useEffect(() => {
-		getData();
-		if (data) {
-			setDataRows(data);
-		}
-	}, []);
-
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setDataForm({ ...dataForm, [name]: value });
+	};
 	const formik = useFormik({
-		initialValues: dataInicial,
+		initialValues: values,
 		validationSchema: validacion,
 		onSubmit: (values) => {
 			alert(JSON.stringify(values, null, 2));
 		},
 	});
-
-	const handleAdd = (value) => {
-		const existe = dataHerramientas.find(
-			(herramienta) => herramienta.id === value.id,
-		);
-		if (existe) {
-			return toast.error('No Puede agregar las misma herramienta.');
-		}
-		setDataHerramientas([...dataHerramientas, value]);
-	};
-
-	const handleRemove = (index) => {
-		const herramientas = [...dataHerramientas];
-		herramientas.splice(index, 1);
-		setDataHerramientas(herramientas);
-	};
-
-	const herramientasAgregadas = [
-		{ field: 'id', headerName: 'ID', width: 80 },
-		{
-			field: 'nombre',
-			headerName: 'NOMBRE',
-			width: 150,
-			editable: false,
-		},
-		{
-			field: 'clasificacion',
-			headerName: 'CLASIFICACIÓN',
-			width: 150,
-			editable: false,
-			valueGetter: ({ value }) => value.descripcion,
-		},
-		{
-			field: 'estado',
-			headerName: 'CONDICIÓN',
-			width: 120,
-			editable: false,
-			renderCell: ({ value, index }) => (
-				<EstadoHerramienta key={index} value={value} />
-			),
-		},
-		{
-			field: 'estatus',
-			headerName: 'ESTATUS',
-			width: 120,
-			editable: false,
-			renderCell: ({ value, index }) => <Estatus key={index} value={value} />,
-		},
-		{
-			field: 'actions',
-			headerName: 'ACCIÓN',
-			editable: false,
-			renderCell: ({ row, index }) => {
-				return (
-					<Fragment>
-						<Tooltip
-							title="Eliminar"
-							placement="right"
-							arrow
-							onClick={() => {
-								handleRemove(row, index);
-							}}
-						>
-							<IconButton>
-								<FcCancel size={20} className="text-green-700" />
-							</IconButton>
-						</Tooltip>
-					</Fragment>
-				);
-			},
-		},
-	];
-
-	const ToolsAdd = () => {
-		const data = dataHerramientas.map((herramientas) => ({
-			herramientaID: herramientas.id,
-		}));
-		return data;
-	};
-
-	const herramientas = useMemo(
-		() => [
-			{
-				field: 'nombre',
-				headerName: 'NOMBRE',
-				width: 150,
-				editable: false,
-			},
-			{
-				field: 'clasificacion',
-				headerName: 'CLASIFICACIÓN',
-				width: 150,
-				editable: false,
-				valueGetter: ({ value }) => value.descripcion,
-			},
-			{
-				field: 'actions',
-				headerName: 'ACCIÓN',
-				editable: false,
-				renderCell: ({ row, index }) => {
-					return (
-						<Fragment>
-							<Tooltip
-								title="Agregar"
-								placement="left"
-								arrow
-								onClick={() => {
-									handleAdd(row, index);
-								}}
-							>
-								<IconButton>
-									<FcPlus size={20} className="text-green-700" />
-								</IconButton>
-							</Tooltip>
-						</Fragment>
-					);
-				},
-			},
-		],
-		[ToolsAdd],
-	);
-
 	const getUrlImage = (url) => {
 		setImage(url);
 	};
+
 	if (loading) return <div>Cargando...</div>;
 	return (
 		<>
@@ -228,80 +102,77 @@ export const PaqueteHerramienta = () => {
 						<div className="overflow-hidden shadow sm:rounded-md">
 							<div className="bg-white px-5 py-5 sm:p-2">
 								<div className="grid grid-cols-8 gap-2">
-									<div className="col-span-8 sm:col-span-3 space-y-3">
+									<div className="col-span-12 lg:col-span-3 md:col-span-12 sm:col-span-12 space-y-3">
 										<TextField
 											fullWidth
 											id="usuario"
 											size="small"
 											name="descripcion"
 											label="Nombre"
-											autoFocus
-											value={formik.values.descripcion}
-											onChange={formik.handleChange}
-											helperText={
-												formik.touched.descripcion && formik.errors.descripcion
-											}
-											error={
-												formik.touched.descripcion &&
-												Boolean(formik.errors.descripcion)
-											}
+											value={dataForm.descripcion}
+											onChange={handleChange}
 										/>
 										<UploadFile getUrl={getUrlImage} />
+									</div>
+									<div className="col-span-12 lg:col-span-5 md:col-span-12 sm:col-span-12 space-y-2">
 										<label
 											htmlFor="label-form"
 											className="block mb-2 text-sm font-medium text-gray-700"
 										>
 											Seleccione las herramientas del paquete
 										</label>
-										<SearchField />
-										<TableContainer component={Paper}>
-											<Table sx={{ minWidth: 650 }} aria-label="simple table">
+										<SearchField fullWidth={false} />
+										{loadingData && <LinearProgress />}
+										<TableContainer component={Paper} sx={{ maxHeight: 340 }}>
+											<Table
+												sx={{ width: '100%' }}
+												stickyHeader
+												aria-label="sticky table"
+											>
 												<TableHead>
 													<TableRow>
-														<TableCell>Dessert (100g serving)</TableCell>
-														<TableCell align="right">Calories</TableCell>
-														<TableCell align="right">Fat&nbsp;(g)</TableCell>
-														<TableCell align="right">Carbs&nbsp;(g)</TableCell>
-														<TableCell align="right">
-															Protein&nbsp;(g)
-														</TableCell>
+														<TableCell>NOMBRE</TableCell>
+														<TableCell>CLASIFICACIÓN</TableCell>
+														<TableCell>CONDICIÓN</TableCell>
+														<TableCell>ESTATUS</TableCell>
+														<TableCell>ACCIÓN</TableCell>
 													</TableRow>
 												</TableHead>
 												<TableBody>
-													{rows.map((row) => (
-														<TableRow
-															key={row.name}
-															sx={{
-																'&:last-child td, &:last-child th': {
-																	border: 0,
-																},
-															}}
-														>
-															<TableCell component="th" scope="row">
-																{row.name}
+													{data?.getAllHerramientas?.rows.map((row) => (
+														<TableRow key={row.id}>
+															<TableCell>{row.nombre}</TableCell>
+															<TableCell>
+																{row.clasificacion.descripcion}
 															</TableCell>
-															<TableCell align="right">
-																{row.calories}
+															<TableCell>
+																<EstadoHerramienta value={row.estado} />
 															</TableCell>
-															<TableCell align="right">{row.fat}</TableCell>
-															<TableCell align="right">{row.carbs}</TableCell>
-															<TableCell align="right">{row.protein}</TableCell>
+															<TableCell>
+																<Estatus value={row.estatus} />
+															</TableCell>
+															<TableCell>
+																<Fragment>
+																	<Tooltip
+																		title="Agregar"
+																		placement="left"
+																		arrow
+																		onClick={() => {}}
+																	>
+																		<IconButton>
+																			<FcPlus
+																				size={20}
+																				className="text-green-700"
+																			/>
+																		</IconButton>
+																	</Tooltip>
+																</Fragment>
+															</TableCell>
 														</TableRow>
 													))}
 												</TableBody>
 											</Table>
 										</TableContainer>
-										{/* <Table
-											showPaginate={false}
-											height={350}
-											uri={GQL.GET}
-											urlDelete={{
-												gql: GQL.DELETE,
-												params: 'deleteHerramientaId',
-											}}
-											dataCache={dataCache}
-											columns={herramientas}
-										/> */}
 									</div>
 								</div>
 							</div>

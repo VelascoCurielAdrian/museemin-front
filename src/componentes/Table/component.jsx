@@ -10,7 +10,7 @@ import { parseError } from '../../helpers';
 import { Header } from '../Header/component';
 import { Confirmation } from '../confirmation/component';
 import { searchField, snackbar } from '../../configuracion/apollo/cache';
-import { TableBase } from '../TableBase/component';
+import TableBase from '../TableBase';
 const defaultSnackbar = { isOpen: true, time: 3000 };
 export const Table = ({
 	uri,
@@ -182,5 +182,5 @@ Table.defaultProps = {
 	showHeader: false,
 	showPaginate: true,
 	dataFixed: false,
-	print: true,
+	print: false,
 };

@@ -120,7 +120,10 @@ export const GestionGastos = ({
 		<Dialog
 			open={open}
 			title="Agregue los gastos que se realizaron."
-			onClose={handleClose}
+			onClose={() => {
+				handleClose();
+				reset(defaultValues);
+			}}
 		>
 			<Grid container spacing={1}>
 				<Grid item lg={3} md={8} sm={8} xs={12}>
