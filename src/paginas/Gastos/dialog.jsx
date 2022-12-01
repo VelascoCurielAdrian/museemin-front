@@ -9,7 +9,6 @@ import {
 	useMediaQuery,
 	useTheme,
 	Grid,
-	Box,
 } from '@mui/material';
 
 import { ValidacionDetalleGasto } from '../../actions/gastos';
@@ -93,12 +92,13 @@ export const GestionGastos = ({
 		});
 		onChange(gastosActivos);
 	};
+
 	const handleEdit = (item) => {
 		setEditGasto({ show: true, idGasto: item.id });
 		reset(item);
 	};
 
-	const SetEditGasto = (nuevaData) => {
+	const editarGasto = (nuevaData) => {
 		const gastosAgregados = [...data];
 		const gastosActivos = gastosAgregados.map((gasto) => {
 			if (gasto.id === editGasto.idGasto) {
@@ -122,6 +122,7 @@ export const GestionGastos = ({
 			title="Agregue los gastos que se realizaron."
 			onClose={() => {
 				handleClose();
+				setEditGasto({ show: false, idGasto: '' });
 				reset(defaultValues);
 			}}
 		>
@@ -176,7 +177,7 @@ export const GestionGastos = ({
 								className="bg-gray-700"
 								onClick={(e) => {
 									if (editGasto.show) {
-										handleSubmit(SetEditGasto)(e);
+										handleSubmit(editarGasto)(e);
 									} else {
 										handleSubmit(SetnewGasto)(e);
 									}
@@ -193,7 +194,7 @@ export const GestionGastos = ({
 								style={{ margin: 15 }}
 								onClick={(e) => {
 									if (editGasto.show) {
-										handleSubmit(SetEditGasto)(e);
+										handleSubmit(editarGasto)(e);
 									} else {
 										handleSubmit(SetnewGasto)(e);
 									}

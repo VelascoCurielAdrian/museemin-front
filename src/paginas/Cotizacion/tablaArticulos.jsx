@@ -14,11 +14,15 @@ import PropTypes from 'prop-types';
 import { FiEdit } from 'react-icons/fi';
 import { MdOutlineDelete } from 'react-icons/md';
 import { EmptyRows } from '../../componentes/EmptyRows/component';
+import TipoUnidad from '../../componentes/TipoUnidad';
 
 const TablaArticulos = ({ data, handleEdit, handleDelete }) => {
 	return (
 		<>
-			<TableContainer component={Paper} sx={{ width: '100%', height: '80%' }}>
+			<TableContainer
+				component={Paper}
+				sx={{ width: '100%', height: 255, maxHeight: 400 }}
+			>
 				<Table stickyHeader aria-label="sticky table">
 					<TableHead>
 						<TableRow>
@@ -34,7 +38,9 @@ const TablaArticulos = ({ data, handleEdit, handleDelete }) => {
 						{data.map((item, index) => (
 							<TableRow key={index}>
 								<TableCell>{item.descripcion}</TableCell>
-								<TableCell>{item.unidad}</TableCell>
+								<TableCell>
+									<TipoUnidad value={item.unidad} />
+								</TableCell>
 								<TableCell>{item.precio}</TableCell>
 								<TableCell>{item.cantidad}</TableCell>
 								<TableCell>{item.importe}</TableCell>
@@ -47,7 +53,7 @@ const TablaArticulos = ({ data, handleEdit, handleDelete }) => {
 											onClick={() => handleEdit(item, index)}
 										>
 											<IconButton>
-												<FiEdit size={18} className="text-red-600" />
+												<FiEdit size={18} />
 											</IconButton>
 										</Tooltip>
 										<Tooltip
@@ -57,21 +63,21 @@ const TablaArticulos = ({ data, handleEdit, handleDelete }) => {
 											onClick={() => handleDelete(item, index)}
 										>
 											<IconButton>
-												<MdOutlineDelete size={18} className="text-red-600" />
+												<MdOutlineDelete size={18} />
 											</IconButton>
 										</Tooltip>
 									</>
 								</TableCell>
 							</TableRow>
 						))}
+						{data.length === 0 && (
+							<TableRow>
+								<TableCell align="left" colSpan={23}>
+									<EmptyRows />
+								</TableCell>
+							</TableRow>
+						)}
 					</TableBody>
-					{data.length === 0 && (
-						<TableRow>
-							<TableCell align="left" colSpan={23}>
-								<EmptyRows />
-							</TableCell>
-						</TableRow>
-					)}
 				</Table>
 			</TableContainer>
 		</>

@@ -319,11 +319,9 @@ export const Gasto = () => {
 			</div>
 			<GestionGastos
 				open={open}
-				handleClose={handleClose}
-				control={control}
-				errors={errors}
-				data={detalleGastos}
 				addGasto={addGasto}
+				data={detalleGastos}
+				handleClose={handleClose}
 				onChange={handleDetalleGasto}
 			/>
 		</>

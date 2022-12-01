@@ -1,12 +1,18 @@
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
-import { GastosActions } from '../../actions/gastos';
 import { Table } from '../../componentes/Table/component';
-import { EstadoMetodoPago } from '../../componentes/MetodoPago/component';
 import { formatPdfGasto } from './pdf';
+import { CotizacionesActions } from '../../actions/cotizaciones';
+import ProcesoCotizacion from '../../componentes/ProcesoCotizacion';
 
 const columns = [
 	{ field: 'id', headerName: 'ID', width: 30 },
+	{
+		field: 'descripcion',
+		headerName: 'DESCRIPCION',
+		width: 290,
+		editable: false,
+	},
 	{
 		field: 'fecha',
 		headerName: 'FECHA',
@@ -15,36 +21,20 @@ const columns = [
 		valueGetter: ({ row }) => moment(row.fecha).format('L'),
 	},
 	{
-		field: 'trabajadorID',
-		headerName: 'TRABAJADOR',
+		field: 'clienteID',
+		headerName: 'CLIENTE',
 		width: 170,
 		editable: false,
-		valueGetter: ({ row }) =>
-			`${row.trabajador.nombres} ${row.trabajador.primerApellido} ${row.trabajador.segundoApellido}`,
+		valueGetter: ({ row }) => `${row?.cliente?.nombre}`,
 	},
 	{
-		field: 'tipoGasto',
-		headerName: 'TIPO DE GASTO',
-		width: 150,
+		field: 'proceso',
+		headerName: 'PROCESO DE LA COTIZACIÓN',
+		width: 220,
 		editable: false,
-		valueGetter: ({ row }) => {
-			if (row.tipoGasto === 1) {
-				return `Externo a ${row?.cliente?.nombre}`;
-			}
-			return 'Gasto Interno';
-		},
-	},
-	{
-		field: 'importe',
-		headerName: 'IMPORTE',
-		width: 80,
-		editable: false,
-	},
-	{
-		field: 'diferencia',
-		headerName: 'DIFERENCIA',
-		width: 110,
-		editable: false,
+		renderCell: ({ value, index }) => (
+			<ProcesoCotizacion key={index} value={value} />
+		),
 	},
 	{
 		field: 'subTotal',
@@ -52,24 +42,9 @@ const columns = [
 		width: 110,
 		editable: false,
 	},
-	{
-		field: 'total',
-		headerName: 'TOTAL',
-		width: 90,
-		editable: false,
-	},
-	{
-		field: 'metodoPago',
-		headerName: 'METODO DE PAGO',
-		width: 180,
-		editable: false,
-		renderCell: ({ value, index }) => (
-			<EstadoMetodoPago key={index} value={value} />
-		),
-	},
 ];
 
-const dataCache = 'getAllGastos';
+const dataCache = 'getAllCotizaciones';
 export const Cotizaciones = () => {
 	const navigate = useNavigate();
 	const handleNew = () => {
@@ -83,12 +58,11 @@ export const Cotizaciones = () => {
 				showHeader
 				pdf={formatPdfGasto}
 				handleNew={handleNew}
-				uri={GastosActions.GET}
-				urlDelete={{ gql: GastosActions.DELETE, params: 'deleteId' }}
+				uri={CotizacionesActions.GET}
+				urlDelete={{ gql: CotizacionesActions.DELETE, params: 'deleteId' }}
 				dataCache={dataCache}
 				columns={columns}
 				showActions
-				print
 			/>
 		</>
 	);

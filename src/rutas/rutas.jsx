@@ -8,7 +8,7 @@ import {
 	PaqueteHerramienta,
 } from '../paginas/PaqueteHerramientas';
 import { Gastos, Gasto } from '../paginas/Gastos';
-import { Servicios } from '../paginas/Servicios';
+import { Cotizaciones, Cotizacion } from '../paginas/Cotizacion';
 
 export const DaashBoardRoutes = () => {
 	return (
@@ -36,7 +36,10 @@ export const DaashBoardRoutes = () => {
 						path="paqueteHerramientas/formulario/:id"
 						element={<PaqueteHerramienta />}
 					/>
-					<Route path="servicios" element={<Servicios />} />
+					<Route path="cotizaciones" element={<Cotizaciones />} />
+					<Route path="cotizacion/formulario" element={<Cotizacion />} />
+					<Route path="cotizacion/formulario/:id" element={<Cotizacion />} />
+
 					<Route path="gastos" element={<Gastos />} />
 					<Route path="gastos/formulario" element={<Gasto />} />
 					<Route path="gastos/formulario/:id" element={<Gasto />} />

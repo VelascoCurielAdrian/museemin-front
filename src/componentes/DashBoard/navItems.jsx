@@ -56,16 +56,15 @@ export const NavItems = (props) => {
 				handleClick={props.handleClick}
 			/>
 			<LinkButton
-				icon={<FaMoneyBillAlt />}
-				url="/gastos"
-				label="Gastos"
-				handleClick={props.handleClick}
-			/>
-
-			<LinkButton
 				icon={<FaCashRegister />}
 				url="/cotizaciones"
 				label="Cotizaciones"
+				handleClick={props.handleClick}
+			/>
+			<LinkButton
+				icon={<FaMoneyBillAlt />}
+				url="/gastos"
+				label="Gastos"
 				handleClick={props.handleClick}
 			/>
 		</List>

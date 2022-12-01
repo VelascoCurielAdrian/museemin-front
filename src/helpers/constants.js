@@ -1,13 +1,13 @@
 export const IS_REQUERED = 'Numero invalido';
 export const NUMBER_INVALID = 'Numero invalido';
-export const MESSAGE_REQUIRED = 'Este campo es requerido';
 export const ZIP_CODE = 'Codigo postal invalido';
-export const TELEPHONE_VALIDATE =
-	'El télefono debe tener como minimo 10 dígitos';
-export const TELEPHONE_INVALID = 'Numero télefono invalido';
+export const MESSAGE_REQUIRED = 'Este campo es requerido';
 export const EMAIL_INVALID = 'Correo electronico invalido';
+export const TELEPHONE_INVALID = 'Numero télefono invalido';
 export const NUMBER_ADDRESSLINE_MIN = 'debe tener como minimo 4 caracteres';
 export const NUMBER_ADDRESSLINE_MAX = 'debe tener como maximo 4 caracteres';
+export const TELEPHONE_VALIDATE =
+	'El télefono debe tener como minimo 10 dígitos';
 
 export const estatus = [
 	{ id: true, nombre: 'Habilitado' },
@@ -34,6 +34,12 @@ export const tiposMetodoPago = [
 	{ id: 6, nombre: 'Intermediario de pago' },
 ];
 
+export const procesoCotizacion = [
+	{ id: 1, nombre: 'Diagnóstico / Revisión', color: 'warning' },
+	{ id: 2, nombre: 'Denegada', color: 'error' },
+	{ id: 3, nombre: 'Aceptada', color: 'success' },
+];
+
 export const filters = {
 	offset: null,
 	limit: null,
@@ -41,8 +47,10 @@ export const filters = {
 };
 
 export const unidades = [
-	{ id: 1, nombre: 'Kilogramo' },
-	{ id: 2, nombre: 'Metro' },
-	{ id: 3, nombre: 'Pieza' },
-	{ id: 4, nombre: 'Litro' },
+	{ id: 1, nombre: 'Kilogramo', color: 'info' },
+	{ id: 2, nombre: 'Metro', color: 'info' },
+	{ id: 3, nombre: 'Pieza', color: 'info' },
+	{ id: 4, nombre: 'Litro', color: 'info' },
+	{ id: 5, nombre: 'Metro M2', color: 'info' },
+	{ id: 6, nombre: 'Metro M3', color: 'info' },
 ];
