@@ -8,6 +8,7 @@ export const SelectFieldController = ({
 	label,
 	options,
 	error,
+	loading,
 	customLabel,
 	messageError,
 }) => {
@@ -19,6 +20,7 @@ export const SelectFieldController = ({
 				<SelectField
 					labelProp={labelProp}
 					name={name}
+					loading={loading}
 					label={label}
 					onChange={onChange}
 					value={value || ''}

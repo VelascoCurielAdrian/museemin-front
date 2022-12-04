@@ -130,6 +130,16 @@ const GET_BYID = gql`
 	${FRAGMENTS.Cotizaciones}
 `;
 
+const GET_BYIDCLIENTE = gql`
+	query GetCotizacionCliente($clienteID: ID!) {
+		getCotizacionCliente(clienteID: $clienteID) {
+			id
+			descripcion
+			fecha
+		}
+	}
+`;
+
 export const ValidacionCotizacion = yup.object().shape({
 	descripcion: yup.string().required(MESSAGE_REQUIRED),
 	proceso: yup
@@ -162,6 +172,7 @@ export const ValidacionDetalleCotizacion = yup.object({
 });
 
 export const CotizacionesActions = {
+	GET_BYIDCLIENTE,
 	GET_BYID,
 	CREATE,
 	DELETE,

@@ -22,11 +22,13 @@ import {
 import { GestionGastos } from './dialog';
 import { Totals } from './totals';
 import { snackbar } from '../../configuracion/apollo/cache';
+import { CotizacionesActions } from '../../actions/cotizaciones';
 
 const dataInicial = {
 	trabajadorID: '',
 	fecha: format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS"),
 	clienteID: '',
+	cotizacionID: '',
 	compania: '',
 	metodoPago: '',
 	importe: '',
@@ -41,17 +43,12 @@ export const Gasto = () => {
 	const { id } = useParams();
 	const [tipoGasto, setTipoGasto] = useState({ interno: false, externo: true });
 	const [detalleGastos, setDetalleGastos] = useState([]);
+	const [cotizaciones, setCotizaciones] = useState([]);
 	const [trabajadores, setTrabajadores] = useState([]);
 	const [clientes, setClientes] = useState([]);
 	const [open, setOpen] = useState(false);
 
-	const {
-		reset,
-		control,
-		setValue,
-		handleSubmit,
-		formState: { errors },
-	} = useForm({
+	const { reset, control, setValue, handleSubmit, formState: { errors }} = useForm({
 		resolver: yupResolver(ValidacionGasto),
 		defaultValues: dataInicial,
 	});
@@ -70,6 +67,7 @@ export const Gasto = () => {
 
 	const diferencia = useWatch({ control, name: 'diferencia' });
 	const importe = useWatch({ control, name: 'importe' });
+	const clienteID = useWatch({ control, name: 'clienteID' });
 
 	const [getById, { loading }] = useLazyQuery(GastosActions.GET_BYID, {
 		fetchPolicy: 'no-cache',
@@ -81,6 +79,17 @@ export const Gasto = () => {
 			setDetalleGastos(DetalleGastos);
 		},
 	});
+
+	const [getCotizacionesByClienteID, { loading: loadingCotizacion }] = useLazyQuery(CotizacionesActions.GET_BYIDCLIENTE, {
+		fetchPolicy: 'no-cache',
+		onCompleted: (response) => {
+			setCotizaciones(response.getCotizacionCliente);
+		},
+	});
+
+	useEffect(() => {
+		clienteID && getCotizacionesByClienteID({ variables: { clienteID } });
+	}, [clienteID]);
 
 	useEffect(() => {
 		id && getById({ variables: { id } });
@@ -107,7 +116,7 @@ export const Gasto = () => {
 			setClientes(data.getAllCliente?.rows);
 		},
 	});
-
+	
 	const handleDetalleGasto = (gastos) => {
 		setDetalleGastos(gastos);
 	};
@@ -247,7 +256,7 @@ export const Gasto = () => {
 											label="Interno"
 										/>
 									</div>
-									<Box sx={{ height: tipoGasto.externo ? 80 : 2 }}>
+									<Box sx={{ height: tipoGasto.externo ? 130 : 2 }}>
 										<Box sx={{ display: 'flex' }}>
 											<Grow
 												in={tipoGasto.externo}
@@ -262,6 +271,15 @@ export const Gasto = () => {
 														labelProp="nombre"
 														options={clientes}
 														error={errors.clienteID}
+													/>
+													<SelectFieldController
+														control={control}
+														loading={loadingCotizacion}
+														label="Cotizacion / Servicio"
+														name="cotizacionID"
+														labelProp="descripcion"
+														options={cotizaciones}
+														error={errors.cotizacionID}
 													/>
 												</div>
 											</Grow>

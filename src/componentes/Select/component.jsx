@@ -144,7 +144,7 @@ export const SelecField = ({
 							className={classes.li}
 							value={valueProp ? option[valueProp] : option}
 						>
-							{customLabel ? customLabel(option) : option[labelProp]}
+
 						</MenuItem>
 					))}
 					{options.length === 0 && (

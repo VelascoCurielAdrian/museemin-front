@@ -8,6 +8,7 @@ const FRAGMENTS = {
 			id
 			trabajadorID
 			clienteID
+			cotizacionID
 			descripcion
 			compania
 			fecha
@@ -29,6 +30,11 @@ const FRAGMENTS = {
 				nombre
 				primerTelefono
 			}
+			cotizacion {
+				id
+				descripcion
+				fecha
+			}
 			DetalleGastos {
 				id
 				gastoID
@@ -49,6 +55,7 @@ const CREATE = gql`
 	mutation CreateGasto(
 		$trabajadorID: ID
 		$clienteID: ID
+		$cotizacionID: ID
 		$descripcion: String
 		$compania: String
 		$fecha: Date
@@ -65,6 +72,7 @@ const CREATE = gql`
 			input: {
 				trabajadorID: $trabajadorID
 				clienteID: $clienteID
+				cotizacionID: $cotizacionID
 				descripcion: $descripcion
 				compania: $compania
 				fecha: $fecha
@@ -92,6 +100,7 @@ const UPDATE = gql`
 		$updateID: ID
 		$trabajadorID: ID
 		$clienteID: ID
+		$cotizacionID: ID
 		$descripcion: String
 		$compania: String
 		$fecha: Date
@@ -109,6 +118,7 @@ const UPDATE = gql`
 			input: {
 				trabajadorID: $trabajadorID
 				clienteID: $clienteID
+				cotizacionID: $cotizacionID
 				descripcion: $descripcion
 				compania: $compania
 				fecha: $fecha
@@ -172,6 +182,9 @@ export const ValidacionGasto = yup.object().shape({
 		.transform((value) => (isNaN(value) ? undefined : value))
 		.required(MESSAGE_REQUIRED),
 	clienteID: yup
+		.number()
+		.transform((value) => (isNaN(value) ? undefined : value)),
+	cotizacionID: yup
 		.number()
 		.transform((value) => (isNaN(value) ? undefined : value)),
 	importe: yup
