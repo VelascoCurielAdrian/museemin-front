@@ -46,7 +46,7 @@ export const formatPdfGasto = (data) => {
 		margin: { horizontal: 10 },
 		styles: { overflow: 'linebreak' },
 		bodyStyles: { valign: 'top' },
-		columnStyles: { email: { columnWidth: 'wrap' } },
+		columnStyles: { email: { cellWidth: 'wrap' } },
 		theme: 'striped',
 		showHead: 'everyPage',
 		didDrawPage: function (data) {
@@ -76,7 +76,7 @@ export const formatPdfGasto = (data) => {
 			doc.setFontSize(10);
 			let pageSize = doc.internal.pageSize;
 			let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
-			doc.text('Footer text', data.settings.margin.left, pageHeight - 10);
+			doc.text('Museemin', data.settings.margin.left, pageHeight - 10);
 			doc.text(575, 830, str);
 		},
 	});

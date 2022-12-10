@@ -38,6 +38,8 @@ export const procesoCotizacion = [
 	{ id: 1, nombre: 'Diagnóstico / Revisión', color: 'warning' },
 	{ id: 2, nombre: 'Denegada', color: 'error' },
 	{ id: 3, nombre: 'Aceptada', color: 'success' },
+	{ id: 4, nombre: 'Garantia', color: 'info' },
+	{ id: 5, nombre: 'Realizada', color: 'primary' },
 ];
 
 export const filters = {

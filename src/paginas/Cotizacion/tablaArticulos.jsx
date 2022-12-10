@@ -20,13 +20,12 @@ const TablaArticulos = ({ data, handleEdit, handleDelete }) => {
 	return (
 		<>
 			<TableContainer
-				component={Paper}
 				sx={{ width: '100%', height: 255, maxHeight: 400 }}
 			>
 				<Table stickyHeader aria-label="sticky table">
 					<TableHead>
 						<TableRow>
-							<TableCell>DECRIPCIÓN</TableCell>
+							<TableCell align="left">DECRIPCIÓN</TableCell>
 							<TableCell>UNIDAD</TableCell>
 							<TableCell>PRECIO</TableCell>
 							<TableCell>CANTIDAD</TableCell>
@@ -37,7 +36,9 @@ const TablaArticulos = ({ data, handleEdit, handleDelete }) => {
 					<TableBody>
 						{data.map((item, index) => (
 							<TableRow key={index}>
-								<TableCell>{item.descripcion}</TableCell>
+								<TableCell align='right'>
+									{item.descripcion}
+								</TableCell>
 								<TableCell>
 									<TipoUnidad value={item.unidad} />
 								</TableCell>

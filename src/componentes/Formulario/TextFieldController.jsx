@@ -10,6 +10,7 @@ export const TextFieldController = ({
 	type,
 	rows,
 	variant,
+	placeHolder,
 	onChangeCustom,
 	messageError,
 	autoFocus,
@@ -40,6 +41,7 @@ export const TextFieldController = ({
 					rows={rows}
 					disabled={disabled}
 					autoFocus={autoFocus}
+					placeHolder={placeHolder}
 				/>
 			)}
 		/>

@@ -291,6 +291,7 @@ export const Gasto = () => {
 										error={errors.importe}
 										label="Importe"
 										type="number"
+										placeHolder='0:00'
 									/>
 									<TextFieldController
 										control={control}
@@ -298,6 +299,7 @@ export const Gasto = () => {
 										error={errors.diferencia}
 										label="Importe del trabajador"
 										type="number"
+										placeHolder='0:00'
 									/>
 								</div>
 								<div className="col-span-12 lg:col-span-6 md:col-span-12 sm:col-span-12 space-y-2">

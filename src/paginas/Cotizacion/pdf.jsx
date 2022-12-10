@@ -1,24 +1,19 @@
 import { format } from 'date-fns';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { tiposMetodoPago, unidades } from '../../helpers/constants';
+import { unidades } from '../../helpers/constants';
 import logo from '../../assets/Logo.png';
 import moment from 'moment/moment';
 import 'moment/locale/es';
 
-export const formatPdfGasto = (data) => {
+export const formatPdCotizacion = (data) => {
+	console.log(data);
 	const {
-		DetalleGastos,
-		trabajador,
-		tipoGasto,
+		CotizacionDetalles,
 		cliente,
 		descripcion,
 		fecha,
 		subTotal,
-		importe,
-		diferencia,
-		total,
-		metodoPago,
 		id,
 	} = data;
 	const columns = [
@@ -28,7 +23,7 @@ export const formatPdfGasto = (data) => {
 		{ title: 'Cantidad', dataKey: 'cantidad' },
 		{ title: 'Importe', dataKey: 'importe' },
 	];
-	const rows = DetalleGastos?.map((data) => {
+	const rows = CotizacionDetalles?.map((data) => {
 		const tipoUnidad = unidades.find(
 			(tipo) => tipo.id === data?.unidad,
 		)?.nombre;
@@ -46,37 +41,24 @@ export const formatPdfGasto = (data) => {
 		margin: { horizontal: 10 },
 		styles: { overflow: 'linebreak' },
 		bodyStyles: { valign: 'top' },
-		columnStyles: { email: { columnWidth: 'wrap' } },
+		columnStyles: { email: { cellWidth: 'wrap' } },
 		theme: 'striped',
 		showHead: 'everyPage',
 		didDrawPage: function (data) {
-			const gasto =
-				tipoGasto === 2 ? 'Interno' : `Externo dirigido a ${cliente?.nombre}`;
+			const cotizacion = `Dirigido a ${cliente?.nombre}`;
 			doc.addImage(logo, 'JPEG', data.settings.margin.left, 15, 135, 60);
 			doc.setFontSize(10);
 			doc.setTextColor('#161C22');
 			doc.text(`Fecha: ${moment(fecha).format('LLLL')}`, 150, 19);
-			doc.text(`Folio: 000-G0${id}`, 500, 17.5);
-			doc.text(`Gasto: ${gasto}`, 150, 35);
-			doc.text(
-				`A cargo del trabajador: ${trabajador?.nombres} ${trabajador?.primerApellido} ${trabajador?.segundoApellido}`,
-				150,
-				50,
-			);
-			doc.text(
-				`Metodo de pago: ${
-					tiposMetodoPago.find((el) => el.id === metodoPago)?.nombre
-				}`,
-				150,
-				65,
-			);
+			doc.text(`Folio: 000-C0${id}`, 500, 17.5);
+			doc.text(`Cliente: ${cotizacion}`, 150, 35);
 			doc.setFontSize(11);
-			doc.text('Detalle de los gastos agregados', 15, 90);
+			doc.text('Detalle de la cotización', 15, 90);
 			let str = '' + doc.internal.getNumberOfPages();
 			doc.setFontSize(10);
 			let pageSize = doc.internal.pageSize;
 			let pageHeight = pageSize.height ? pageSize.height : pageSize.getHeight();
-			doc.text('Footer text', data.settings.margin.left, pageHeight - 10);
+			doc.text('Museemin', data.settings.margin.left, pageHeight - 10);
 			doc.text(575, 830, str);
 		},
 	});
@@ -86,14 +68,8 @@ export const formatPdfGasto = (data) => {
 	doc.text(`Comentarios`, 15, finalY + 30);
 	doc.setFontSize(9);
 	doc.text(`${descripcion}`, 15, finalY + 50);
-	doc.text(400, finalY + 30, 'Sub Total');
+	doc.text(400, finalY + 30, 'Precio estimado');
 	doc.text(500, finalY + 30, `$: ${subTotal}`);
-	doc.text(400, finalY + 50, 'Importe');
-	doc.text(500, finalY + 50, `$: ${importe}`);
-	doc.text(400, finalY + 70, 'Importe del trabajador');
-	doc.text(500, finalY + 70, `$: ${diferencia}`);
-	doc.text(400, finalY + 90, 'Total');
-	doc.text(500, finalY + 90, `$: ${total}`);
 
-	doc.save(`Gasto-${format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS")}.pdf`);
+	doc.save(`Cotización-${format(new Date(), "yyyy-MM-dd'T'HH:mm:ss.SSS")}.pdf`);
 };

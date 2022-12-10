@@ -1,13 +1,17 @@
 import { forwardRef } from 'react';
 import PropTypes from 'prop-types';
+import { FiSave } from 'react-icons/fi';
 import Slide from '@mui/material/Slide';
+import { GiCancel } from 'react-icons/gi';
 import DialogMui from '@mui/material/Dialog';
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { FaRegWindowClose } from 'react-icons/fa';
 import DialogTitleMui from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
-import { useMediaQuery, useTheme } from '@mui/material';
+import { DialogActions, useMediaQuery, useTheme } from '@mui/material';
+
+import Button from '../Button';
 
 const DialogCustom = styled(DialogMui)(({ theme }) => ({
 	'& .MuiDialogContent-root': {
@@ -56,7 +60,17 @@ DialogTitle.propTypes = {
 	onClose: PropTypes.func.isRequired,
 };
 
-const Dialog = ({ onClose, open, title, children }) => {
+const Dialog = ({
+	onClose,
+	open,
+	title,
+	children,
+	actions,
+	isLoading,
+	actionSave,
+	actionCancel,
+	handleSubmit,
+}) => {
 	const theme = useTheme();
 	const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 	return (
@@ -75,6 +89,26 @@ const Dialog = ({ onClose, open, title, children }) => {
 					{title}
 				</DialogTitle>
 				<DialogContent dividers>{children}</DialogContent>
+				{actions && (
+					<DialogActions sx={{ marginRight: 2 }}>
+						<Button
+							onClick={actionCancel}
+							label="Cancelar"
+							fullWidth
+							icono={<GiCancel size={16} />}
+						/>
+						<Button
+							showLoading
+							onClick={(e) => {
+								handleSubmit(actionSave)(e);
+							}}
+							label="Guardar"
+							fullWidth
+							loading={isLoading}
+							icono={<FiSave size={16} />}
+						/>
+					</DialogActions>
+				)}
 			</DialogCustom>
 		</>
 	);
@@ -85,6 +119,15 @@ Dialog.propTypes = {
 	onClose: PropTypes.func.isRequired,
 	title: PropTypes.string.isRequired,
 	open: PropTypes.bool.isRequired,
+	handleSubmit: PropTypes.func,
+	actionSave: PropTypes.func,
+	actionCancel: PropTypes.func,
+};
+
+Dialog.defaultProps = {
+	handleSubmit: () => {},
+	actionSave: () => {},
+	actionCancel: () => {},
 };
 
 export default Dialog;

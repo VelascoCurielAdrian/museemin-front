@@ -25,12 +25,24 @@ export const NavItems = (props) => {
 				label="Herramientas"
 				handleClick={props.handleClick}
 			/>
-			<LinkButton
+			{/* <LinkButton
 				icon={<MdBackpack />}
 				url="/paqueteHerramientas"
 				label="Paquete"
 				handleClick={props.handleClick}
 			/>
+						<LinkButton
+				icon={<FaToolbox />}
+				url="/almacen"
+				label="Almacén"
+				handleClick={props.handleClick}
+			/>
+			<LinkButton
+				icon={<GrServices />}
+				url="/servicios"
+				label="Servicios"
+				handleClick={props.handleClick}
+			/> */}
 			<LinkButton
 				icon={<FaUsersCog />}
 				url="/trabajadores"
@@ -41,18 +53,6 @@ export const NavItems = (props) => {
 				icon={<FaUserTie />}
 				url="/clientes"
 				label="Clientes"
-				handleClick={props.handleClick}
-			/>
-			<LinkButton
-				icon={<FaToolbox />}
-				url="/almacen"
-				label="Almacén"
-				handleClick={props.handleClick}
-			/>
-			<LinkButton
-				icon={<GrServices />}
-				url="/servicios"
-				label="Servicios"
 				handleClick={props.handleClick}
 			/>
 			<LinkButton

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { Table } from '../../componentes/Table/component';
-import { formatPdfGasto } from './pdf';
+import { formatPdCotizacion } from './pdf';
 import { CotizacionesActions } from '../../actions/cotizaciones';
 import ProcesoCotizacion from '../../componentes/ProcesoCotizacion';
 
@@ -56,13 +56,14 @@ export const Cotizaciones = () => {
 				title="Cotizaciones"
 				subtitle="Moduló de cotizaciones"
 				showHeader
-				pdf={formatPdfGasto}
+				pdf={formatPdCotizacion}
 				handleNew={handleNew}
 				uri={CotizacionesActions.GET}
 				urlDelete={{ gql: CotizacionesActions.DELETE, params: 'deleteId' }}
 				dataCache={dataCache}
 				columns={columns}
 				showActions
+				print
 			/>
 		</>
 	);
