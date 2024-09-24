@@ -14,7 +14,7 @@
     "@emotion/styled": "^11.10.0",
     "@hookform/resolvers": "^2.9.10",
     "@mui/lab": "^5.0.0-alpha.101",
-    "@mui/material": "^5.10.3",
+    "@mui/material": "^5.16.7",
     "@mui/styles": "^5.10.3",
     "@mui/x-data-grid": "^5.17.1",
     "@mui/x-date-pickers": "^5.0.5",
